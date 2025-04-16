@@ -14,5 +14,5 @@ Como en varios brokers Argentinos no hay forma de calcular la ganancia verdadera
 > para mayor informacion ℹ️ [CustomApiTemplate](https://github.com/LeonardoFaggiani/Template)
 
 
-## Dame una Estrillita! ⭐
+## Dame una Estrellita! ⭐
 Si te gusta lo que hago o te sirvio `Calculadora Cedears` podes darme una ⭐ como muestra de soporte 😉
