@@ -1,0 +1,16 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/CaluladoraCedears.Api/bin/Debug/net8.0
+/CaluladoraCedears.Api/obj
+/CaluladoraCedears.Api.Db/bin/Debug
+/CaluladoraCedears.Api.Db/obj/Debug
+/CaluladoraCedears.Api.Db/CaluladoraCedears.Api.Db.sqlproj.user
+/CaluladoraCedears.Api.Db/CaluladoraCedears.Api.Db.jfm
+/CaluladoraCedears.Api.Db/CaluladoraCedears.Api.Db.dbmdl
+/CaluladoraCedears.Api.Dto/bin/Debug/netstandard2.1
+/CaluladoraCedears.Api.Dto/obj
+/CaluladoraCedears.Api.Unit.Tests/bin/Debug/net8.0
+/CaluladoraCedears.Api.Unit.Tests/obj
