@@ -6,13 +6,23 @@ namespace CalculadoraCedears.Api.Domian
     {
         protected Cedear() { }
 
-        public Cedear(string description, string ticker)
+        public Cedear(string name,
+            string ticker,
+            int ratio)
         {
-            Description = description;
-            Ticker = ticker;
+            this.Name = name;
+            this.Ticker = ticker;
+            this.Ratio = ratio;
+            this.CedearsStockHoldings = new List<CedearsStockHolding>();
         }
 
-        public string Description { get; }
-        public string Ticker { get; }
+
+        public string Name { get; protected set; }
+
+        public string Ticker { get; protected set; }
+
+        public int Ratio { get; protected set; }
+
+        public virtual ICollection<CedearsStockHolding> CedearsStockHoldings { get; protected set; }   
     }
 }

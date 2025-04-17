@@ -61,8 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Cedears.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="CalculadoraCedears.Api.Db.publish.xml" />
+    <Build Include="Tables\Brokers.sql" />
+    <Build Include="Tables\CedearsStockHolding.sql" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 {
     public class CreateCedearRequest
     {
-        public string Description { get; set; }
+        public string Name { get; set; }
         public string Ticker { get; set; }
     }
 }

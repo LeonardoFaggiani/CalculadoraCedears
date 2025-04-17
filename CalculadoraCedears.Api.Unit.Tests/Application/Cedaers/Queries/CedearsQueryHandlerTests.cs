@@ -22,7 +22,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedaers.Queries
             CedearRepository = Mock.Of<ICedearRepository>();
             Mapper = Mock.Of<IMapper>();
 
-            var samples = new List<Cedear> { new Cedear("Testing", "TE") };
+            var samples = new List<Cedear> { new Cedear("Testing", "TE", 1) };
 
             Mock.Get(CedearRepository).Setup(x => x.All()).Returns(samples.AsQueryable().BuildMock());
             Mock.Get(Mapper).Setup(x => x.Map<IEnumerable<Cedear>, IEnumerable<CedaerDto>>(It.IsAny<IEnumerable<Cedear>>())).Returns(new List<CedaerDto> { new CedaerDto() { Id = Guid.NewGuid(), Description = "Testing" } });

@@ -1,14 +1,13 @@
 ﻿CREATE TABLE [dbo].[Cedears]
 (
-    [Id] INT IDENTITY (1, 1) NOT NULL,
-    [Description] VARCHAR(50) NOT NULL,
-    [Ticker] VARCHAR(5) NOT NULL,
-    CONSTRAINT [PK_Sample] PRIMARY KEY CLUSTERED ([Id] ASC)
+    [Id]                    UNIQUEIDENTIFIER,
+    [Ticker]                VARCHAR(5)      NOT NULL,
+    [Name]                  VARCHAR(50)     NOT NULL,
+    [Ratio]                 INT             NOT NULL,
+    CONSTRAINT [PK_Cedears] PRIMARY KEY CLUSTERED ([Id] ASC)
 )
-
 GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [UK_Sample_Ticker] ON [dbo].[Cedears]
+CREATE UNIQUE NONCLUSTERED INDEX [UK_Cedears] ON [dbo].[Cedears]
 (
-	[Ticker] ASC
+    [Ticker]
 )

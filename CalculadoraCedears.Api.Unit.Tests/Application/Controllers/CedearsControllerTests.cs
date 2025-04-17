@@ -74,7 +74,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
             {
                 Request = new CreateCedearRequest()
                 {
-                    Description = "Tests"
+                    Name = "Tests"
                 };
             }
 
