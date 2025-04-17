@@ -1,5 +1,3 @@
-// components/ui/PortfolioHeader.tsx
-
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 
