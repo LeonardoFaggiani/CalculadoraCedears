@@ -7,72 +7,67 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { formatPercent } from "@/lib/utils";
 import CedearsDetailTable from "../cedears-details/cedears-detail-table";
-
-interface CedearInfoTabsProps {
-  cedears: Cedears[];
-  expandedTicker: Record<string, boolean>;
-  toggleCedear: (id: string) => void;
-}
+import PriceGainLoss from "../price-gain-loss/price-gain-loss";
 
 export default function CedearsInfoTabs({
   cedears,
   expandedTicker,
   toggleCedear,
-}: CedearInfoTabsProps) {
+}: CedearsInfoTabs) {
   return (
     <Tabs defaultValue="summary" className="mb-6">
       <TabsContent value="summary" className="mt-0">
         <div className="space-y-4">
           {cedears.map((cedear) => (
-            <Card key={cedear.id} className="overflow-hidden">
+            <Card key={cedear.ticker} className="overflow-hidden">
               <Collapsible
-                open={expandedTicker[cedear.id]}
-                onOpenChange={() => toggleCedear(cedear.id)}
+                open={expandedTicker[cedear.ticker]}
+                onOpenChange={() => toggleCedear(cedear.ticker)}
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex items-center justify-between p-1 cursor-pointer hover:bg-gray-50">
+                  <div className="flex items-center justify-between pr-6 pl-6 cursor-pointer hover:bg-gray-50">
                     <div className="flex items-center space-x-2">
-                      {expandedTicker[cedear.id] ? (
+                      {expandedTicker[cedear.ticker] ? (
                         <ChevronDown className="w-5 h-5 text-gray-500" />
                       ) : (
                         <ChevronUp className="w-5 h-5 text-gray-500" />
                       )}
                       <h3 className="font-medium">
-                        {cedear.name} *{cedear.accountNumber}
+                        {cedear.name}
                       </h3>
-                      <Badge variant="outline" className="ml-2 text-xs">
-                        {cedear.syncStatus}
+                      <Badge variant="outline" className="text-xs">
+                        {cedear.ticker}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {cedear.ratio}
                       </Badge>
                     </div>
                     <div className="flex items-center space-x-8">
                       <div>
-                        <div className="text-xs text-gray-500">VALUE</div>
+                        <div className="text-xs text-gray-500">PRECIO ACTUAL</div>
                         <div>${cedear.value?.toLocaleString()}</div>
                       </div>
                       <div>
-                        <div className="text-xs text-gray-500">TODAY</div>
-                        <div className="text-red-500">
-                          ${cedear.todayChange?.toLocaleString()}{" "}
-                          {formatPercent(cedear.todayChangePercent || 0)} ▼
-                        </div>
+                        <div className="text-xs text-gray-500">HOY</div>
+                        <PriceGainLoss value={cedear.todayChange}
+                          percent={cedear.todayChangePercent}
+                          />
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">
-                          SINCE PURCHASE
+                          DESDE LA COMPRA
                         </div>
-                        <div className="text-red-500">
-                          ${cedear.sinceChange?.toLocaleString()}{" "}
-                          {formatPercent(cedear.sinceChangePercent || 0)} ▼
-                        </div>
+                        <PriceGainLoss  value={cedear.sinceChange}
+                          percent={cedear.sinceChangePercent}
+                          />
                       </div>
                     </div>
                   </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <CardContent className="p-0">
-                    <CedearsDetailTable holdings={cedear.holdings} />
+                  <CardContent className="p-4">
+                    <CedearsDetailTable details={cedear.details} />
                   </CardContent>
                 </CollapsibleContent>
               </Collapsible>

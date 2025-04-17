@@ -1,13 +1,13 @@
 interface Cedears {
-    id: string;
+    ticker: string;
     name: string;
-    accountNumber: string;
-    syncStatus: "SYNCED" | "SYNC FAILED" | "MANUAL";
-    holdings: StockHolding[];
-    value?: number;
-    todayChange?: number;
-    todayChangePercent?: number;
-    sinceChange?: number;
-    sinceChangePercent?: number;
+    quantity: number;
+    ratio: number;
+    value: number;
+    todayChange: number;
+    todayChangePercent: number;
+    sinceChange: number;
+    sinceChangePercent: number;
+    details: CedearsDetails[];
   }
   
