@@ -11,12 +11,12 @@ CalculadoraCedears.Desktop/.vscode/extensions.json
 /CalculadoraCedears.Api.Db/bin/Debug
 /CalculadoraCedears.Api.Db/obj/Debug
 /CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj.user
-/CalculadoraCedears.Api.Db/CaluladoraCedears.Api.Db.jfm
-/CalculadoraCedears.Api.Db/CaluladoraCedears.Api.Db.publish.xml
 /CalculadoraCedears.Api.Dto/bin/Debug/netstandard2.1
 /CalculadoraCedears.Api.Dto/obj/Debug/netstandard2.1
 /CalculadoraCedears.Api.Dto/obj
 /CalculadoraCedears.Api.Unit.Tests/bin/Debug/net8.0
 /CalculadoraCedears.Api.Unit.Tests/obj/Debug/net8.0
 /CalculadoraCedears.Api.Unit.Tests/obj
+/CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.dbmdl
+/CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.jfm
 /CaluladoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj.user

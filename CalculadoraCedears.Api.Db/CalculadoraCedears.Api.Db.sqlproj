@@ -11,8 +11,8 @@
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>CaluladoraCedears.Api.Db</RootNamespace>
-    <AssemblyName>CaluladoraCedears.Api.Db</AssemblyName>
+    <RootNamespace>CalculadoraCedears.Api.Db</RootNamespace>
+    <AssemblyName>CalculadoraCedears.Api.Db</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -63,6 +63,6 @@
     <Build Include="Tables\Cedears.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CaluladoraCedears.Api.Db.publish.xml" />
+    <None Include="CalculadoraCedears.Api.Db.publish.xml" />
   </ItemGroup>
 </Project>
