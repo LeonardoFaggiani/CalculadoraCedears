@@ -58,10 +58,16 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\PostDeployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Cedears.sql" />
     <Build Include="Tables\Brokers.sql" />
     <Build Include="Tables\CedearsStockHolding.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\PostDeployment\Cedears.sql" />
+    <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>

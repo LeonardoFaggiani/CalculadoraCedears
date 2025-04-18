@@ -1,6 +1,6 @@
 ﻿using CalculadoraCedears.Api.Application.Cedears.Commands;
 using CalculadoraCedears.Api.Domian;
-using CalculadoraCedears.Api.Dto.Samples.Request;
+using CalculadoraCedears.Api.Dto.Cedears.Request;
 using CalculadoraCedears.Api.Infrastructure.Repositories;
 using CalculadoraCedears.Api.Unit.Tests.Base;
 
@@ -30,7 +30,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedaers.Commands
         public class The_Constructor : CreateCedearCommandHandlerTests
         {
             [Fact]
-            public void Should_throw_an_ArgumentNullException_when_sampleRepository_is_null()
+            public void Should_throw_an_ArgumentNullException_when_cedearRepository_is_null()
             {
                 //Act & Assert
                 Assert.Throws<ArgumentNullException>(() => new CreateCedearCommandHandler(null));
@@ -45,7 +45,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedaers.Commands
             }
 
             [Fact]
-            public async Task Should_verify_if_sample_is_added_to_repository()
+            public async Task Should_verify_if_cedear_is_added_to_repository()
             {
                 //Arrange
                 var request = new CreateCedearRequest();
@@ -59,7 +59,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedaers.Commands
             }
 
             [Fact]
-            public async Task Should_verify_if_sample_is_committed()
+            public async Task Should_verify_if_cedear_is_committed()
             {
                 //Arrange
                 var request = new CreateCedearRequest();

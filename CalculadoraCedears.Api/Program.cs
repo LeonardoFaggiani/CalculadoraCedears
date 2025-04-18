@@ -14,7 +14,7 @@ builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddDomainEvents();
 builder.Services.AddBuilders();
-builder.Services.AddConnectionString();
+builder.Services.AddConnectionString(builder.Configuration);
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();

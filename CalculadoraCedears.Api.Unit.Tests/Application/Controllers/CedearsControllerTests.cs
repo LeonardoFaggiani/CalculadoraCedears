@@ -2,8 +2,8 @@
 using CalculadoraCedears.Api.Application.Cedears.Queries;
 using CalculadoraCedears.Api.Application.Controllers;
 using CalculadoraCedears.Api.Dto;
-using CalculadoraCedears.Api.Dto.Samples;
-using CalculadoraCedears.Api.Dto.Samples.Request;
+using CalculadoraCedears.Api.Dto.Cedears;
+using CalculadoraCedears.Api.Dto.Cedears.Request;
 using CalculadoraCedears.Api.Unit.Tests.Base;
 
 using FluentAssertions;
@@ -18,16 +18,16 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
     {
         public CedearsControllerTests()
         {
-            var samplesDto = new List<CedaerDto>()
+            var cedaerDtos = new List<CedaerDto>()
             {
                 new CedaerDto()
                 {
                     Id = new Guid("5e832cf5-6934-485f-bd8a-207eb3eadc4c"),
-                    Description = "Tests"
+                    Name = "Tests"
                 }
             };
 
-            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CedearsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new CedearsQueryResponse(samplesDto));
+            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<SearchCedearsByTickerQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SearchCedearsByTickerQueryResponse(cedaerDtos));
             Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CreateCedearCommand>(), It.IsAny<CancellationToken>()));
 
             Sut = new CedearsController(Mediator);
@@ -43,26 +43,32 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
             }
         }
 
-        public class The_Method_GetAsync : CedearsControllerTests
+        public class The_Method_GetSearchByTickerAsync : CedearsControllerTests
         {
+            private SearchCedearsByTickerQuery Query;
+            public The_Method_GetSearchByTickerAsync()
+            {
+                this.Query = new SearchCedearsByTickerQuery();
+            }
+
             [Fact]
             public async Task Should_verify_if_mediator_was_called()
             {
                 //Act                
-                await Sut.GetAsync(CancellationToken);
+                await Sut.GetSearchByTickerAsync(this.Query, CancellationToken);
 
                 //Assert
-                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CedearsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<SearchCedearsByTickerQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
             public async Task Should_verify_query_results()
             {
                 //Act                
-                var result = await Sut.GetAsync(CancellationToken);
+                var result = await Sut.GetSearchByTickerAsync(this.Query, CancellationToken);
 
                 //Assert
-                result.As<OkObjectResult>().Value.As<CedearsQueryResponse>().Samples.First().Description.Should().Be("Tests");
+                result.As<OkObjectResult>().Value.As<SearchCedearsByTickerQueryResponse>().Cedears.First().Name.Should().Be("Tests");
             }
         }
 

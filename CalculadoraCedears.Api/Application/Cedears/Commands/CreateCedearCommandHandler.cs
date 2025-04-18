@@ -20,11 +20,11 @@ namespace CalculadoraCedears.Api.Application.Cedears.Commands
 
         protected override async Task Handle(CreateCedearCommand command, CancellationToken cancellationToken)
         {
-            var sample = new Cedear(command.request.Name, command.request.Ticker,1);
+            var cedear = new Cedear(command.request.Name, command.request.Ticker,1);
 
-            sample.AddDomainEvent(new CedearHasBeenInserted(sample.Id));
+            cedear.AddDomainEvent(new CedearHasBeenInserted(cedear.Id));
 
-            cedearRepository.Add(sample);
+            cedearRepository.Add(cedear);
 
             await Commit(cedearRepository.UnitOfWork);
         }

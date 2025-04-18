@@ -4,13 +4,13 @@
         <name>CalculadoraCedears.Api</name>
     </assembly>
     <members>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetAsync(System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetSearchByTickerAsync(CalculadoraCedears.Api.Application.Cedears.Queries.SearchCedearsByTickerQuery,System.Threading.CancellationToken)">
             <summary>
-            Get all cedears
+            Devuelve todos los cedears donde coindica el ticker
             </summary>                
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.PostCedearAsync(CalculadoraCedears.Api.Dto.Samples.Request.CreateCedearRequest,System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.PostCedearAsync(CalculadoraCedears.Api.Dto.Cedears.Request.CreateCedearRequest,System.Threading.CancellationToken)">
             <summary>
             Create a Cedear
             </summary>        

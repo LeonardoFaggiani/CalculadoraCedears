@@ -1,4 +1,4 @@
-﻿namespace CalculadoraCedears.Api.Dto.Samples.Request
+﻿namespace CalculadoraCedears.Api.Dto.Cedears.Request
 {
     public class CreateCedearRequest
     {

@@ -115,11 +115,11 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             return services;
         }
 
-        public static IServiceCollection AddConnectionString(this IServiceCollection services)
+        public static IServiceCollection AddConnectionString(this IServiceCollection services, IConfiguration configuration)
         {
             //In memory database used for simplicity, change to a real db for production applications
-            services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseInMemoryDatabase("calculadoracedearsApiBD"); }, ServiceLifetime.Transient);
-            //services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseSqlServer("your-connection-string"); }, ServiceLifetime.Transient);
+            //services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseInMemoryDatabase("calculadoracedearsApiBD"); }, ServiceLifetime.Transient);
+            services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseSqlServer(configuration.GetSection("SQL:ConnectionStrings").Value); }, ServiceLifetime.Transient);
 
             return services;
         }

@@ -1,5 +1,6 @@
-﻿using MediatR;
-using CalculadoraCedears.Api.Dto.Samples.Request;
+﻿using CalculadoraCedears.Api.Dto.Cedears.Request;
+
+using MediatR;
 
 namespace CalculadoraCedears.Api.Application.Cedears.Commands
 {

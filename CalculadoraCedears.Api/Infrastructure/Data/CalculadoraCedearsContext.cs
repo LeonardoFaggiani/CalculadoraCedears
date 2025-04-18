@@ -43,8 +43,6 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
         {
             modelBuilder.Ignore<Event>();
 
-            modelBuilder.Entity<Entity>().HasKey(e => e.Id);
-
             modelBuilder.Entity<Broker>(entity =>
             {
                 entity.HasIndex(e => e.Name, "UK_Brokers").IsUnique();

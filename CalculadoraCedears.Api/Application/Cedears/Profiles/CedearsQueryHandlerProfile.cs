@@ -9,7 +9,7 @@ namespace CalculadoraCedears.Api.Application.Cedears.Profiles
     {
         public CedearsQueryHandlerProfile()
         {
-            CreateMap<Cedear, CedaerDto>(MemberList.None);
+            CreateMap<Cedear, CedaerDto>(MemberList.None);                
         }
     }
 }

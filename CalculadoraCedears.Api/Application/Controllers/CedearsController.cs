@@ -1,8 +1,8 @@
 using CalculadoraCedears.Api.Application.Cedears.Commands;
 using CalculadoraCedears.Api.Application.Cedears.Queries;
 using CalculadoraCedears.Api.Application.Controllers.Base;
-using CalculadoraCedears.Api.Dto.Samples;
-using CalculadoraCedears.Api.Dto.Samples.Request;
+using CalculadoraCedears.Api.Dto.Cedears;
+using CalculadoraCedears.Api.Dto.Cedears.Request;
 
 using MediatR;
 
@@ -17,17 +17,16 @@ namespace CalculadoraCedears.Api.Application.Controllers
         { }
 
         /// <summary>
-        /// Get all cedears
+        /// Devuelve todos los cedears donde coindica el ticker
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpGet]
         [AllowAnonymous]
-        [Produces("application/json", Type = typeof(CedearsQueryResponse))]
-        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        [Route("search-by-ticker")]
+        [Produces("application/json", Type = typeof(SearchCedearsByTickerQueryResponse))]
+        public async Task<IActionResult> GetSearchByTickerAsync([FromQuery] SearchCedearsByTickerQuery searchCedearsQuery, CancellationToken cancellationToken)
         {
-            var query = new CedearsQuery();
-
-            return Ok(await mediator.Send(query, cancellationToken));
+            return Ok(await mediator.Send(searchCedearsQuery, cancellationToken));
         }
 
         /// <summary>
