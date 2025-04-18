@@ -1,4 +1,6 @@
-﻿using NetDevPack.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+
+using NetDevPack.Domain;
 
 namespace CalculadoraCedears.Api.Domian
 {
@@ -9,7 +11,6 @@ namespace CalculadoraCedears.Api.Domian
         public CedearsStockHolding(int quantity,DateTime sinceDate, decimal exchangeRateCcl, decimal purchasePriceArs)
         {
             this.Quantity = quantity;
-            this.EffectiveRatio = quantity;
             this.SinceDate = sinceDate;
             this.ExchangeRateCcl = exchangeRateCcl;
             this.PurchasePriceArs = purchasePriceArs;
@@ -50,14 +51,33 @@ namespace CalculadoraCedears.Api.Domian
 
         public virtual Cedear Cedear { get; protected set; }
 
-        public void SetCedear(Cedear cedear)
+        public CedearsStockHolding SetCedear(Guid cedearId)
         {
-            this.Cedear = Cedear;
+            this.CedearId = cedearId;
+            return this;
         }
 
-        public void SetBroker(Broker broker)
+        public CedearsStockHolding SetBroker(int brokerId)
         {
-            this.Broker = broker;
+            this.BrokerId = brokerId;
+            return this;
+        }
+
+        public CedearsStockHolding SetEffectiveRatio(int ratio)
+        {
+            this.EffectiveRatio = (decimal)this.Quantity / ratio;
+
+            return this;
+        }
+
+        public CedearsStockHolding SetPurchaseUsd(int ratio, decimal brokerComision)
+        {
+            decimal comision = (this.PurchasePriceArs * brokerComision) / 100;
+
+            this.PurchasePriceUsd = (this.PurchasePriceArs + comision)/((decimal)(this.ExchangeRateCcl * ratio));
+            this.PurchaseValueUsd = (this.PurchasePriceUsd * this.EffectiveRatio);
+
+            return this;
         }
     }
 }

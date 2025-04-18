@@ -28,7 +28,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
             };
 
             Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<SearchCedearsByTickerQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SearchCedearsByTickerQueryResponse(cedaerDtos));
-            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CreateCedearCommand>(), It.IsAny<CancellationToken>()));
+            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()));
 
             Sut = new CedearsController(Mediator);
         }
@@ -74,14 +74,11 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
 
         public class The_Method_PostCedearsAsync : CedearsControllerTests
         {
-            private CreateCedearRequest Request;
+            private CedearStockHoldingRequest Request;
 
             public The_Method_PostCedearsAsync()
             {
-                Request = new CreateCedearRequest()
-                {
-                    Name = "Tests"
-                };
+                Request = new CedearStockHoldingRequest();
             }
 
             [Fact]
@@ -91,7 +88,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
                 await Sut.PostCedearAsync(Request, CancellationToken);
 
                 //Assert
-                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CreateCedearCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]

@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using CalculadoraCedears.Api.Infrastructure.Exceptions;
+using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
+
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace CalculadoraCedears.Api.Infrastructure.Filters
 {
@@ -11,7 +13,8 @@ namespace CalculadoraCedears.Api.Infrastructure.Filters
     {
         private readonly Dictionary<Type, HttpStatusCode> exceptionHttpStatusCodes = new()
         {
-            { typeof(ValidationException), HttpStatusCode.BadRequest }
+            { typeof(ValidationException), HttpStatusCode.BadRequest },
+            { typeof(AlreadyExistsCedearException), HttpStatusCode.Conflict },
         };
 
         private readonly IExceptionMessageBuilder exceptionMessageBuilder;
@@ -24,6 +27,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Filters
         public void OnException(ExceptionContext context)
         {
             var code = HttpStatusCode.InternalServerError;
+
             var exceptionMessage = exceptionMessageBuilder
                                .WithContext(context, code)
                                .WithExceptionMessage()
@@ -36,6 +40,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Filters
             if (exceptionHttpStatusCodes.ContainsKey(context.Exception.GetType()))
             {
                 code = exceptionHttpStatusCodes[context.Exception.GetType()];
+
                 if (context.Exception.Data.Contains("changeState"))
                 {
                     result = new JsonResult(context.Exception.Data["changeState"]);

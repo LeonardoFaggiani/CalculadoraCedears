@@ -10,11 +10,17 @@
             </summary>                
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.PostCedearAsync(CalculadoraCedears.Api.Dto.Cedears.Request.CreateCedearRequest,System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.PostCedearAsync(CalculadoraCedears.Api.Dto.Cedears.Request.CedearStockHoldingRequest,System.Threading.CancellationToken)">
             <summary>
             Create a Cedear
             </summary>        
             <param name="request"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetAsync(System.Threading.CancellationToken)">
+            <summary>
+            Devuelve todos los cedears activos
+            </summary>                
             <param name="cancellationToken"></param>
         </member>
         <member name="T:CalculadoraCedears.Api.CrossCutting.Resources.Messages">
@@ -31,6 +37,11 @@
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:CalculadoraCedears.Api.CrossCutting.Resources.Messages.CedearAlreadyExists">
+            <summary>
+              Looks up a localized string similar to Ya existe un cedear para la fecha ingresada.
             </summary>
         </member>
         <member name="P:CalculadoraCedears.Api.CrossCutting.Resources.Messages.OfflineServer">

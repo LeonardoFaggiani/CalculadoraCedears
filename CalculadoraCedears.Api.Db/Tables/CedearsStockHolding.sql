@@ -2,7 +2,7 @@
 (
     [Id]                    UNIQUEIDENTIFIER, 
     [Quantity]              INT                 NOT NULL,  
-    [EffectiveRatio]        DECIMAL(4,2)        NOT NULL, 
+    [EffectiveRatio]        DECIMAL(5,2)        NOT NULL, 
     [TodayChange]           DECIMAL(10, 2)      NOT NULL,
     [TodayChangePercent]    DECIMAL(5, 2)       NOT NULL,
     [SinceChange]           DECIMAL(10, 2)      NOT NULL,

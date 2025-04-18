@@ -61,6 +61,15 @@ namespace CalculadoraCedears.Api.CrossCutting.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ya existe un cedear para la fecha ingresada.
+        /// </summary>
+        public static string CedearAlreadyExists {
+            get {
+                return ResourceManager.GetString("CedearAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El servidor se encuentra fuera de servicio por favor intente más tarde..
         /// </summary>
         public static string OfflineServer {

@@ -36,11 +36,23 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// <param name="cancellationToken"></param>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> PostCedearAsync([FromBody] CreateCedearRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> PostCedearAsync([FromBody] CedearStockHoldingRequest request, CancellationToken cancellationToken)
         {
-            var query = new CreateCedearCommand(request);
+            var query = new CedearStockHoldingCommand(request);
 
             return Ok(await mediator.Send(query, cancellationToken));
+        }
+
+        /// <summary>
+        /// Devuelve todos los cedears activos
+        /// </summary>                
+        /// <param name="cancellationToken"></param>
+        [HttpGet]
+        [AllowAnonymous]        
+        [Produces("application/json", Type = typeof(CedearsQueryResponse))]
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        {
+            return Ok(await mediator.Send(new CedearsQuery(), cancellationToken));
         }
     }
 }

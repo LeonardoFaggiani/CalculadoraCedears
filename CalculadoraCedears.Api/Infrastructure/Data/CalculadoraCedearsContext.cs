@@ -62,6 +62,10 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.Property(e => e.Ticker)
                     .HasMaxLength(5)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Market)
+                .HasMaxLength(6)
+                .IsUnicode(false);
             });
 
             modelBuilder.Entity<CedearsStockHolding>(entity =>
@@ -77,7 +81,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.Property(e => e.PurchasePriceArs).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.PurchasePriceUsd).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.PurchaseValueUsd).HasColumnType("decimal(10, 2)");
-                entity.Property(e => e.EffectiveRatio).HasColumnType("decimal(4, 2)");
+                entity.Property(e => e.EffectiveRatio).HasColumnType("decimal(5, 2)");
                 entity.Property(e => e.SinceChange).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.SinceChangePercent).HasColumnType("decimal(5, 2)");
                 entity.Property(e => e.SinceDate).HasColumnType("datetime");

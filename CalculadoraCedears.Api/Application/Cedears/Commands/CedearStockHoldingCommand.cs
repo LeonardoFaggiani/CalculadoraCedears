@@ -4,6 +4,6 @@ using MediatR;
 
 namespace CalculadoraCedears.Api.Application.Cedears.Commands
 {
-    public record CreateCedearCommand(CreateCedearRequest request) : IRequest
+    public record CedearStockHoldingCommand(CedearStockHoldingRequest request) : IRequest
     { }
 }

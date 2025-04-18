@@ -8,18 +8,20 @@ namespace CalculadoraCedears.Api.Domian
 
         public Cedear(string name,
             string ticker,
+            string market,
             int ratio)
         {
             this.Name = name;
             this.Ticker = ticker;
+            this.Market = market;
             this.Ratio = ratio;
             this.CedearsStockHoldings = new List<CedearsStockHolding>();
         }
 
-
         public string Name { get; protected set; }
 
         public string Ticker { get; protected set; }
+        public string Market { get; protected set; }
 
         public int Ratio { get; protected set; }
 

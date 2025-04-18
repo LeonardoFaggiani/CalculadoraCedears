@@ -103,6 +103,9 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<ICedearRepository, CedearRepository>();
+            services.AddTransient<ICedearStockHoldingRepository, CedearStockHoldingRepository>();
+            services.AddTransient<IBrokerRepository, BrokerRepository>();
+
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
             return services;

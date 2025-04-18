@@ -1,6 +1,8 @@
-﻿namespace CalculadoraCedears.Api.Domian;
+﻿using NetDevPack.Domain;
 
-public partial class Broker
+namespace CalculadoraCedears.Api.Domian;
+
+public partial class Broker : Entity
 {
     protected Broker() { }
 
@@ -11,7 +13,7 @@ public partial class Broker
         this.CedearsStockHoldings = new List<CedearsStockHolding>();
     }
 
-    public int Id { get; set; }
+    public new int Id { get; set; }
 
     public string Name { get; protected set; }
 

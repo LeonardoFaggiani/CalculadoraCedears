@@ -1,10 +1,11 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using CalculadoraCedears.Api.Infrastructure.Data;
+
+using CommunityToolkit.Diagnostics;
 
 using Microsoft.EntityFrameworkCore;
 
 using NetDevPack.Data;
 using NetDevPack.Domain;
-using CalculadoraCedears.Api.Infrastructure.Data;
 
 namespace CalculadoraCedears.Api.Infrastructure.Repositories.Base
 {
