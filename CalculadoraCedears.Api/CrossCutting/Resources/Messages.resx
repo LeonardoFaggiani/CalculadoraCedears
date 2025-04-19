@@ -123,4 +123,7 @@
   <data name="OfflineServer" xml:space="preserve">
     <value>El servidor se encuentra fuera de servicio por favor intente más tarde.</value>
   </data>
+  <data name="PriceNotFound" xml:space="preserve">
+    <value>Hubo un fallo al buscar el  precio en GoogleFinance, revisa el ticker, verifica que este bien. como asi tambien el mercado. Puedes volver a intentar mas tarde.</value>
+  </data>
 </root>

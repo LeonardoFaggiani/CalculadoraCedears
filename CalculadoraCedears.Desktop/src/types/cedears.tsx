@@ -1,13 +1,13 @@
-interface Cedears {
-    ticker: string;
-    name: string;
-    quantity: number;
-    ratio: number;
-    value: number;
-    todayChange: number;
-    todayChangePercent: number;
-    sinceChange: number;
-    sinceChangePercent: number;
-    details: CedearsDetails[];
-  }
+import { StockHoldings } from "./stock-holdings";
+
+  export type CedearsStockResponse = {
+    cedearWithStockHoldings: Cedears[];
+  };
   
+  export type Cedears = {
+    id: string;
+    name: string;
+    ticker: string;
+    ratio: number;
+    cedearsStockHoldings: StockHoldings[];
+  };  

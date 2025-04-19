@@ -1,4 +1,4 @@
-﻿using CalculadoraCedears.Api.Domian;
+﻿using CalculadoraCedears.Api.Domain;
 using CalculadoraCedears.Api.Infrastructure.Extensions;
 
 using CommunityToolkit.Diagnostics;
@@ -6,7 +6,6 @@ using CommunityToolkit.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
 using NetDevPack.Data;
-using NetDevPack.Domain;
 using NetDevPack.Mediator;
 using NetDevPack.Messaging;
 
@@ -53,7 +52,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
 
             modelBuilder.Entity<Cedear>(entity =>
             {
-                entity.HasIndex(e => e.Ticker, "UK_Cedears").IsUnique();
+                entity.HasIndex(e => new { e.Ticker, e.Market }, "UK_Cedears_Ticker_Market").IsUnique();
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
                 entity.Property(e => e.Name)

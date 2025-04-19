@@ -77,5 +77,14 @@ namespace CalculadoraCedears.Api.CrossCutting.Resources {
                 return ResourceManager.GetString("OfflineServer", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hubo un fallo al buscar el  precio en GoogleFinance, revisa el ticker, verifica que este bien. como asi tambien el mercado. Puedes volver a intentar mas tarde..
+        /// </summary>
+        public static string PriceNotFound {
+            get {
+                return ResourceManager.GetString("PriceNotFound", resourceCulture);
+            }
+        }
     }
 }

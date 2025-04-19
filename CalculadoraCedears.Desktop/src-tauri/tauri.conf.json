@@ -18,8 +18,12 @@
       }
     ],
     "security": {
-      "csp": null
-    }
+      "csp": null,
+      "dangerousDisableAssetCspModification": true
+    }    
+  },
+  "plugins": {
+    "http": null
   },
   "bundle": {
     "active": true,

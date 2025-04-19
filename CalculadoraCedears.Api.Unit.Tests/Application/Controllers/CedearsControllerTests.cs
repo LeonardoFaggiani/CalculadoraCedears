@@ -1,9 +1,8 @@
-﻿using CalculadoraCedears.Api.Application.Cedears.Commands;
-using CalculadoraCedears.Api.Application.Cedears.Queries;
+﻿using CalculadoraCedears.Api.Application.Cedears.Queries;
+using CalculadoraCedears.Api.Application.CedearsStockHolding.Commands;
 using CalculadoraCedears.Api.Application.Controllers;
 using CalculadoraCedears.Api.Dto;
 using CalculadoraCedears.Api.Dto.Cedears;
-using CalculadoraCedears.Api.Dto.Cedears.Request;
 using CalculadoraCedears.Api.Unit.Tests.Base;
 
 using FluentAssertions;
@@ -18,9 +17,9 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
     {
         public CedearsControllerTests()
         {
-            var cedaerDtos = new List<CedaerDto>()
+            var cedaerDtos = new List<CedearDto>()
             {
-                new CedaerDto()
+                new CedearDto()
                 {
                     Id = new Guid("5e832cf5-6934-485f-bd8a-207eb3eadc4c"),
                     Name = "Tests"
@@ -69,36 +68,6 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
 
                 //Assert
                 result.As<OkObjectResult>().Value.As<SearchCedearsByTickerQueryResponse>().Cedears.First().Name.Should().Be("Tests");
-            }
-        }
-
-        public class The_Method_PostCedearsAsync : CedearsControllerTests
-        {
-            private CedearStockHoldingRequest Request;
-
-            public The_Method_PostCedearsAsync()
-            {
-                Request = new CedearStockHoldingRequest();
-            }
-
-            [Fact]
-            public async Task Should_verify_if_mediator_was_called()
-            {
-                //Act                
-                await Sut.PostCedearAsync(Request, CancellationToken);
-
-                //Assert
-                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-            }
-
-            [Fact]
-            public async Task Should_verify_query_results()
-            {
-                //Act                
-                var result = await Sut.PostCedearAsync(Request, CancellationToken);
-
-                //Assert
-                result.As<OkObjectResult>().Value.As<IActionResult>();
             }
         }
     }

@@ -8,7 +8,7 @@
     CONSTRAINT [PK_Cedears] PRIMARY KEY CLUSTERED ([Id] ASC)
 )
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [UK_Cedears] ON [dbo].[Cedears]
+CREATE UNIQUE NONCLUSTERED INDEX [UK_Cedears_Ticker_Market] ON [dbo].[Cedears]
 (
-    [Ticker]
+    [Ticker],[Market]
 )

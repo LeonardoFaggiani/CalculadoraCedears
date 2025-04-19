@@ -1,4 +1,5 @@
 interface PriceGainLossChangeValue {
     value: number;
-    percent: number;
+    percent?: number | null;
+    isPercent: boolean
   }

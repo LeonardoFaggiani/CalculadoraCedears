@@ -9,24 +9,29 @@ import {
 import { ChevronDown, ChevronUp } from "lucide-react";
 import CedearsDetailTable from "../cedears-details/cedears-detail-table";
 import PriceGainLoss from "../price-gain-loss/price-gain-loss";
+import { Cedears } from "@/types/cedears";
+import { CedearsInfoTab } from "@/types/cedears-info-tabs";
+import { getTotalChange, getTotalChangeSummary } from "@/lib/utils";
+import { getTotalChangePercentage } from "@/lib/utils";
 
 export default function CedearsInfoTabs({
   cedears,
   expandedTicker,
   toggleCedear,
-}: CedearsInfoTabs) {
+}: CedearsInfoTab) {
+
   return (
     <Tabs defaultValue="summary" className="mb-6">
       <TabsContent value="summary" className="mt-0">
         <div className="space-y-4">
-          {cedears.map((cedear) => (
+          {cedears?.map((cedear:Cedears) => (            
             <Card key={cedear.ticker} className="overflow-hidden">
               <Collapsible
                 open={expandedTicker[cedear.ticker]}
                 onOpenChange={() => toggleCedear(cedear.ticker)}
               >
                 <CollapsibleTrigger asChild>
-                  <div className="flex items-center justify-between pr-6 pl-6 cursor-pointer hover:bg-gray-50">
+                  <div className="flex items-center justify-between pr-6 pl-6 cursor-pointer">
                     <div className="flex items-center space-x-2">
                       {expandedTicker[cedear.ticker] ? (
                         <ChevronDown className="w-5 h-5 text-gray-500" />
@@ -40,11 +45,11 @@ export default function CedearsInfoTabs({
                         {cedear.ticker}
                       </Badge>
                       <Badge variant="outline" className="text-xs">
-                        {cedear.ratio}
+                        Ratio {cedear.ratio}
                       </Badge>
                     </div>
                     <div className="flex items-center space-x-8">
-                      <div>
+                      {/* <div>
                         <div className="text-xs text-gray-500">PRECIO ACTUAL</div>
                         <div>${cedear.value?.toLocaleString()}</div>
                       </div>
@@ -53,13 +58,13 @@ export default function CedearsInfoTabs({
                         <PriceGainLoss value={cedear.todayChange}
                           percent={cedear.todayChangePercent}
                           />
-                      </div>
+                      </div> */}
                       <div>
                         <div className="text-xs text-gray-500">
                           DESDE LA COMPRA
                         </div>
-                        <PriceGainLoss  value={cedear.sinceChange}
-                          percent={cedear.sinceChangePercent}
+                        <PriceGainLoss isPercent={false} value={getTotalChangeSummary(cedear).sinceChange}
+                            percent={getTotalChangeSummary(cedear).sinceChangePercent}
                           />
                       </div>
                     </div>
@@ -67,7 +72,7 @@ export default function CedearsInfoTabs({
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <CardContent className="p-4">
-                    <CedearsDetailTable details={cedear.details} />
+                    <CedearsDetailTable ticker={cedear.ticker} stockHoldings={cedear.cedearsStockHoldings} />
                   </CardContent>
                 </CollapsibleContent>
               </Collapsible>

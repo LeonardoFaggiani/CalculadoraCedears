@@ -14,7 +14,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
-using CalculadoraCedears.Api.Domian.Events;
+using CalculadoraCedears.Api.Domain.Events;
 using CalculadoraCedears.Api.Infrastructure.Extensions;
 using CalculadoraCedears.Api.Infrastructure.Repositories.Base;
 using CalculadoraCedears.Api.CrossCutting.Bus;
@@ -105,7 +105,8 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             services.AddTransient<ICedearRepository, CedearRepository>();
             services.AddTransient<ICedearStockHoldingRepository, CedearStockHoldingRepository>();
             services.AddTransient<IBrokerRepository, BrokerRepository>();
-
+            services.AddTransient<IGoogleFinanceRepository, GoogleFinanceRepository>();
+            
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
             return services;

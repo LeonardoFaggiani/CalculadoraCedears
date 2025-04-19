@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using CalculadoraCedears.Api.Domian;
+using CalculadoraCedears.Api.Domain;
 using CalculadoraCedears.Api.Dto;
 using CalculadoraCedears.Api.Dto.Cedears;
 using CalculadoraCedears.Api.Infrastructure.Repositories;
@@ -33,7 +33,7 @@ namespace CalculadoraCedears.Api.Application.Cedears.Queries
             IEnumerable<Cedear> cedears = await cedearRepository.All().Where(c => c.Ticker.ToLower().Contains(query.Ticker.ToLower()))
                 .ToListAsync();
 
-            var cedaerDtos = mapper.Map<IEnumerable<Cedear>, IEnumerable<CedaerDto>>(cedears);
+            var cedaerDtos = mapper.Map<IEnumerable<Cedear>, IEnumerable<CedearDto>>(cedears);
 
             return new SearchCedearsByTickerQueryResponse(cedaerDtos);
         }

@@ -1,64 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SummaryPortfolio from "../summary-portfolio/summary-portfolio";
 import CedearsInfoTabs from "../cedears-info/cedears-info-tabs";
-
-const cedears: Cedears[] = [
-  {
-    ticker: "JMIA",
-    name: "JUMIA TECHNOLOGIES AG",
-    quantity: 325,
-    ratio: 1,
-    value: 9673,
-    todayChange: -61.26,
-    todayChangePercent: -0.6,
-    sinceChange: -331.94,
-    sinceChangePercent: -3.3,
-    details: [
-      {
-        ticker: "JMIA",
-        sinceDate: new Date(),
-        cclPurchase: 1033,
-        quantity: 325,
-        currentPriceUsd: 99,
-        currentValueUsd: 99,
-        pricePurchase: 89,
-        pricePurchaseUsd: 11,
-        valuePurchaseUsd: 231,
-      },
-    ],
-  },
-  {
-    ticker: "GOOGL",
-    name: "ALPHABET INC.",
-    quantity: 220,
-    ratio: 58,
-    value: 9673,
-    todayChange: -61.26,
-    todayChangePercent: -0.6,
-    sinceChange: -331.94,
-    sinceChangePercent: -3.3,
-    details: [
-      {
-        ticker: "GOOGL",
-        sinceDate: new Date(),
-        cclPurchase: 1660,
-        quantity: 20,
-        currentPriceUsd: 99,
-        currentValueUsd: 99,
-        pricePurchase: 89,
-        pricePurchaseUsd: 11,
-        valuePurchaseUsd: 333,
-      },
-    ],
-  },
-];
+import { getAllCedears } from "@/api/cedears-api";
+import { CedearsStockResponse } from "@/types/cedears";
 
 export default function Dashboard() {
+
+
+  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
     {}
   );
+
+  useEffect(() => {
+    loadCedears();
+  }, []);
+
+
+  const loadCedears = async () => {
+    try {
+      setLoading(true);            
+      await getAllCedears().then(setCedearsStockHolding).catch(console.log);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleCedear = (cedearsId: string) => {
     setExpandedTicker((prev) => ({
@@ -66,7 +38,7 @@ export default function Dashboard() {
       [cedearsId]: !prev[cedearsId],
     }));
   };
-    
+
   const portfolioValue = 274980;
   const todaysGain = 706.22;
   const todaysGainPercent = 0.3;
@@ -80,7 +52,7 @@ export default function Dashboard() {
           todaysGainPercent={todaysGainPercent}
         />
         <CedearsInfoTabs
-          cedears={cedears}
+          cedears={cedearsStockResponse?.cedearWithStockHoldings}
           expandedTicker={expandedTicker}
           toggleCedear={toggleCedear}
         />

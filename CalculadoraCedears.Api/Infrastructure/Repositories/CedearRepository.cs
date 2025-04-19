@@ -1,4 +1,4 @@
-﻿using CalculadoraCedears.Api.Domian;
+﻿using CalculadoraCedears.Api.Domain;
 using CalculadoraCedears.Api.Infrastructure.Data;
 using CalculadoraCedears.Api.Infrastructure.Repositories.Base;
 

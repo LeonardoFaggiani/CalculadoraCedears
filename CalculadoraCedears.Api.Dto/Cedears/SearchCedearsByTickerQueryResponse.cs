@@ -4,11 +4,11 @@ namespace CalculadoraCedears.Api.Dto.Cedears
 {
     public class SearchCedearsByTickerQueryResponse
     {
-        public SearchCedearsByTickerQueryResponse(IEnumerable<CedaerDto> cedaerDtos)
+        public SearchCedearsByTickerQueryResponse(IEnumerable<CedearDto> cedaerDtos)
         {
             Cedears = cedaerDtos;
         }
 
-        public IEnumerable<CedaerDto> Cedears { get; }
+        public IEnumerable<CedearDto> Cedears { get; }
     }
 }

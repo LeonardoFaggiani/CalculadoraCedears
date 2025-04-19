@@ -10,16 +10,16 @@
             </summary>                
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.PostCedearAsync(CalculadoraCedears.Api.Dto.Cedears.Request.CedearStockHoldingRequest,System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.PostAsync(CalculadoraCedears.Api.Dto.CedearsStockHolding.Request.CedearStockHoldingRequest,System.Threading.CancellationToken)">
             <summary>
-            Create a Cedear
+            Crea un CedearsStockHolding
             </summary>        
             <param name="request"></param>
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetAsync(System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.GetAsync(System.Threading.CancellationToken)">
             <summary>
-            Devuelve todos los cedears activos
+            Devuelve todos los CedearsStockHolding activos
             </summary>                
             <param name="cancellationToken"></param>
         </member>
@@ -47,6 +47,11 @@
         <member name="P:CalculadoraCedears.Api.CrossCutting.Resources.Messages.OfflineServer">
             <summary>
               Looks up a localized string similar to El servidor se encuentra fuera de servicio por favor intente más tarde..
+            </summary>
+        </member>
+        <member name="P:CalculadoraCedears.Api.CrossCutting.Resources.Messages.PriceNotFound">
+            <summary>
+              Looks up a localized string similar to Hubo un fallo al buscar el  precio en GoogleFinance, revisa el ticker, verifica que este bien. como asi tambien el mercado. Puedes volver a intentar mas tarde..
             </summary>
         </member>
     </members>
