@@ -11,8 +11,7 @@ import CedearsDetailTable from "../cedears-details/cedears-detail-table";
 import PriceGainLoss from "../price-gain-loss/price-gain-loss";
 import { Cedears } from "@/types/cedears";
 import { CedearsInfoTab } from "@/types/cedears-info-tabs";
-import { getTotalChange, getTotalChangeSummary } from "@/lib/utils";
-import { getTotalChangePercentage } from "@/lib/utils";
+import { getTotalChangeSummary } from "@/lib/utils";
 
 export default function CedearsInfoTabs({
   cedears,
@@ -49,16 +48,14 @@ export default function CedearsInfoTabs({
                       </Badge>
                     </div>
                     <div className="flex items-center space-x-8">
-                      {/* <div>
-                        <div className="text-xs text-gray-500">PRECIO ACTUAL</div>
-                        <div>${cedear.value?.toLocaleString()}</div>
+                      <div>
+                        <div className="text-xs text-gray-500">TOTAL VALOR COMPRA</div>
+                        <div>${getTotalChangeSummary(cedear).totalPurchase}</div>
                       </div>
                       <div>
-                        <div className="text-xs text-gray-500">HOY</div>
-                        <PriceGainLoss value={cedear.todayChange}
-                          percent={cedear.todayChangePercent}
-                          />
-                      </div> */}
+                        <div className="text-xs text-gray-500">TOTAL VALOR ACTUAL</div>
+                        <div>${getTotalChangeSummary(cedear).totalCurrent}</div>
+                      </div>
                       <div>
                         <div className="text-xs text-gray-500">
                           DESDE LA COMPRA
@@ -72,7 +69,7 @@ export default function CedearsInfoTabs({
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <CardContent className="p-4">
-                    <CedearsDetailTable ticker={cedear.ticker} stockHoldings={cedear.cedearsStockHoldings} />
+                    <CedearsDetailTable stockHoldings={cedear.cedearsStockHoldings} />
                   </CardContent>
                 </CollapsibleContent>
               </Collapsible>

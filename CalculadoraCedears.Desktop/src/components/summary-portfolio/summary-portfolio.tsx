@@ -1,11 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
+import { BadgePlus } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 export default function SummaryPortfolio({
   portfolioValue,
   todaysGain,
   todaysGainPercent,
 }: SummaryPortfolio) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex justify-between items-center mb-8">
       <div className="flex space-x-12">
@@ -30,7 +34,13 @@ export default function SummaryPortfolio({
       </div>
 
       <div className="flex space-x-2">
-        <Button variant="outline" size="sm">
+        <Button
+          variant="outline"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => navigate("/cedear")}
+        >
+          <BadgePlus />
           Ticker
         </Button>
       </div>

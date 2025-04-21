@@ -9,11 +9,9 @@ import {
 import { StockHoldings } from "@/types/stock-holdings";
 import PriceGainLoss from "../price-gain-loss/price-gain-loss";
 
-export default function CedearsDetailTable({
-  ticker,
+export default function CedearsDetailTable({  
   stockHoldings,
 }: {
-  ticker:string,
   stockHoldings: StockHoldings[];
 }) {
   return (
@@ -34,7 +32,7 @@ export default function CedearsDetailTable({
       </TableHeader>
       <TableBody>
         {stockHoldings.map((stock) => (          
-          <TableRow key={ticker} className="hover:bg-gray-100">
+          <TableRow key={stockHoldings.indexOf(stock)} className="hover:bg-gray-100">
             <TableCell className="font-center">{new Date(stock.sinceDate).toLocaleDateString()}</TableCell>
             <TableCell className="text-center">{stock.exchangeRateCcl}</TableCell>
             <TableCell className="text-center">{stock.quantity}</TableCell>

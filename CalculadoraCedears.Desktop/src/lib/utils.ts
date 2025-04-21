@@ -33,8 +33,8 @@ export function getTotalChange(cedear: Cedears) {
 
 
 export function getTotalChangeSummary(cedear: Cedears) {
-  const totalPurchase = cedear.cedearsStockHoldings.reduce((acc, h) => acc + h.purchaseValueUsd, 0);
-  const totalCurrent = cedear.cedearsStockHoldings.reduce((acc, h) => acc + h.currentValueUsd, 0);
+  const totalPurchase = parseFloat(cedear.cedearsStockHoldings.reduce((acc, h) => acc + h.purchaseValueUsd, 0).toFixed(2));
+  const totalCurrent = parseFloat(cedear.cedearsStockHoldings.reduce((acc, h) => acc + h.currentValueUsd, 0).toFixed(2));
 
   const sinceChange = totalCurrent - totalPurchase;
   const sinceChangePercent = totalPurchase > 0
@@ -47,16 +47,4 @@ export function getTotalChangeSummary(cedear: Cedears) {
     sinceChange,
     sinceChangePercent,
   };
-}
-
-export function getTotalChangePercentage(cedear: Cedears) {  
-  const total = cedear.cedearsStockHoldings.reduce(
-    (acc, curr) => {
-      acc.sinceChangePercent += curr.sinceChangePercent;
-      return acc;
-    },
-    { sinceChangePercent: 0 }
-  );
-
-  return total;
 }

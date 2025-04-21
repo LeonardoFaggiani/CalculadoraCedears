@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "url": "/",
         "title": "calculadoracedearsdesktop",
         "width": 800,
         "height": 600

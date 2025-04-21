@@ -7,9 +7,8 @@ import { getAllCedears } from "@/api/cedears-api";
 import { CedearsStockResponse } from "@/types/cedears";
 
 export default function Dashboard() {
-
-
-  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
+  const [cedearsStockResponse, setCedearsStockHolding] =
+    useState<CedearsStockResponse>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
@@ -20,10 +19,9 @@ export default function Dashboard() {
     loadCedears();
   }, []);
 
-
   const loadCedears = async () => {
     try {
-      setLoading(true);            
+      setLoading(true);
       await getAllCedears().then(setCedearsStockHolding).catch(console.log);
     } catch (err) {
       console.error(err);
@@ -44,19 +42,17 @@ export default function Dashboard() {
   const todaysGainPercent = 0.3;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 container mx-auto p-6">
-        <SummaryPortfolio
-          portfolioValue={portfolioValue}
-          todaysGain={todaysGain}
-          todaysGainPercent={todaysGainPercent}
-        />
-        <CedearsInfoTabs
-          cedears={cedearsStockResponse?.cedearWithStockHoldings}
-          expandedTicker={expandedTicker}
-          toggleCedear={toggleCedear}
-        />
-      </main>
-    </div>
+    <>
+      <SummaryPortfolio
+        portfolioValue={portfolioValue}
+        todaysGain={todaysGain}
+        todaysGainPercent={todaysGainPercent}
+      />
+      <CedearsInfoTabs
+        cedears={cedearsStockResponse?.cedearWithStockHoldings}
+        expandedTicker={expandedTicker}
+        toggleCedear={toggleCedear}
+      />
+    </>
   );
 }
