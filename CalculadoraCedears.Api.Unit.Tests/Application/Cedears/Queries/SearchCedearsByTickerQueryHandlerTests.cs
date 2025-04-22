@@ -12,7 +12,7 @@ using Moq;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedears.Queries
 {
-    public class SearchCedearsByTickerQueryHandlerTests : BaseTestClass<SearchCedearsByTickerQueryHandler>
+    public class SearchCedearsByTickerQueryHandlerTests : BaseTestClass<CedearsQueryHandler>
     {
         private readonly ICedearRepository CedearRepository;
         private readonly IMapper Mapper;
@@ -27,7 +27,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedears.Queries
             Mock.Get(CedearRepository).Setup(x => x.All()).Returns(cedears.AsQueryable().BuildMock());
             Mock.Get(Mapper).Setup(x => x.Map<IEnumerable<Cedear>, IEnumerable<CedearDto>>(It.IsAny<IEnumerable<Cedear>>())).Returns(new List<CedearDto> { new CedearDto() { Id = Guid.NewGuid(), Name = "Testing", Ticker = "TE" } });
 
-            Sut = new SearchCedearsByTickerQueryHandler(CedearRepository, Mapper);
+            Sut = new CedearsQueryHandler(CedearRepository, Mapper);
         }
 
         public class The_Constructor : SearchCedearsByTickerQueryHandlerTests
@@ -36,23 +36,23 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Cedears.Queries
             public void Should_throw_an_ArgumentNullException_when_cedearRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new SearchCedearsByTickerQueryHandler(null, Mapper));
+                Assert.Throws<ArgumentNullException>(() => new CedearsQueryHandler(null, Mapper));
             }
 
             [Fact]
             public void Should_throw_an_ArgumentNullException_when_mapper_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new SearchCedearsByTickerQueryHandler(CedearRepository, null));
+                Assert.Throws<ArgumentNullException>(() => new CedearsQueryHandler(CedearRepository, null));
             }
         }
 
         public class The_Method_Handle : SearchCedearsByTickerQueryHandlerTests
         {
-            private SearchCedearsByTickerQuery SearchCedearsByTickerQuery;
+            private CedearsQuery SearchCedearsByTickerQuery;
             public The_Method_Handle()
             {
-                SearchCedearsByTickerQuery = new SearchCedearsByTickerQuery
+                SearchCedearsByTickerQuery = new CedearsQuery
                 {
                     Ticker = "TE"
                 };

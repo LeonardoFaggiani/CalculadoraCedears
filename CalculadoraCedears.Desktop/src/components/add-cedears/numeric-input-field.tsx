@@ -29,8 +29,7 @@ export function NumericInputFields<T extends FieldValues>({
       numericType === "int" ? /^\d*$/.test(val) : /^\d*\.?\d*$/.test(val);
 
     if (isValid) {
-      const parsed =
-        numericType === "int" ? parseInt(val, 10) : parseFloat(val);
+      const parsed = numericType === "int" ? parseInt(val, 10) : parseFloat(val);
       form.setValue(name, isNaN(parsed) ? undefined : (parsed as any));
     }
   };

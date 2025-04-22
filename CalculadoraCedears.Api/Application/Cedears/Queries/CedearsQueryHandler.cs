@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CalculadoraCedears.Api.Application.Cedears.Queries
 {
-    public class SearchCedearsByTickerQueryHandler : IRequestHandler<SearchCedearsByTickerQuery, SearchCedearsByTickerQueryResponse>
+    public class CedearsQueryHandler : IRequestHandler<CedearsQuery, CedearsQueryResponse>
     {
         private readonly ICedearRepository cedearRepository;
         private readonly IMapper mapper;
 
-        public SearchCedearsByTickerQueryHandler(ICedearRepository cedearRepository,
+        public CedearsQueryHandler(ICedearRepository cedearRepository,
             IMapper mapper)
         {
             Guard.IsNotNull(cedearRepository, nameof(cedearRepository));
@@ -28,14 +28,14 @@ namespace CalculadoraCedears.Api.Application.Cedears.Queries
             this.mapper = mapper;
         }
 
-        public async Task<SearchCedearsByTickerQueryResponse> Handle(SearchCedearsByTickerQuery query, CancellationToken cancellationToken)
+        public async Task<CedearsQueryResponse> Handle(CedearsQuery query, CancellationToken cancellationToken)
         {
-            IEnumerable<Cedear> cedears = await cedearRepository.All().Where(c => c.Ticker.ToLower().Contains(query.Ticker.ToLower()))
-                .ToListAsync();
+            IEnumerable<Cedear> cedears = await cedearRepository.All()
+                .ToListAsync(cancellationToken);
 
             var cedaerDtos = mapper.Map<IEnumerable<Cedear>, IEnumerable<CedearDto>>(cedears);
 
-            return new SearchCedearsByTickerQueryResponse(cedaerDtos);
+            return new CedearsQueryResponse(cedaerDtos);
         }
     }
 }

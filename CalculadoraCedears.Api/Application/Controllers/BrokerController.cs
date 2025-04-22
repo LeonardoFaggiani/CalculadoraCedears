@@ -1,6 +1,6 @@
-using CalculadoraCedears.Api.Application.Cedears.Queries;
+﻿using CalculadoraCedears.Api.Application.Brokers.Queries;
 using CalculadoraCedears.Api.Application.Controllers.Base;
-using CalculadoraCedears.Api.Dto.Cedears;
+using CalculadoraCedears.Api.Dto.Brokers;
 
 using MediatR;
 
@@ -9,21 +9,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCedears.Api.Application.Controllers
 {
-    public class CedearsController : ApiController
+    public class BrokerController : ApiController
     {
-        public CedearsController(IMediator mediator) : base(mediator)
+        public BrokerController(IMediator mediator) : base(mediator)
         { }
 
         /// <summary>
-        /// Devuelve todos los cedears donde coindica el ticker
+        /// Devuelve todos los brokers
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpGet]
-        [AllowAnonymous]
-        [Produces("application/json", Type = typeof(CedearsQueryResponse))]
+        [AllowAnonymous]        
+        [Produces("application/json", Type = typeof(BrokerQueryResponse))]
         public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
-            return Ok(await mediator.Send(new CedearsQuery(), cancellationToken));
+            return Ok(await mediator.Send(new BrokerQuery(), cancellationToken));
         }
     }
 }

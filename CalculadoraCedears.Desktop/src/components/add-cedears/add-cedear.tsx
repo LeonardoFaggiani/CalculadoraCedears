@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Check, CalendarIcon, ArrowLeftCircle } from "lucide-react";
-
 import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar } from "../ui/calendar";
@@ -31,63 +30,48 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { formSchema } from "@/lib/form-schema";
 import { SelectItemField } from "./select-item-field";
-import { ListItem } from "@/types/list-item";
 import { NumericInputFields } from "./numeric-input-field";
-
-const brokers: ListItem[] = [
-  { id: "iol", label: "InvertirOnline" },
-  { id: "ppi", label: "Portfolio Personal Inversiones" },
-  { id: "balanz", label: "Balanz" },
-  { id: "bull", label: "Bull Market Brokers" },
-  { id: "cocos", label: "Cocos Capital" },
-];
-
-const cedears: ListItem[] = [
-  { id: "AAPL", label: "Apple Inc." },
-  { id: "AMZN", label: "Amazon.com Inc." },
-  { id: "GOOGL", label: "Alphabet Inc. (Google)" },
-  { id: "MSFT", label: "Microsoft Corporation" },
-  { id: "TSLA", label: "Tesla Inc." },
-  { id: "META", label: "Meta Platforms Inc." },
-  { id: "NFLX", label: "Netflix Inc." },
-  { id: "DIS", label: "The Walt Disney Company" },
-  { id: "KO", label: "The Coca-Cola Company" },
-  { id: "PEP", label: "PepsiCo Inc." },
-  { id: "MELI", label: "MercadoLibre Inc." },
-  { id: "NVDA", label: "NVIDIA Corporation" },
-  { id: "AMD", label: "Advanced Micro Devices Inc." },
-  { id: "INTC", label: "Intel Corporation" },
-  { id: "PYPL", label: "PayPal Holdings Inc." },
-  { id: "V", label: "Visa Inc." },
-  { id: "MA", label: "Mastercard Incorporated" },
-  { id: "JPM", label: "JPMorgan Chase & Co." },
-  { id: "BAC", label: "Bank of America Corporation" },
-  { id: "WMT", label: "Walmart Inc." },
-];
+import { postCedearAsync } from "@/api/cedears-api";
+import { CreateCedear } from "@/types/create-cedear";
 
 export default function AddCedear() {
-  const [broker, setBroker] = useState("");
-  const [cedear, setCedear] = useState("");
-  const [fechaCompra, setFechaCompra] = useState<Date | undefined>(new Date());
   const [openCalendar, setOpenCalendar] = useState(false);
   const navigate = useNavigate();
+  const { brokers, cedears } = useLoaderData();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       broker: "",
       cedear: "",
-      cantidad: 0,
-      fechaCompra: undefined,
-      dolarCcl: 0,
-      precioCompra: 0,
+      quantity: 0,
+      sinceDate: undefined,
+      exchangeRateCCL: 0,
+      purchasePriceArs: 0,
     },
   });
 
-  const onSubmit = (data: any) => {};
+  const onSubmit = async (data: any) => {
+    const formValues = form.getValues();
+
+    const request: CreateCedear = {
+      brokerId: formValues.broker,
+      cedearId: formValues.cedear,
+      exchangeRateCCL: formValues.exchangeRateCCL,
+      purchasePriceArs: formValues.purchasePriceArs,
+      quantity: formValues.quantity,
+      sinceDate: formValues.sinceDate,
+    };
+
+    await postCedearAsync(request)
+      .then(() => {
+        navigate("/")
+      })
+      .catch(console.log);
+  };
 
   return (
     <Card className="w-full max-w-lg mx-auto">
@@ -98,15 +82,13 @@ export default function AddCedear() {
         </CardDescription>
       </CardHeader>
       <Form {...form}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <SelectItemField
               form={form}
               name="broker"
               label="Broker"
               items={brokers}
-              selected={broker}
-              setSelected={setBroker}
               placeholder="Seleccionar broker..."
             />
 
@@ -115,8 +97,6 @@ export default function AddCedear() {
               name="cedear"
               label="Cedear"
               items={cedears}
-              selected={cedear}
-              setSelected={setCedear}
               placeholder="Seleccionar cedear..."
               searchPlaceholder="Ingresar ticker..."
               searchable
@@ -124,7 +104,7 @@ export default function AddCedear() {
 
             <NumericInputFields
               form={form}
-              name="cantidad"
+              name="quantity"
               label="Cantidad"
               placeholder="Cantidad"
               numericType="int"
@@ -133,8 +113,8 @@ export default function AddCedear() {
 
             <FormField
               control={form.control}
-              name="fechaCompra"
-              render={() => (
+              name="sinceDate"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fecha</FormLabel>
                   <FormControl>
@@ -143,20 +123,20 @@ export default function AddCedear() {
                         <Button
                           variant="outline"
                           className="w-full justify-start text-left font-normal"
-                          id="fechaCompra"
+                          id="sinceDate"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {fechaCompra
-                            ? format(fechaCompra, "PPP", { locale: es })
-                            : "Seleccionar fecha"}
+                          {field.value
+                            ? format(field.value, "PPP", { locale: es })
+                            : "Seleccionar fecha de compra"}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
                         <Calendar
                           mode="single"
-                          selected={fechaCompra}
+                          selected={field.value}
                           onSelect={(date) => {
-                            setFechaCompra(date);
+                            field.onChange(date);
                             setOpenCalendar(false);
                           }}
                           initialFocus
@@ -171,7 +151,7 @@ export default function AddCedear() {
 
             <NumericInputFields
               form={form}
-              name="dolarCcl"
+              name="exchangeRateCCL"
               label="Dolar CCL"
               placeholder="0.00"
               numericType="float"
@@ -181,7 +161,7 @@ export default function AddCedear() {
 
             <NumericInputFields
               form={form}
-              name="precioCompra"
+              name="purchasePriceArs"
               label="Precio Compra (Ars)"
               placeholder="0.00"
               numericType="float"
@@ -194,12 +174,10 @@ export default function AddCedear() {
               type="button"
               className="cursor-pointer mr-5"
               onClick={() => navigate("/")}
-            >
-              {" "}
+            >              
               <ArrowLeftCircle /> Volver
             </Button>
-            <Button type="submit" className="cursor-pointer">
-              {" "}
+            <Button type="submit" className="cursor-pointer">              
               <Check /> Agregar a Portfolio
             </Button>
           </CardFooter>

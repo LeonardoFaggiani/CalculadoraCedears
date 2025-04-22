@@ -26,7 +26,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
                 }
             };
 
-            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<SearchCedearsByTickerQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SearchCedearsByTickerQueryResponse(cedaerDtos));
+            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CedearsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new CedearsQueryResponse(cedaerDtos));
             Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()));
 
             Sut = new CedearsController(Mediator);
@@ -42,32 +42,26 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
             }
         }
 
-        public class The_Method_GetSearchByTickerAsync : CedearsControllerTests
+        public class The_Method_GetAsync : CedearsControllerTests
         {
-            private SearchCedearsByTickerQuery Query;
-            public The_Method_GetSearchByTickerAsync()
-            {
-                this.Query = new SearchCedearsByTickerQuery();
-            }
-
             [Fact]
             public async Task Should_verify_if_mediator_was_called()
             {
                 //Act                
-                await Sut.GetSearchByTickerAsync(this.Query, CancellationToken);
+                await Sut.GetAsync(CancellationToken);
 
                 //Assert
-                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<SearchCedearsByTickerQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CedearsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             }
 
             [Fact]
             public async Task Should_verify_query_results()
             {
                 //Act                
-                var result = await Sut.GetSearchByTickerAsync(this.Query, CancellationToken);
+                var result = await Sut.GetAsync(CancellationToken);
 
                 //Assert
-                result.As<OkObjectResult>().Value.As<SearchCedearsByTickerQueryResponse>().Cedears.First().Name.Should().Be("Tests");
+                result.As<OkObjectResult>().Value.As<CedearsQueryResponse>().Cedears.First().Name.Should().Be("Tests");
             }
         }
     }

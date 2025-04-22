@@ -26,15 +26,12 @@ export function SelectItemField<T extends FieldValues>({
   name,
   label,
   items,
-  selected,
-  setSelected,
   placeholder = "Seleccionar...",
   className = "w-full justify-between",
   popoverWidth = "w-[450px]",
   searchable = false,
   emptyText = "No se encontraron resultados.",
   searchPlaceholder = "Ingresa ticker...",
-  customFilter,
 }: SelectFieldProps<T>) {
   const [open, setOpen] = useState(false);
 
@@ -42,27 +39,26 @@ export function SelectItemField<T extends FieldValues>({
 
   const filteredOptions = useMemo(() => {
     if (!searchable || searchTerm.trim() === "") return items;
-    return items.filter((o) =>
-      customFilter
-        ? customFilter(o, searchTerm)
-        : o.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          o.id.toLowerCase().includes(searchTerm.toLowerCase())
+    return items.filter(
+      (o) =>
+        o.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        o.id.toString().toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [items, searchTerm, searchable, customFilter]);
+  }, [items, searchTerm, searchable]);
 
   return (
     <FormField
       control={form.control}
       name={name}
-      render={() => (
+      render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" role="combobox" className={className}>
-                  {selected
-                    ? items.find((o) => o.id === selected)?.label
+                  {field.value
+                    ? items.find((o) => o.id === field.value)?.label
                     : placeholder}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -82,11 +78,11 @@ export function SelectItemField<T extends FieldValues>({
                       {filteredOptions.map((o) => (
                         <CommandItem
                           key={o.id}
-                          value={o.id}
+                          value={o.label}
                           onSelect={(currentValue) => {
-                            setSelected(
-                              currentValue === selected ? "" : currentValue
-                            );
+                            const selectedItem = items.find((item) => item.label === currentValue);
+                            const newValue = selectedItem && selectedItem.id === field.value ? "" : selectedItem?.id || "";
+                            field.onChange(newValue);
                             setOpen(false);
                             setSearchTerm("");
                           }}
@@ -94,7 +90,7 @@ export function SelectItemField<T extends FieldValues>({
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              selected === o.id ? "opacity-100" : "opacity-0"
+                              field.value === o.id ? "opacity-100" : "opacity-0"
                             )}
                           />
                           {o.label}

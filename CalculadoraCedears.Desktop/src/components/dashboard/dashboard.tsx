@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import SummaryPortfolio from "../summary-portfolio/summary-portfolio";
 import CedearsInfoTabs from "../cedears-info/cedears-info-tabs";
-import { getAllCedears } from "@/api/cedears-api";
+import { getCedearStocksAsync } from "@/api/cedears-api";
 import { CedearsStockResponse } from "@/types/cedears";
 
 export default function Dashboard() {
-  const [cedearsStockResponse, setCedearsStockHolding] =
-    useState<CedearsStockResponse>();
+
+  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
@@ -22,7 +22,7 @@ export default function Dashboard() {
   const loadCedears = async () => {
     try {
       setLoading(true);
-      await getAllCedears().then(setCedearsStockHolding).catch(console.log);
+      await getCedearStocksAsync().then(setCedearsStockHolding).catch(console.log);
     } catch (err) {
       console.error(err);
     } finally {

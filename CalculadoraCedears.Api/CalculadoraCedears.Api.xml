@@ -4,7 +4,13 @@
         <name>CalculadoraCedears.Api</name>
     </assembly>
     <members>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetSearchByTickerAsync(CalculadoraCedears.Api.Application.Cedears.Queries.SearchCedearsByTickerQuery,System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.BrokerController.GetAsync(System.Threading.CancellationToken)">
+            <summary>
+            Devuelve todos los brokers
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetAsync(System.Threading.CancellationToken)">
             <summary>
             Devuelve todos los cedears donde coindica el ticker
             </summary>                
