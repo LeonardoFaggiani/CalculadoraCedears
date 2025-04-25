@@ -13,7 +13,8 @@ namespace CalculadoraCedears.Api.Dto
         public decimal PurchaseValueUsd { get; set; }
         public decimal CurrentPriceUsd { get;  set; }
         public decimal CurrentValueUsd { get;  set; }
-
+        public int BrokerId { get; set; }
+        public Guid CedearId { get; set; }
         public decimal SinceChange => PurchaseValueUsd == 0 ? 0 : (CurrentValueUsd - PurchaseValueUsd);
         public decimal SinceChangePercent => PurchaseValueUsd == 0 ? 0 : ((CurrentValueUsd / PurchaseValueUsd) - 1) * 100;
     }

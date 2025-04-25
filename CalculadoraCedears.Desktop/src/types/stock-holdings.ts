@@ -10,4 +10,6 @@ export type StockHoldings = {
   currentValueUsd: number;
   sinceChange: number;
   sinceChangePercent: number;
+  cedearId:string;
+  brokerId:number;
 }

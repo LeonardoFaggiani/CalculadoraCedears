@@ -20,18 +20,19 @@ export function NumericInputFields<T extends FieldValues>({
   required = false,
   prefixSymbol = undefined,
 }: NumericInputField<T>) {
+
   const value = form.watch(name) as number | undefined;
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-
-    const isValid =
-      numericType === "int" ? /^\d*$/.test(val) : /^\d*\.?\d*$/.test(val);
+    
+    const isValid = numericType === "int" ? /^\d*$/.test(val) : /^\d*\.?\d*$/.test(val);
 
     if (isValid) {
       const parsed = numericType === "int" ? parseInt(val, 10) : parseFloat(val);
       form.setValue(name, isNaN(parsed) ? undefined : (parsed as any));
     }
+
   };
 
   return (

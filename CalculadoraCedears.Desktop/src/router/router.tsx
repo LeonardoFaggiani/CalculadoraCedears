@@ -1,4 +1,3 @@
-import { getAddCedearData } from "@/loaders/loader-add-cedears";
 import AddCedear from "../components/add-cedears/add-cedear";
 import Dashboard from "../components/dashboard/dashboard";
 
@@ -11,7 +10,6 @@ const routes = createHashRouter([
   },
   {
     path: "/cedear",
-    loader: getAddCedearData,
     element: <AddCedear />
   }
 ]);

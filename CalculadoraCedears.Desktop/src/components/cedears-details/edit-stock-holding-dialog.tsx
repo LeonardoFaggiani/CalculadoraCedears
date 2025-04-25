@@ -1,20 +1,14 @@
-"use client";
-
-import { useState } from "react";
-import { Check, CalendarIcon, ArrowLeftCircle } from "lucide-react";
-import { Button } from "../ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar } from "../ui/calendar";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formSchema } from "@/lib/form-schema";
 import {
   Form,
   FormControl,
@@ -23,68 +17,58 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { useNavigate } from "react-router-dom";
-import { formSchema } from "@/lib/form-schema";
-import { SelectItemField } from "./select-item-field";
-import { NumericInputFields } from "./numeric-input-field";
-import { postCedearAsync } from "@/api/cedears-api";
-import { CreateCedear } from "@/types/create-cedear";
+import { useEffect, useState } from "react";
+import { SelectItemField } from "../add-cedears/select-item-field";
+import { NumericInputFields } from "../add-cedears/numeric-input-field";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+import { EditStockHoldingDialog } from "@/types/edit-dialog";
 import { useDataContext } from "@/context/data-context";
 
-export default function AddCedear() {
+export function EditDialog({
+  open,
+  onOpenChange,
+  onSave,
+  stock,
+}: EditStockHoldingDialog) {
   const [openCalendar, setOpenCalendar] = useState(false);
-  const navigate = useNavigate();
   const { brokers, cedears } = useDataContext();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      broker: "",
-      cedear: "",
-      quantity: 0,
-      sinceDate: undefined,
-      exchangeRateCCL: 0,
-      purchasePriceArs: 0,
+      ...stock,
     },
   });
 
-  const onSubmit = async (data: any) => {
-    const formValues = form.getValues();
+  useEffect(() => {
+    if (stock) {
+      form.reset({
+        quantity: stock.quantity,
+        sinceDate: stock.sinceDate,
+        purchasePriceArs: stock.purchasePriceArs,
+        exchangeRateCCL: stock.exchangeRateCcl,
+        broker: stock.brokerId.toString(),
+        cedear: stock.cedearId,
+      });
+    }
+  }, [form, stock]);
 
-    const request: CreateCedear = {
-      brokerId: formValues.broker,
-      cedearId: formValues.cedear,
-      exchangeRateCCL: formValues.exchangeRateCCL,
-      purchasePriceArs: formValues.purchasePriceArs,
-      quantity: formValues.quantity,
-      sinceDate: formValues.sinceDate,
-    };
-
-    await postCedearAsync(request)
-      .then(() => {
-        navigate("/");
-      })
-      .catch(console.log);
-  };
+  function onSubmit(values: any) {
+    onSave(values);
+  }
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>Alta de Cedear</CardTitle>
-        <CardDescription>
-          Ingrese los detalles para agregar un nuevo cedear a su portfolio.
-        </CardDescription>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Editar información</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <SelectItemField
               form={form}
               name="broker"
@@ -169,21 +153,26 @@ export default function AddCedear() {
               required
               prefixSymbol="$"
             />
-          </CardContent>
-          <CardFooter className="flex justify-end mt-5">
-            <Button
-              type="button"
-              className="text-white hover:text-white hover:bg-blue-300 bg-blue-500 cursor-pointer mr-5"
-              onClick={() => navigate("/")}
-            >
-              <ArrowLeftCircle /> Volver
-            </Button>
-            <Button type="submit" className="text-white hover:bg-green-300 bg-green-500 cursor-pointer">
-              <Check /> Agregar a Portfolio
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                className="text-white hover:text-white hover:bg-red-200 bg-red-400 cursor-pointer"
+                onClick={() => onOpenChange(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                className="text-white hover:bg-green-300 bg-green-500 cursor-pointer"
+                type="submit"
+              >
+                Guardar cambios
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
