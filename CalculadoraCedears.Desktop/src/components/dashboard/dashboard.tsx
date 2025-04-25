@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import SummaryPortfolio from "../summary-portfolio/summary-portfolio";
 import CedearsInfoTabs from "../cedears-info/cedears-info-tabs";
-import { getCedearStocksAsync } from "@/api/cedears-api";
+import { getCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CedearsStockResponse } from "@/types/cedears";
 
 export default function Dashboard() {
@@ -22,7 +22,7 @@ export default function Dashboard() {
   const loadCedears = async () => {
     try {
       setLoading(true);
-      await getCedearStocksAsync().then(setCedearsStockHolding).catch(console.log);
+      await getCedearStockHoldingAsync().then(setCedearsStockHolding).catch(console.log);
     } catch (err) {
       console.error(err);
     } finally {

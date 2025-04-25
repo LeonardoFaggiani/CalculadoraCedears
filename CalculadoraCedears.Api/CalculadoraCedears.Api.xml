@@ -29,6 +29,20 @@
             </summary>                
             <param name="cancellationToken"></param>
         </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.PutAsync(CalculadoraCedears.Api.Dto.CedearsStockHolding.Request.UpdateCedearStockHoldingRequest,System.Threading.CancellationToken)">
+            <summary>
+            Actualiza un CedearsStockHolding
+            </summary>        
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.DeleteAsync(System.Guid,System.Threading.CancellationToken)">
+            <summary>
+            Elimina un CedearsStockHolding
+            </summary>        
+            <param name="cedearsStockHoldingId"></param>
+            <param name="cancellationToken"></param>
+        </member>
         <member name="T:CalculadoraCedears.Api.CrossCutting.Resources.Messages">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

@@ -37,5 +37,10 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories.Base
         {
             Context.Add(entity);
         }
+
+        public void Delete(TEntity entity)
+        {
+            Context.Remove(entity);
+        }
     }
 }

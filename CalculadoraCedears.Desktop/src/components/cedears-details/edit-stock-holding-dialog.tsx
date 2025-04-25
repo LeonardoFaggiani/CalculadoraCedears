@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -8,7 +9,7 @@ import {
 import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formSchema } from "@/lib/form-schema";
+import { formSchemaEdit } from "@/lib/form-schema";
 import {
   Form,
   FormControl,
@@ -35,10 +36,10 @@ export function EditDialog({
   stock,
 }: EditStockHoldingDialog) {
   const [openCalendar, setOpenCalendar] = useState(false);
-  const { brokers, cedears } = useDataContext();
+  const { brokers } = useDataContext();
 
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchemaEdit),
     defaultValues: {
       ...stock,
     },
@@ -48,11 +49,10 @@ export function EditDialog({
     if (stock) {
       form.reset({
         quantity: stock.quantity,
-        sinceDate: stock.sinceDate,
+        sinceDate: new Date(stock.sinceDate),
         purchasePriceArs: stock.purchasePriceArs,
         exchangeRateCCL: stock.exchangeRateCcl,
         broker: stock.brokerId.toString(),
-        cedear: stock.cedearId,
       });
     }
   }, [form, stock]);
@@ -65,8 +65,9 @@ export function EditDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Editar información</DialogTitle>
+          <DialogTitle>Editar cedear</DialogTitle>
         </DialogHeader>
+        <DialogDescription>Modifica los datos del cedear.</DialogDescription>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <SelectItemField
@@ -75,16 +76,6 @@ export function EditDialog({
               label="Broker"
               items={brokers}
               placeholder="Seleccionar broker..."
-            />
-
-            <SelectItemField
-              form={form}
-              name="cedear"
-              label="Cedear"
-              items={cedears}
-              placeholder="Seleccionar cedear..."
-              searchPlaceholder="Ingresar ticker..."
-              searchable
             />
 
             <NumericInputFields

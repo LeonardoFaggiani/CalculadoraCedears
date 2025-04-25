@@ -34,7 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { formSchema } from "@/lib/form-schema";
 import { SelectItemField } from "./select-item-field";
 import { NumericInputFields } from "./numeric-input-field";
-import { postCedearAsync } from "@/api/cedears-api";
+import { postCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CreateCedear } from "@/types/create-cedear";
 import { useDataContext } from "@/context/data-context";
 
@@ -67,7 +67,7 @@ export default function AddCedear() {
       sinceDate: formValues.sinceDate,
     };
 
-    await postCedearAsync(request)
+    await postCedearStockHoldingAsync(request)
       .then(() => {
         navigate("/");
       })

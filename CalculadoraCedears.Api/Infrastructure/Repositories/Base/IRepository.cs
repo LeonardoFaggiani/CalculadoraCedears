@@ -9,5 +9,6 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories.Base
         void Add(TEntity entity);
         IQueryable<TEntity> All();
         void Update(TEntity entity);
+        void Delete(TEntity entity);
     }
 }

@@ -15,6 +15,9 @@ import { useState } from "react";
 
 import { DeleteDialog } from "./delete-dialog";
 import { EditDialog } from "./edit-stock-holding-dialog";
+import { UpdateCedear } from "@/types/update-cedear";
+import { deleteCedearStockHoldingAsync, putCedearStockHoldingAsync } from "@/api/cedears-api";
+import { useNavigate } from "react-router-dom";
 
 export default function CedearsDetailTable({
   stockHoldings,
@@ -24,19 +27,38 @@ export default function CedearsDetailTable({
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedStockHoldings, setSelectedStockHoldings] =
-    useState<StockHoldings | null>(null);
-
-  const handleDelete = (id: string) => {
-    //Llamo a la api
-    setDeleteDialogOpen(false);
+  const [selectedStockHoldings, setSelectedStockHoldings] = useState<StockHoldings | null>(null);
+  const navigate = useNavigate();
+  
+  const handleDelete = async (id: string) => {
+    await deleteCedearStockHoldingAsync(id)
+      .then(() => {
+        navigate("/");
+      })
+      .catch(console.log)
+      .finally(() => {
+        setDeleteDialogOpen(false);
+      });
   };
 
-  const handleEdit = (stockHoldings: StockHoldings) => {
-    //Llamo a la api
+  const handleEdit = async (stockHoldings: StockHoldings) => {
+    const request: UpdateCedear = {
+      brokerId: stockHoldings.brokerId,
+      exchangeRateCCL: stockHoldings.exchangeRateCcl,
+      purchasePriceArs: stockHoldings.purchasePriceArs,
+      quantity: stockHoldings.quantity,
+      sinceDate: stockHoldings.sinceDate,
+      id: selectedStockHoldings!.id,
+    };
 
-    debugger
-    setEditDialogOpen(false);
+    await putCedearStockHoldingAsync(request)
+      .then(() => {
+        navigate("/");
+      })
+      .catch(console.log)
+      .finally(() => {
+        setEditDialogOpen(false);
+      });
   };
 
   return (
@@ -60,7 +82,7 @@ export default function CedearsDetailTable({
         <TableBody>
           {stockHoldings.map((stock) => (
             <TableRow
-              key={stockHoldings.indexOf(stock)}
+              key={stock.id}
               className="hover:bg-gray-100"
             >
               <TableCell className="font-center">

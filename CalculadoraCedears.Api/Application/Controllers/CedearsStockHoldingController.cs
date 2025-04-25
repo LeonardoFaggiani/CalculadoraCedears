@@ -42,5 +42,33 @@ namespace CalculadoraCedears.Api.Application.Controllers
         {
             return Ok(await mediator.Send(new CedearsStockHoldingQuery(), cancellationToken));
         }
+
+        /// <summary>
+        /// Actualiza un CedearsStockHolding
+        /// </summary>        
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        [HttpPut]
+        [AllowAnonymous]
+        public async Task<IActionResult> PutAsync([FromBody] UpdateCedearStockHoldingRequest request, CancellationToken cancellationToken)
+        {
+            var command = new UpdateCedearStockHoldingCommand(request);
+
+            return Ok(await mediator.Send(command, cancellationToken));
+        }
+
+        /// <summary>
+        /// Elimina un CedearsStockHolding
+        /// </summary>        
+        /// <param name="cedearsStockHoldingId"></param>
+        /// <param name="cancellationToken"></param>
+        [HttpDelete]
+        [AllowAnonymous]
+        public async Task<IActionResult> DeleteAsync([FromQuery] Guid cedearsStockHoldingId, CancellationToken cancellationToken)
+        {
+            var command = new DeleteCedearStockHoldingCommand(cedearsStockHoldingId);
+
+            return Ok(await mediator.Send(command, cancellationToken));
+        }
     }
 }
