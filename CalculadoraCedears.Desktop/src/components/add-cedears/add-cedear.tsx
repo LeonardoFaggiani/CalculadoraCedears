@@ -50,18 +50,18 @@ export default function AddCedear() {
       cedear: "",
       quantity: 0,
       sinceDate: undefined,
-      exchangeRateCCL: 0,
+      exchangeRateCcl: 0,
       purchasePriceArs: 0,
     },
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async () => {
     const formValues = form.getValues();
 
     const request: CreateCedear = {
       brokerId: formValues.broker,
       cedearId: formValues.cedear,
-      exchangeRateCCL: formValues.exchangeRateCCL,
+      exchangeRateCcl: formValues.exchangeRateCcl,
       purchasePriceArs: formValues.purchasePriceArs,
       quantity: formValues.quantity,
       sinceDate: formValues.sinceDate,
@@ -152,7 +152,7 @@ export default function AddCedear() {
 
             <NumericInputFields
               form={form}
-              name="exchangeRateCCL"
+              name="exchangeRateCcl"
               label="Dolar CCL"
               placeholder="0.00"
               numericType="float"
@@ -178,7 +178,10 @@ export default function AddCedear() {
             >
               <ArrowLeftCircle /> Volver
             </Button>
-            <Button type="submit" className="text-white hover:bg-green-300 bg-green-500 cursor-pointer">
+            <Button
+              type="submit"
+              className="text-white hover:bg-green-300 bg-green-500 cursor-pointer"
+            >
               <Check /> Agregar a Portfolio
             </Button>
           </CardFooter>

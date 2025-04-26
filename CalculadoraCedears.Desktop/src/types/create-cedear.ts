@@ -3,6 +3,6 @@ export type CreateCedear = {
     brokerId: string;
     quantity: number;
     sinceDate: Date;
-    exchangeRateCCL: number;
+    exchangeRateCcl: number;
     purchasePriceArs: number;
   };  

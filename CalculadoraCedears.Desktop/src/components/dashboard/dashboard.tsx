@@ -7,8 +7,8 @@ import { getCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CedearsStockResponse } from "@/types/cedears";
 
 export default function Dashboard() {
-
-  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
+  const [cedearsStockResponse, setCedearsStockHolding] =
+    useState<CedearsStockResponse>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
@@ -22,11 +22,15 @@ export default function Dashboard() {
   const loadCedears = async () => {
     try {
       setLoading(true);
-      await getCedearStockHoldingAsync().then(setCedearsStockHolding).catch(console.log);
+      await getCedearStockHoldingAsync()
+        .then(setCedearsStockHolding)
+        .catch(console.log);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   };
 
@@ -52,6 +56,8 @@ export default function Dashboard() {
         cedears={cedearsStockResponse?.cedearWithStockHoldings}
         expandedTicker={expandedTicker}
         toggleCedear={toggleCedear}
+        onRefresh={loadCedears}
+        loading={loading}
       />
     </>
   );

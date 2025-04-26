@@ -34,7 +34,7 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
         {
             await cedearStockHoldingRepository.TryIfAlreadyExistsAsync(command.request.SinceDate, command.request.CedearId, cancellationToken);
 
-            var cedearsStockHolding = new Domain.CedearsStockHolding(command.request.Quantity, command.request.SinceDate, command.request.ExchangeRateCCL, command.request.PurchasePriceArs);
+            var cedearsStockHolding = new Domain.CedearsStockHolding(command.request.Quantity, command.request.SinceDate, command.request.ExchangeRateCcl, command.request.PurchasePriceArs);
 
             var cedear = await cedearRepository.All().FirstAsync(x => x.Id == command.request.CedearId, cancellationToken);
             var broker = await brokerRepository.All().FirstAsync(x => x.Id == command.request.BrokerId, cancellationToken);

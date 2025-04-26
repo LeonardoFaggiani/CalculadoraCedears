@@ -12,70 +12,89 @@ import PriceGainLoss from "../price-gain-loss/price-gain-loss";
 import { Cedears } from "@/types/cedears";
 import { CedearsInfoTab } from "@/types/cedears-info-tabs";
 import { getTotalChangeSummary } from "@/lib/utils";
+import { LoaderSkeleton } from "../loader-skeleton/loader-skeleton";
 
 export default function CedearsInfoTabs({
   cedears,
   expandedTicker,
   toggleCedear,
-}: CedearsInfoTab) {
-
+  onRefresh,
+  loading = false,
+}: CedearsInfoTab & { loading?: boolean }) {
   return (
     <Tabs defaultValue="summary" className="mb-6">
       <TabsContent value="summary" className="mt-0">
-        <div className="space-y-4">
-          {cedears?.map((cedear:Cedears) => (            
-            <Card key={cedear.ticker} className="overflow-hidden">
-              <Collapsible
-                open={expandedTicker[cedear.ticker]}
-                onOpenChange={() => toggleCedear(cedear.ticker)}
-              >
-                <CollapsibleTrigger asChild>
-                  <div className="flex items-center justify-between pr-6 pl-6 cursor-pointer">
-                    <div className="flex items-center space-x-2">
-                      {expandedTicker[cedear.ticker] ? (
-                        <ChevronDown className="w-5 h-5 text-gray-500" />
-                      ) : (
-                        <ChevronUp className="w-5 h-5 text-gray-500" />
-                      )}
-                      <h3 className="font-medium">
-                        {cedear.name}
-                      </h3>
-                      <Badge variant="outline" className="text-xs">
-                        {cedear.ticker}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        Ratio {cedear.ratio}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center space-x-8">
-                      <div>
-                        <div className="text-xs text-gray-500">TOTAL VALOR COMPRA</div>
-                        <div>${getTotalChangeSummary(cedear).totalPurchase}</div>
+        {loading ? (
+          <LoaderSkeleton />
+        ) : (
+          <div className="space-y-4">
+            {cedears?.map((cedear: Cedears) => (
+              <Card key={cedear.ticker} className="overflow-hidden">
+                <Collapsible
+                  open={expandedTicker[cedear.ticker]}
+                  onOpenChange={() => toggleCedear(cedear.ticker)}
+                >
+                  <CollapsibleTrigger asChild>
+                    <div className="flex items-center justify-between pr-6 pl-6 cursor-pointer">
+                      <div className="flex items-center space-x-2">
+                        {expandedTicker[cedear.ticker] ? (
+                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                        ) : (
+                          <ChevronUp className="w-5 h-5 text-gray-500" />
+                        )}
+                        <h3 className="font-medium">{cedear.name}</h3>
+                        <Badge variant="outline" className="text-xs">
+                          {cedear.ticker}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          Ratio {cedear.ratio}
+                        </Badge>
                       </div>
-                      <div>
-                        <div className="text-xs text-gray-500">TOTAL VALOR ACTUAL</div>
-                        <div>${getTotalChangeSummary(cedear).totalCurrent}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500">
-                          DESDE LA COMPRA
+                      <div className="flex items-center space-x-8">
+                        <div>
+                          <div className="text-xs text-gray-500">
+                            TOTAL VALOR COMPRA
+                          </div>
+                          <div>
+                            ${getTotalChangeSummary(cedear).totalPurchase}
+                          </div>
                         </div>
-                        <PriceGainLoss isPercent={false} value={getTotalChangeSummary(cedear).sinceChange}
-                            percent={getTotalChangeSummary(cedear).sinceChangePercent}
+                        <div>
+                          <div className="text-xs text-gray-500">
+                            TOTAL VALOR ACTUAL
+                          </div>
+                          <div>
+                            ${getTotalChangeSummary(cedear).totalCurrent}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-gray-500">
+                            DESDE LA COMPRA
+                          </div>
+                          <PriceGainLoss
+                            isPercent={false}
+                            value={getTotalChangeSummary(cedear).sinceChange}
+                            percent={
+                              getTotalChangeSummary(cedear).sinceChangePercent
+                            }
                           />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <CardContent className="p-4">
-                    <CedearsDetailTable stockHoldings={cedear.cedearsStockHoldings} />
-                  </CardContent>
-                </CollapsibleContent>
-              </Collapsible>
-            </Card>
-          ))}
-        </div>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <CardContent className="p-4">
+                      <CedearsDetailTable
+                        stockHoldings={cedear.cedearsStockHoldings}
+                        onRefresh={onRefresh}
+                      />
+                    </CardContent>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Card>
+            ))}
+          </div>
+        )}
       </TabsContent>
     </Tabs>
   );

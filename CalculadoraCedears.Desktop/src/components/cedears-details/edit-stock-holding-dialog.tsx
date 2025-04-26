@@ -51,8 +51,8 @@ export function EditDialog({
         quantity: stock.quantity,
         sinceDate: new Date(stock.sinceDate),
         purchasePriceArs: stock.purchasePriceArs,
-        exchangeRateCCL: stock.exchangeRateCcl,
-        broker: stock.brokerId.toString(),
+        exchangeRateCcl: stock.exchangeRateCcl,
+        brokerId: stock.brokerId.toString(),
       });
     }
   }, [form, stock]);
@@ -72,7 +72,7 @@ export function EditDialog({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <SelectItemField
               form={form}
-              name="broker"
+              name="brokerId"
               label="Broker"
               items={brokers}
               placeholder="Seleccionar broker..."
@@ -127,7 +127,7 @@ export function EditDialog({
 
             <NumericInputFields
               form={form}
-              name="exchangeRateCCL"
+              name="exchangeRateCcl"
               label="Dolar CCL"
               placeholder="0.00"
               numericType="float"

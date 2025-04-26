@@ -1,8 +1,8 @@
 export type UpdateCedear = {
     id:string;
-    brokerId: number;
+    brokerId: string;
     quantity: number;
     sinceDate: Date;
-    exchangeRateCCL: number;
+    exchangeRateCcl: number;
     purchasePriceArs: number;
   };  

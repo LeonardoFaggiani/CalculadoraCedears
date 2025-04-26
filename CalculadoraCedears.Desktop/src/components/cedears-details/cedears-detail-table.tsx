@@ -12,28 +12,30 @@ import { Button } from "../ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-
 import { DeleteDialog } from "./delete-dialog";
 import { EditDialog } from "./edit-stock-holding-dialog";
 import { UpdateCedear } from "@/types/update-cedear";
-import { deleteCedearStockHoldingAsync, putCedearStockHoldingAsync } from "@/api/cedears-api";
-import { useNavigate } from "react-router-dom";
+import {
+  deleteCedearStockHoldingAsync,
+  putCedearStockHoldingAsync,
+} from "@/api/cedears-api";
 
 export default function CedearsDetailTable({
   stockHoldings,
+  onRefresh,
 }: {
   stockHoldings: StockHoldings[];
+  onRefresh: () => Promise<void>;
 }) {
-
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedStockHoldings, setSelectedStockHoldings] = useState<StockHoldings | null>(null);
-  const navigate = useNavigate();
-  
+  const [selectedStockHoldings, setSelectedStockHoldings] =
+    useState<StockHoldings | null>(null);
+
   const handleDelete = async (id: string) => {
     await deleteCedearStockHoldingAsync(id)
       .then(() => {
-        navigate("/");
+        onRefresh();
       })
       .catch(console.log)
       .finally(() => {
@@ -42,9 +44,11 @@ export default function CedearsDetailTable({
   };
 
   const handleEdit = async (stockHoldings: StockHoldings) => {
+    debugger;
+    console.log(stockHoldings);
     const request: UpdateCedear = {
-      brokerId: stockHoldings.brokerId,
-      exchangeRateCCL: stockHoldings.exchangeRateCcl,
+      brokerId: stockHoldings.brokerId.toString(),
+      exchangeRateCcl: stockHoldings.exchangeRateCcl,
       purchasePriceArs: stockHoldings.purchasePriceArs,
       quantity: stockHoldings.quantity,
       sinceDate: stockHoldings.sinceDate,
@@ -53,7 +57,7 @@ export default function CedearsDetailTable({
 
     await putCedearStockHoldingAsync(request)
       .then(() => {
-        navigate("/");
+        onRefresh();
       })
       .catch(console.log)
       .finally(() => {
@@ -81,10 +85,7 @@ export default function CedearsDetailTable({
         </TableHeader>
         <TableBody>
           {stockHoldings.map((stock) => (
-            <TableRow
-              key={stock.id}
-              className="hover:bg-gray-100"
-            >
+            <TableRow key={stock.id} className="hover:bg-gray-100">
               <TableCell className="font-center">
                 {new Date(stock.sinceDate).toLocaleDateString()}
               </TableCell>
