@@ -19,6 +19,7 @@ import {
   deleteCedearStockHoldingAsync,
   putCedearStockHoldingAsync,
 } from "@/api/cedears-api";
+import { ToastService } from "@/services/toast.service";
 
 export default function CedearsDetailTable({
   stockHoldings,
@@ -33,19 +34,17 @@ export default function CedearsDetailTable({
     useState<StockHoldings | null>(null);
 
   const handleDelete = async (id: string) => {
-    await deleteCedearStockHoldingAsync(id)
-      .then(() => {
-        onRefresh();
-      })
-      .catch(console.log)
-      .finally(() => {
-        setDeleteDialogOpen(false);
-      });
+    await ToastService.promise(deleteCedearStockHoldingAsync(id), {
+      loading: "Guardando datos...",
+      success: "Se ha eliminado correctamente.",
+      error: "Hubo un error al borrar los datos.",
+    }).finally(() => {
+      onRefresh();
+      setDeleteDialogOpen(false);
+    });
   };
 
   const handleEdit = async (stockHoldings: StockHoldings) => {
-    debugger;
-    console.log(stockHoldings);
     const request: UpdateCedear = {
       brokerId: stockHoldings.brokerId.toString(),
       exchangeRateCcl: stockHoldings.exchangeRateCcl,
@@ -55,14 +54,14 @@ export default function CedearsDetailTable({
       id: selectedStockHoldings!.id,
     };
 
-    await putCedearStockHoldingAsync(request)
-      .then(() => {
-        onRefresh();
-      })
-      .catch(console.log)
-      .finally(() => {
-        setEditDialogOpen(false);
-      });
+    await ToastService.promise(putCedearStockHoldingAsync(request), {
+      loading: "Guardando datos...",
+      success: "Se ha actualizado correctamente.",
+      error: "Hubo un error al actualizar los datos.",
+    }).finally(() => {
+      onRefresh();
+      setEditDialogOpen(false);
+    });
   };
 
   return (

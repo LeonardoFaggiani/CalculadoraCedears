@@ -22,6 +22,7 @@ export default function Dashboard() {
   const loadCedears = async () => {
     try {
       setLoading(true);
+
       await getCedearStockHoldingAsync()
         .then(setCedearsStockHolding)
         .catch(console.log);

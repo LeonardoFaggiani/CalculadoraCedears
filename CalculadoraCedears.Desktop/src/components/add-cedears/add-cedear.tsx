@@ -37,6 +37,7 @@ import { NumericInputFields } from "./numeric-input-field";
 import { postCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CreateCedear } from "@/types/create-cedear";
 import { useDataContext } from "@/context/data-context";
+import { ToastService } from "@/services/toast.service";
 
 export default function AddCedear() {
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -67,11 +68,15 @@ export default function AddCedear() {
       sinceDate: formValues.sinceDate,
     };
 
-    await postCedearStockHoldingAsync(request)
-      .then(() => {
-        navigate("/");
-      })
-      .catch(console.log);
+    await ToastService.promise(postCedearStockHoldingAsync(request), {
+      loading: "Guardando datos...",
+      success: "Datos guardados exitosamente!",
+      error: "Hubo un error al guardar los datos.",
+    }).finally(() => {
+      navigate("/");
+    });
+
+    
   };
 
   return (
