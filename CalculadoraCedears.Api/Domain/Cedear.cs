@@ -19,12 +19,15 @@ namespace CalculadoraCedears.Api.Domain
         }
 
         public string Name { get; protected set; }
-
         public string Ticker { get; protected set; }
         public string Market { get; protected set; }
-
         public int Ratio { get; protected set; }
-
+        public decimal? Price { get; protected set; }
         public virtual ICollection<CedearsStockHolding> CedearsStockHoldings { get; protected set; }
+
+        public void SetPrice(decimal price)
+        {
+            this.Price = price;
+        }
     }
 }

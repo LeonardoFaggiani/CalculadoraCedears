@@ -11,7 +11,6 @@
     [UntilDate]             DATETIME            NULL,
     [ExchangeRateCCL]       DECIMAL(10, 2)      NOT NULL,
     [PurchasePriceArs]      DECIMAL(10, 2)      NOT NULL,
-    [CurrentPriceUsd]       DECIMAL(10, 2)      NOT NULL,
     [CurrentValueUsd]       DECIMAL(10, 2)      NOT NULL,    
     [PurchasePriceUsd]      DECIMAL(10, 2)      NOT NULL,
     [PurchaseValueUsd]      DECIMAL(10, 2)      NOT NULL,

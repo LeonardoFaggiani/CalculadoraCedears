@@ -1,27 +1,26 @@
-﻿using System.Reflection;
-using System.Text;
-
-using MediatR;
-using NetDevPack.Mediator;
+﻿using CalculadoraCedears.Api.CrossCutting.Bus;
+using CalculadoraCedears.Api.Infrastructure.BackgroundServices;
+using CalculadoraCedears.Api.Infrastructure.Data;
+using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
+using CalculadoraCedears.Api.Infrastructure.Extensions;
+using CalculadoraCedears.Api.Infrastructure.Filters;
+using CalculadoraCedears.Api.Infrastructure.HealthChecks;
+using CalculadoraCedears.Api.Infrastructure.Repositories;
+using CalculadoraCedears.Api.Infrastructure.Repositories.Base;
+using CalculadoraCedears.Api.Infrastructure.WebSocket;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
-using CalculadoraCedears.Api.Domain.Events;
-using CalculadoraCedears.Api.Infrastructure.Extensions;
-using CalculadoraCedears.Api.Infrastructure.Repositories.Base;
-using CalculadoraCedears.Api.CrossCutting.Bus;
-using CalculadoraCedears.Api.Infrastructure.Repositories;
-using CalculadoraCedears.Api.Infrastructure.Filters;
-using CalculadoraCedears.Api.Infrastructure.HealthChecks;
-using CalculadoraCedears.Api.Infrastructure.Data;
+
+using NetDevPack.Mediator;
+
+using System.Reflection;
+using System.Text;
 
 namespace CalculadoraCedears.Api.Infrastructure.Extensions
 {
@@ -102,12 +101,12 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
 
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddTransient<ICedearRepository, CedearRepository>();
-            services.AddTransient<ICedearStockHoldingRepository, CedearStockHoldingRepository>();
-            services.AddTransient<IBrokerRepository, BrokerRepository>();
-            services.AddTransient<IGoogleFinanceRepository, GoogleFinanceRepository>();
-            
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<ICedearRepository, CedearRepository>();
+            services.AddScoped<ICedearStockHoldingRepository, CedearStockHoldingRepository>();
+            services.AddScoped<IBrokerRepository, BrokerRepository>();
+            services.AddScoped<IGoogleFinanceRepository, GoogleFinanceRepository>();
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             return services;
         }
@@ -123,7 +122,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
         {
             //In memory database used for simplicity, change to a real db for production applications
             //services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseInMemoryDatabase("calculadoracedearsApiBD"); }, ServiceLifetime.Transient);
-            services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseSqlServer(configuration.GetSection("SQL:ConnectionStrings").Value); }, ServiceLifetime.Transient);
+            services.AddDbContext<CalculadoraCedearsContext>(options => { options.UseSqlServer(configuration.GetSection("SQL:ConnectionStrings").Value); }, ServiceLifetime.Scoped);
 
             return services;
         }
@@ -169,10 +168,22 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
         {
             services.AddScoped<IMediatorHandler, InMemoryBus>();
 
-            services.AddScoped<INotificationHandler<CedearHasBeenInserted>, CedearEventHandler>();
+            return services;
+        }
+
+        public static IServiceCollection AddBackgroundServices(this IServiceCollection services)
+        {
+            services.AddHostedService<UpdateCedearsPriceBackgroundService>();
 
             return services;
         }
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddSingleton<ICedearsStockHoldingUpdateService, CedearsStockHoldingUpdateService>();
+
+            return services;
+        }
+
 
         public static IApplicationBuilder UseHealthChecks(this IApplicationBuilder app)
         {

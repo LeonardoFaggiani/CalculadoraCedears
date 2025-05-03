@@ -9,5 +9,7 @@ import { StockHoldings } from "./stock-holdings";
     name: string;
     ticker: string;
     ratio: number;
+    price: number;
+    priceChangeDirection:string;
     cedearsStockHoldings: StockHoldings[];
   };  

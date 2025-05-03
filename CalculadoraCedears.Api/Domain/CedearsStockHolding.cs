@@ -35,8 +35,6 @@ namespace CalculadoraCedears.Api.Domain
 
         public decimal PurchasePriceArs { get; protected set; }
 
-        public decimal CurrentPriceUsd { get; protected set; }
-
         public decimal CurrentValueUsd { get; protected set; }
 
         public decimal PurchasePriceUsd { get; protected set; }
@@ -51,15 +49,15 @@ namespace CalculadoraCedears.Api.Domain
 
         public virtual Cedear Cedear { get; protected set; }
 
-        public CedearsStockHolding SetCedear(Guid cedearId)
+        public CedearsStockHolding SetCedear(Cedear cedear)
         {
-            this.CedearId = cedearId;
+            this.Cedear = cedear;
             return this;
         }
 
-        public CedearsStockHolding SetBroker(int brokerId)
+        public CedearsStockHolding SetBroker(Broker broker)
         {
-            this.BrokerId = brokerId;
+            this.Broker = broker;
             return this;
         }
 
@@ -81,8 +79,8 @@ namespace CalculadoraCedears.Api.Domain
         }
         public CedearsStockHolding SetCurrentUsd(decimal price)
         {
-            this.CurrentPriceUsd = price;
-            this.CurrentValueUsd = (this.CurrentPriceUsd * this.EffectiveRatio);
+            this.Cedear.SetPrice(price);
+            this.CurrentValueUsd = ((decimal)this.Cedear.Price * this.EffectiveRatio);
 
             return this;
         }        

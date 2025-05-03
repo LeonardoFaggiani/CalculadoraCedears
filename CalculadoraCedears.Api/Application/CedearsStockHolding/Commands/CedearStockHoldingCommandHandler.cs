@@ -32,24 +32,25 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
 
         protected override async Task Handle(CedearStockHoldingCommand command, CancellationToken cancellationToken)
         {
-            await cedearStockHoldingRepository.TryIfAlreadyExistsAsync(command.request.SinceDate, command.request.CedearId, cancellationToken);
+            await this.cedearStockHoldingRepository.TryIfAlreadyExistsAsync(command.request.SinceDate, command.request.CedearId, cancellationToken);
 
             var cedearsStockHolding = new Domain.CedearsStockHolding(command.request.Quantity, command.request.SinceDate, command.request.ExchangeRateCcl, command.request.PurchasePriceArs);
 
-            var cedear = await cedearRepository.All().FirstAsync(x => x.Id == command.request.CedearId, cancellationToken);
-            var broker = await brokerRepository.All().FirstAsync(x => x.Id == command.request.BrokerId, cancellationToken);
+            var cedear = await this.cedearRepository.All().FirstAsync(x => x.Id == command.request.CedearId, cancellationToken);
+            var broker = await this.brokerRepository.All().FirstAsync(x => x.Id == command.request.BrokerId, cancellationToken);
 
-            var googleFinance = await googleFinanceRepository.TryGetCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
+            var googleFinance = await this.googleFinanceRepository.TryGetCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
 
-            cedearsStockHolding.SetBroker(broker.Id)
-                .SetCedear(cedear.Id)
+            cedearsStockHolding.SetBroker(broker)
+            .SetCedear(cedear)
                 .SetEffectiveRatio(cedear.Ratio)
                 .SetPurchaseUsd(cedear.Ratio, broker.Comision)
                 .SetCurrentUsd(googleFinance.Price);
 
-            cedearStockHoldingRepository.Add(cedearsStockHolding);
 
-            await Commit(cedearStockHoldingRepository.UnitOfWork);
+            this.cedearStockHoldingRepository.Add(cedearsStockHolding);
+
+            await Commit(this.cedearStockHoldingRepository.UnitOfWork);
         }
     }
 }

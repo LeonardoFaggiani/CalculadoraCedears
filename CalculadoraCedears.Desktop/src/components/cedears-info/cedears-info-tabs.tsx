@@ -28,7 +28,7 @@ export default function CedearsInfoTabs({
           <LoaderSkeleton />
         ) : (
           <div className="space-y-4">
-            {cedears?.map((cedear: Cedears) => (
+            {cedears?.map((cedear: Cedears) => (              
               <Card key={cedear.ticker} className="overflow-hidden">
                 <Collapsible
                   open={expandedTicker[cedear.ticker]}
@@ -85,7 +85,7 @@ export default function CedearsInfoTabs({
                   <CollapsibleContent>
                     <CardContent className="p-4">
                       <CedearsDetailTable
-                        stockHoldings={cedear.cedearsStockHoldings}
+                        cedear={cedear}
                         onRefresh={onRefresh}
                       />
                     </CardContent>

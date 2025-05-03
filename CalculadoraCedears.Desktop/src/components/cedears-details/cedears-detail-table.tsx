@@ -20,12 +20,13 @@ import {
   putCedearStockHoldingAsync,
 } from "@/api/cedears-api";
 import { ToastService } from "@/services/toast.service";
+import { Cedears } from "@/types/cedears";
 
 export default function CedearsDetailTable({
-  stockHoldings,
+  cedear,
   onRefresh,
 }: {
-  stockHoldings: StockHoldings[];
+  cedear: Cedears;
   onRefresh: () => Promise<void>;
 }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -83,7 +84,7 @@ export default function CedearsDetailTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {stockHoldings.map((stock) => (
+          {cedear.cedearsStockHoldings.map((stock) => (
             <TableRow key={stock.id} className="hover:bg-gray-100">
               <TableCell className="font-center">
                 {new Date(stock.sinceDate).toLocaleDateString()}
@@ -101,8 +102,8 @@ export default function CedearsDetailTable({
               <TableCell className="text-center">
                 {stock.purchaseValueUsd}
               </TableCell>
-              <TableCell className="text-center">
-                {stock.currentPriceUsd}
+              <TableCell className={`text-center transition duration-300 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
+                {cedear.price}
               </TableCell>
               <TableCell className="text-center">
                 {stock.currentValueUsd}

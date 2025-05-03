@@ -5,6 +5,7 @@
     [Name]                  VARCHAR(50)     NOT NULL,
     [Market]                VARCHAR(6)      NOT NULL,
     [Ratio]                 INT             NOT NULL,
+    [Price]                 DECIMAL(10, 2)  NULL,
     CONSTRAINT [PK_Cedears] PRIMARY KEY CLUSTERED ([Id] ASC)
 )
 GO

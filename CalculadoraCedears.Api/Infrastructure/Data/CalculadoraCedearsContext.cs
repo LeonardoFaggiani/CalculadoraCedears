@@ -62,6 +62,9 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                     .HasMaxLength(5)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)");
+
                 entity.Property(e => e.Market)
                 .HasMaxLength(6)
                 .IsUnicode(false);
@@ -72,7 +75,6 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.ToTable("CedearsStockHolding");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
-                entity.Property(e => e.CurrentPriceUsd).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.CurrentValueUsd).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.ExchangeRateCcl)
                     .HasColumnType("decimal(10, 2)")

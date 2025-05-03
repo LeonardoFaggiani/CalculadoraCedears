@@ -25,7 +25,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories.Base
         {
             DbSet<TEntity> dbEntity = Context.Set<TEntity>();
 
-            return dbEntity.AsNoTracking();
+            return dbEntity;
         }
 
         public void Update(TEntity entity)

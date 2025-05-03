@@ -11,6 +11,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
     public interface ICedearStockHoldingRepository : IRepository<CedearsStockHolding>
     {
         Task TryIfAlreadyExistsAsync(DateTime sinceDate, Guid cedearId, CancellationToken cancellationToken);
+        Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken);
     }
 
     public class CedearStockHoldingRepository : Repository<CedearsStockHolding>, ICedearStockHoldingRepository
@@ -24,6 +25,16 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
 
             if (cedearStockHolding is not null)
                 throw new AlreadyExistsCedearException(Messages.CedearAlreadyExists);
+        }
+
+        public async Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken)
+        {
+            var cedearStockHoldings = await this.All()
+                .Include(x => x.Cedear)
+                .Include(x => x.Broker)
+                .Where(x => x.UntilDate == null).ToListAsync(cancellationToken);
+
+            return cedearStockHoldings.GroupBy(c => c.Cedear.Ticker).ToDictionary(group => group.Key, group => group.ToList());
         }
     }
 }

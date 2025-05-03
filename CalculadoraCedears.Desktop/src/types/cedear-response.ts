@@ -1,10 +1,5 @@
+import { Cedears } from "./cedears";
+
 export type CedearResponse = {
-    cedears: Cedear[];
+    cedears: Cedears[];
   };
-  
-  export type Cedear = {
-    id: string;
-    name: string;
-    ticker:string;
-  };
-  
