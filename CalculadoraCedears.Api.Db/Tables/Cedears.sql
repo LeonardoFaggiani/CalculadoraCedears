@@ -6,6 +6,7 @@
     [Market]                VARCHAR(6)      NOT NULL,
     [Ratio]                 INT             NOT NULL,
     [Price]                 DECIMAL(10, 2)  NULL,
+    [PriceHasBeenChanged]   BIT             NOT NULL,
     CONSTRAINT [PK_Cedears] PRIMARY KEY CLUSTERED ([Id] ASC)
 )
 GO

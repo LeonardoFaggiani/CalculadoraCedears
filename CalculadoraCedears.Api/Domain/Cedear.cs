@@ -1,5 +1,7 @@
 ﻿using NetDevPack.Domain;
 
+using System.Reflection.Metadata.Ecma335;
+
 namespace CalculadoraCedears.Api.Domain
 {
     public class Cedear : Entity
@@ -23,11 +25,15 @@ namespace CalculadoraCedears.Api.Domain
         public string Market { get; protected set; }
         public int Ratio { get; protected set; }
         public decimal? Price { get; protected set; }
+        public bool PriceHasBeenChanged { get; protected set; }
         public virtual ICollection<CedearsStockHolding> CedearsStockHoldings { get; protected set; }
 
         public void SetPrice(decimal price)
         {
             this.Price = price;
         }
+
+        public bool SetPriceHasBeenChanged(bool isChanged) =>
+            this.PriceHasBeenChanged = isChanged;
     }
 }

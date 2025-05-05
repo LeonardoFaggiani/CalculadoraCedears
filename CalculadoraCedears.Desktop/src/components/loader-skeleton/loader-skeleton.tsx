@@ -1,12 +1,30 @@
 import { Card } from "../ui/card";
 import { cn } from "@/lib/utils";
 
-export function LoaderSkeleton() {
+export function LoaderSkeleton({ rows = 6 }: any) {
   // Crear un array de 5 elementos para mostrar 5 filas de skeleton
-  const skeletonRows = Array.from({ length: 6 }, (_, i) => i);
+  const skeletonRows = Array.from({ length: rows }, (_, i) => i);
 
   return (
-    <div className="space-y-4">
+    <div className="w-full mx-auto p-4">
+      {/* Header section */}
+      <div className="mb-2">
+        <Skeleton className="h-4 w-24 bg-gray-200 rounded animate-pulse mb-2"></Skeleton>
+        <Skeleton className="h-10 w-40 bg-gray-300 rounded animate-pulse"></Skeleton>
+      </div>
+
+      {/* Metrics section */}
+      <div className="flex flex-wrap gap-8 mb-8">
+        <div>
+          <Skeleton className="h-4 w-40 bg-gray-200 rounded animate-pulse mb-2" />
+          <Skeleton className="h-6 w-32 bg-gray-300 rounded animate-pulse" />
+        </div>
+        <div>
+          <Skeleton className="h-4 w-24 bg-gray-200 rounded animate-pulse mb-2" />
+          <Skeleton className="h-6 w-32 bg-gray-300 rounded animate-pulse" />
+        </div>
+      </div>
+
       {skeletonRows.map((index) => (
         <Card key={index} className="p-6">
           <div className="flex items-center justify-between">

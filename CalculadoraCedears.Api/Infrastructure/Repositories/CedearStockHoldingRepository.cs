@@ -6,12 +6,14 @@ using CalculadoraCedears.Api.Infrastructure.Repositories.Base;
 
 using Microsoft.EntityFrameworkCore;
 
+using System.Linq.Expressions;
+
 namespace CalculadoraCedears.Api.Infrastructure.Repositories
 {
     public interface ICedearStockHoldingRepository : IRepository<CedearsStockHolding>
     {
         Task TryIfAlreadyExistsAsync(DateTime sinceDate, Guid cedearId, CancellationToken cancellationToken);
-        Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken);
+        Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken, bool onlyPriceChanged = false);
     }
 
     public class CedearStockHoldingRepository : Repository<CedearsStockHolding>, ICedearStockHoldingRepository
@@ -27,12 +29,17 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
                 throw new AlreadyExistsCedearException(Messages.CedearAlreadyExists);
         }
 
-        public async Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken)
+        public async Task<Dictionary<string, List<Domain.CedearsStockHolding>>> GetActivesAndGroupedByTickerAsync(CancellationToken cancellationToken, bool onlyPriceChanged = false)
         {
+            Expression<Func<CedearsStockHolding, bool>> customPredicate = (x => x.UntilDate == null);
+
+            if (onlyPriceChanged)
+                customPredicate = (x => x.UntilDate == null && x.Cedear.PriceHasBeenChanged);
+
             var cedearStockHoldings = await this.All()
                 .Include(x => x.Cedear)
                 .Include(x => x.Broker)
-                .Where(x => x.UntilDate == null).ToListAsync(cancellationToken);
+                .Where(customPredicate).ToListAsync(cancellationToken);
 
             return cedearStockHoldings.GroupBy(c => c.Cedear.Ticker).ToDictionary(group => group.Key, group => group.ToList());
         }

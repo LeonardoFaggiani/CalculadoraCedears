@@ -43,7 +43,8 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
                         var googleFinance = await googleFinanceRepository
                             .TryGetCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
 
-                        cedear.SetPrice(googleFinance.Price);
+                        cedear.SetPriceHasBeenChanged(Math.Round(googleFinance.Price, 2, MidpointRounding.AwayFromZero) != cedear.Price);
+                        cedear.SetPrice(Math.Round(googleFinance.Price, 2, MidpointRounding.AwayFromZero));
                         cedearRepository.Update(cedear);
                     }
                     catch (GoogleFinancePriceNotFoundException)
@@ -54,11 +55,14 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
 
                 await cedearRepository.UnitOfWork.Commit();
 
-                var cedearsByTicker = await cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(cancellationToken);
+                var cedearsByTicker = await cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(cancellationToken, true);
 
-                var result = new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(mapper));
+                if (cedearsByTicker.Any())
+                {
+                    var result = new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(mapper));
 
-                await cedearsStockHoldingUpdateService.BroadcastCedearsStockHoldingUpdatesAsync(result);
+                    await cedearsStockHoldingUpdateService.BroadcastCedearsStockHoldingUpdatesAsync(result);
+                }
 
                 await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
             }

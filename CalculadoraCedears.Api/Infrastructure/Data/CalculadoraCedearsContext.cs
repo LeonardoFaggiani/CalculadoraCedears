@@ -65,6 +65,9 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)");
 
+                entity.Property(e => e.PriceHasBeenChanged)
+                .IsRequired();
+
                 entity.Property(e => e.Market)
                 .HasMaxLength(6)
                 .IsUnicode(false);
