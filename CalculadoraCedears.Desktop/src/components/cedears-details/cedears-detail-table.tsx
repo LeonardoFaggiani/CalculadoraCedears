@@ -71,14 +71,14 @@ export default function CedearsDetailTable({
         <TableHeader>
           <TableRow className="hover:bg-gray-100">
             <TableHead className="w-[120px]">FECHA COMPRA</TableHead>
-            <TableHead className="text-center">CCL COMPRA</TableHead>
+            <TableHead className="text-center">CCL COMPRA ($)</TableHead>
             <TableHead className="text-center">CANT.</TableHead>
-            <TableHead className="text-center">P. COMPRA</TableHead>
-            <TableHead className="text-center">PRECIO (USD)</TableHead>
-            <TableHead className="text-center">VALOR COMPRA (USD)</TableHead>
-            <TableHead className="text-center">P. ACTUAL (USD)</TableHead>
-            <TableHead className="text-center">VALOR ACTUAL (USD)</TableHead>
-            <TableHead className="text-center">VAR. ($)</TableHead>
+            <TableHead className="text-center">P. COMPRA ($)</TableHead>
+            <TableHead className="text-center">PRECIO (U$S)</TableHead>
+            <TableHead className="text-center">VALOR COMPRA (U$S)</TableHead>
+            <TableHead className="text-center">P. ACTUAL (U$S)</TableHead>
+            <TableHead className="text-center">VALOR ACTUAL (U$S)</TableHead>
+            <TableHead className="text-center">VAR. (U$S)</TableHead>
             <TableHead className="text-center">VAR. (%)</TableHead>
             <TableHead className="text-center"> </TableHead>
           </TableRow>
@@ -94,7 +94,7 @@ export default function CedearsDetailTable({
               </TableCell>
               <TableCell className="text-center">{stock.quantity}</TableCell>
               <TableCell className="text-center">
-                ${stock.purchasePriceArs}
+                {stock.purchasePriceArs}
               </TableCell>
               <TableCell className="text-center">
                 {stock.purchasePriceUsd}
@@ -102,16 +102,16 @@ export default function CedearsDetailTable({
               <TableCell className="text-center">
                 {stock.purchaseValueUsd}
               </TableCell>
-              <TableCell className={`text-center transition duration-300 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
-                {cedear.price}
+              <TableCell className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
+                {cedear.price.toFixed(2)}
               </TableCell>
-              <TableCell className="text-center">
-                {stock.currentValueUsd}
+              <TableCell className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
+                {stock.currentValueUsd.toFixed(2)}
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
                 <PriceGainLoss isPercent={false} value={stock.sinceChange} />
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
                 <PriceGainLoss
                   isPercent={true}
                   value={stock.sinceChangePercent}

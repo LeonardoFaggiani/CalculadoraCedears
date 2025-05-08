@@ -15,7 +15,7 @@ export default function PriceGainLoss({
 
   const formattedValue = isPercent
     ? `${value.toFixed(2)}%`
-    : `$${value.toLocaleString()}`;
+    : `${value.toLocaleString()}`;
 
   return (
     <div className={color}>

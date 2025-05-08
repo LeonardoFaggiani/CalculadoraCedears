@@ -6,7 +6,6 @@ import { GainLossPortfolioProps } from "@/types/gain-loss-portfolio";
 
 export function GainLossPortfolio({
     portfolioValue,
-    todayGainLoss,
     dolarCCL,
     hasCedears,
   }: GainLossPortfolioProps) {
@@ -20,19 +19,7 @@ export function GainLossPortfolio({
             <h2 className="text-3xl font-bold">{formatCurrency(portfolioValue)}</h2>
           </div>
   
-          <div className="flex gap-6">
-            <div>
-              <p className="text-sm text-muted-foreground">Ganancia/Pérdida Hoy</p>
-              <p
-                className={`text-base font-medium ${
-                  todayGainLoss.amount >= 0 ? "text-emerald-500" : "text-red-500"
-                }`}
-              >
-                {todayGainLoss.amount >= 0 ? "+" : ""}
-                {formatCurrency(todayGainLoss.amount)} ({todayGainLoss.percentage}%)
-              </p>
-            </div>
-  
+          <div className="flex gap-6">  
             <div>
               <p className="text-sm text-muted-foreground">Dolar CCL</p>
               <p

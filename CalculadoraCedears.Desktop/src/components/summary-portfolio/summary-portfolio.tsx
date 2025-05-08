@@ -8,7 +8,6 @@ import { GainLossPortfolio } from "./gain-loss-portfolio";
 export default function SummaryPortfolio({
   portfolioValue,
   cedears = [],
-  todayGainLoss,
   dolarCCL,
   onRefresh,
   loading = false,
@@ -33,8 +32,7 @@ export default function SummaryPortfolio({
       ) : !loading && cedears.length === 0 ? (
         <>
           <GainLossPortfolio
-            portfolioValue={portfolioValue}
-            todayGainLoss={todayGainLoss}
+            portfolioValue={portfolioValue}            
             dolarCCL={dolarCCL}
             hasCedears={cedears.length > 0}
           />
@@ -44,8 +42,7 @@ export default function SummaryPortfolio({
         <div className="grid gap-4">
           <>
             <GainLossPortfolio
-              portfolioValue={portfolioValue}
-              todayGainLoss={todayGainLoss}
+              portfolioValue={portfolioValue}              
               dolarCCL={dolarCCL}
               hasCedears={cedears.length > 0}
             />

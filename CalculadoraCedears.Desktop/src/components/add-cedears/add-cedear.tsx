@@ -74,9 +74,7 @@ export default function AddCedear() {
       error: "Hubo un error al guardar los datos.",
     }).finally(() => {
       navigate("/");
-    });
-
-    
+    });    
   };
 
   return (
@@ -159,7 +157,7 @@ export default function AddCedear() {
               form={form}
               name="exchangeRateCcl"
               label="Dolar CCL"
-              placeholder="0.00"
+              placeholder="0,00"
               numericType="float"
               required
               prefixSymbol="$"
@@ -169,7 +167,7 @@ export default function AddCedear() {
               form={form}
               name="purchasePriceArs"
               label="Precio Compra (Ars)"
-              placeholder="0.00"
+              placeholder="0,00"
               numericType="float"
               required
               prefixSymbol="$"

@@ -12,7 +12,6 @@ import PriceGainLoss from "../price-gain-loss/price-gain-loss";
 import { Cedears } from "@/types/cedears";
 import { CedearsInfoTab } from "@/types/cedears-info-tabs";
 import { getTotalChangeSummary } from "@/lib/utils";
-import { LoaderSkeleton } from "../loader-skeleton/loader-skeleton";
 
 export default function CedearsInfoTabs({
   cedears,
@@ -49,21 +48,21 @@ export default function CedearsInfoTabs({
                     <div className="flex items-center space-x-8">
                       <div>
                         <div className="text-xs text-gray-500">
-                          TOTAL VALOR COMPRA
+                          TOTAL VALOR COMPRA (U$S)
                         </div>
                         <div>
-                          ${getTotalChangeSummary(cedear).totalPurchase}
+                          {getTotalChangeSummary(cedear).totalPurchase}
                         </div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">
-                          TOTAL VALOR ACTUAL
+                          TOTAL VALOR ACTUAL (U$S)
                         </div>
-                        <div>${getTotalChangeSummary(cedear).totalCurrent}</div>
+                        <div className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}> {getTotalChangeSummary(cedear).totalCurrent}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">
-                          DESDE LA COMPRA
+                          DESDE LA COMPRA (U$S)
                         </div>
                         <PriceGainLoss
                           isPercent={false}

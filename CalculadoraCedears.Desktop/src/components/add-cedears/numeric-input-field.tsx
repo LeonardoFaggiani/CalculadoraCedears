@@ -1,5 +1,5 @@
 import { NumericInputField } from "@/types/numeric-input-field";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -21,19 +21,28 @@ export function NumericInputFields<T extends FieldValues>({
   prefixSymbol = undefined,
 }: NumericInputField<T>) {
 
-  const value = form.watch(name) as number | undefined;
-
+  const [inputValue, setInputValue] = useState("");
+  
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    
-    const isValid = numericType === "int" ? /^\d*$/.test(val) : /^\d*\.?\d*$/.test(val);
-
+  
+    // Permitir solo hasta 2 decimales (pero sin parsear aún)
+    const decimalRegex = /^\d*\.?\d{0,2}$/;
+    const intRegex = /^\d*$/;
+  
+    const isValid = numericType === "int" ? intRegex.test(val) : decimalRegex.test(val);
+  
     if (isValid) {
+      setInputValue(val); // mantener como string mientras el usuario escribe
+  
+      // Si se puede parsear, lo mandamos al form
       const parsed = numericType === "int" ? parseInt(val, 10) : parseFloat(val);
-      form.setValue(name, isNaN(parsed) ? undefined : (parsed as any));
+      if (!isNaN(parsed)) {
+        form.setValue(name, parsed as any);
+      }
     }
-
   };
+  
 
   return (
     <FormField
@@ -50,8 +59,8 @@ export function NumericInputFields<T extends FieldValues>({
                 </span>
               )}
               <Input
+                value={inputValue}
                 placeholder={placeholder}
-                value={value ?? ""}
                 onChange={handleChange}
                 required={required}
                 inputMode="decimal"

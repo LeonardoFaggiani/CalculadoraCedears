@@ -28,8 +28,8 @@ export default function Dashboard() {
 
       await getCedearStockHoldingAsync()
         .then(setCedearsStockHolding)
-        .catch(console.log);
-        
+        .catch(console.log);        
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -117,8 +117,7 @@ export default function Dashboard() {
   return (
     <>
       <SummaryPortfolio
-        portfolioValue={portfolioValue}
-        todayGainLoss={totalGainLoss}
+        portfolioValue={portfolioValue}        
         dolarCCL={totalGainLoss}
         cedears={cedearsStockResponse?.cedearWithStockHoldings}
         onRefresh={loadCedears}
