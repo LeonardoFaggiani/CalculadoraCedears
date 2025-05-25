@@ -6,7 +6,7 @@ function App() {
   return (
     <DataProvider>
       <div className="flex flex-col min-h-screen">
-        <main className="flex-1 container mx-auto p-8">
+        <main className="flex-1 container mx-auto flex items-center justify-center">
           <RouterProvider router={router} />
         </main>
       </div>

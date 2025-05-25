@@ -73,7 +73,7 @@ export default function AddCedear() {
       success: "Datos guardados exitosamente!",
       error: "Hubo un error al guardar los datos.",
     }).finally(() => {
-      navigate("/");
+      navigate("/home");
     });    
   };
 
@@ -177,7 +177,7 @@ export default function AddCedear() {
             <Button
               type="button"
               className="text-white hover:text-white hover:bg-blue-300 bg-blue-500 cursor-pointer mr-5"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
             >
               <ArrowLeftCircle /> Volver
             </Button>
