@@ -3,6 +3,5 @@ export type GainLossPortfolioProps = {
     dolarCCL: {
       amount: number;
       percentage: number;
-    };
-    hasCedears: boolean;
+    }
   };

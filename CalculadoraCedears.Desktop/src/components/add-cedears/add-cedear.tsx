@@ -74,122 +74,127 @@ export default function AddCedear() {
       error: "Hubo un error al guardar los datos.",
     }).finally(() => {
       navigate("/home");
-    });    
+    });
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>Alta de Cedear</CardTitle>
-        <CardDescription>
-          Ingrese los detalles para agregar un nuevo cedear a su portfolio.
-        </CardDescription>
-      </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            <SelectItemField
-              form={form}
-              name="broker"
-              label="Broker"
-              items={brokers}
-              placeholder="Seleccionar broker..."
-            />
+    <div className="pt-8">
+      <Card className="w-full max-w-lg mx-auto">
+        <CardHeader>
+          <CardTitle>Alta de Cedear</CardTitle>
+          <CardDescription>
+            Ingrese los detalles para agregar un nuevo cedear a su portfolio.
+          </CardDescription>
+        </CardHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent className="space-y-4">
+              <SelectItemField
+                form={form}
+                name="broker"
+                label="Broker"
+                items={brokers}
+                placeholder="Seleccionar broker..."
+              />
 
-            <SelectItemField
-              form={form}
-              name="cedear"
-              label="Cedear"
-              items={cedears}
-              placeholder="Seleccionar cedear..."
-              searchPlaceholder="Ingresar ticker..."
-              searchable
-            />
+              <SelectItemField
+                form={form}
+                name="cedear"
+                label="Cedear"
+                items={cedears}
+                placeholder="Seleccionar cedear..."
+                searchPlaceholder="Ingresar ticker..."
+                searchable
+              />
 
-            <NumericInputFields
-              form={form}
-              name="quantity"
-              label="Cantidad"
-              placeholder="Cantidad"
-              numericType="int"
-              required
-            />
+              <NumericInputFields
+                form={form}
+                name="quantity"
+                label="Cantidad"
+                placeholder="Cantidad"
+                numericType="int"
+                required
+              />
 
-            <FormField
-              control={form.control}
-              name="sinceDate"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fecha</FormLabel>
-                  <FormControl>
-                    <Popover open={openCalendar} onOpenChange={setOpenCalendar}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start text-left font-normal"
-                          id="sinceDate"
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.value
-                            ? format(field.value, "PPP", { locale: es })
-                            : "Seleccionar fecha de compra"}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            setOpenCalendar(false);
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="sinceDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fecha</FormLabel>
+                    <FormControl>
+                      <Popover
+                        open={openCalendar}
+                        onOpenChange={setOpenCalendar}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-left font-normal"
+                            id="sinceDate"
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {field.value
+                              ? format(field.value, "PPP", { locale: es })
+                              : "Seleccionar fecha de compra"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setOpenCalendar(false);
+                            }}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <NumericInputFields
-              form={form}
-              name="exchangeRateCcl"
-              label="Dolar CCL"
-              placeholder="0,00"
-              numericType="float"
-              required
-              prefixSymbol="$"
-            />
+              <NumericInputFields
+                form={form}
+                name="exchangeRateCcl"
+                label="Dolar CCL"
+                placeholder="0,00"
+                numericType="float"
+                required
+                prefixSymbol="$"
+              />
 
-            <NumericInputFields
-              form={form}
-              name="purchasePriceArs"
-              label="Precio Compra (Ars)"
-              placeholder="0,00"
-              numericType="float"
-              required
-              prefixSymbol="$"
-            />
-          </CardContent>
-          <CardFooter className="flex justify-end mt-5">
-            <Button
-              type="button"
-              className="text-white hover:text-white hover:bg-blue-300 bg-blue-500 cursor-pointer mr-5"
-              onClick={() => navigate("/home")}
-            >
-              <ArrowLeftCircle /> Volver
-            </Button>
-            <Button
-              type="submit"
-              className="text-white hover:bg-green-300 bg-green-500 cursor-pointer"
-            >
-              <Check /> Agregar a Portfolio
-            </Button>
-          </CardFooter>
-        </form>
-      </Form>
-    </Card>
+              <NumericInputFields
+                form={form}
+                name="purchasePriceArs"
+                label="Precio Compra (Ars)"
+                placeholder="0,00"
+                numericType="float"
+                required
+                prefixSymbol="$"
+              />
+            </CardContent>
+            <CardFooter className="flex justify-end mt-5">
+              <Button
+                type="button"
+                className="text-white hover:text-white hover:bg-blue-300 bg-blue-500 cursor-pointer mr-5"
+                onClick={() => navigate("/home")}
+              >
+                <ArrowLeftCircle /> Volver
+              </Button>
+              <Button
+                type="submit"
+                className="text-white hover:bg-green-300 bg-green-500 cursor-pointer"
+              >
+                <Check /> Agregar a Portfolio
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
+    </div>
   );
 }

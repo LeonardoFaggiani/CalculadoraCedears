@@ -5,8 +5,8 @@ import { DataProvider } from "./context/data-context";
 function App() {
   return (
     <DataProvider>
-      <div className="flex flex-col min-h-screen">
-        <main className="flex-1 container mx-auto flex items-center justify-center">
+      <div className="min-h-screen">
+        <main className="flex-1 mx-auto">
           <RouterProvider router={router} />
         </main>
       </div>

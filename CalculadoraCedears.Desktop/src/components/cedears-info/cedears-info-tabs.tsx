@@ -37,10 +37,12 @@ export default function CedearsInfoTabs({
                       ) : (
                         <ChevronUp className="w-5 h-5 text-gray-500" />
                       )}
+                      <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                        <span className="text-sm font-bold text-slate-700">
+                          {cedear.ticker}
+                        </span>
+                      </div>
                       <h3 className="font-medium">{cedear.name}</h3>
-                      <Badge variant="outline" className="text-xs">
-                        {cedear.ticker}
-                      </Badge>
                       <Badge variant="outline" className="text-xs">
                         Ratio {cedear.ratio}
                       </Badge>
@@ -50,15 +52,24 @@ export default function CedearsInfoTabs({
                         <div className="text-xs text-gray-500">
                           TOTAL VALOR COMPRA (U$S)
                         </div>
-                        <div>
-                          {getTotalChangeSummary(cedear).totalPurchase}
-                        </div>
+                        <div>{getTotalChangeSummary(cedear).totalPurchase}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">
                           TOTAL VALOR ACTUAL (U$S)
                         </div>
-                        <div className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}> {getTotalChangeSummary(cedear).totalCurrent}</div>
+                        <div
+                          className={`text-center transition duration-500 ${
+                            cedear.priceChangeDirection === "up"
+                              ? "text-green-100"
+                              : cedear.priceChangeDirection === "down"
+                              ? "text-red-100"
+                              : ""
+                          }`}
+                        >
+                          {" "}
+                          {getTotalChangeSummary(cedear).totalCurrent}
+                        </div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">

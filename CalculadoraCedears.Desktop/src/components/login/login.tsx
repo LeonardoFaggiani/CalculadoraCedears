@@ -10,6 +10,7 @@ import {
 
 import { login } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { ToastService } from "@/services/toast.service";
 
 // Iconos SVG como componentes
 const GoogleIcon: React.FC = () => (
@@ -43,25 +44,23 @@ const SpinnerIcon: React.FC = () => (
   <span className="animate-spin mr-2">⟳</span>
 );
 
-type LoginProvider = "google" | "github";
+type LoginProvider = "google";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-
   const isLoading = useMemo(() => isGoogleLoading, [isGoogleLoading]);
 
   const handleLogin = async (provider: LoginProvider) => {
     try {
-      setErrorMessage("");
       setIsGoogleLoading(true);
+
       await login(provider);
 
       navigate("/home");
     } catch (error) {
       console.error(`${provider} login failed:`, error);
-      setErrorMessage(`Google login failed, please retry`);
+      ToastService.error("Google login failed, please retry");
     } finally {
       setIsGoogleLoading(false);
     }
@@ -70,31 +69,29 @@ const Login: React.FC = () => {
   const loginWithGoogle = () => handleLogin("google");
 
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">
-          Bienvenido a Calculadora Cedears
-        </CardTitle>
-        <CardDescription className="text-center">
-          Elegi el login
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <Button
-          variant="outline"
-          className="cursor-pointer"
-          onClick={loginWithGoogle}
-          disabled={isLoading}
-        >
-          {!isGoogleLoading ? <GoogleIcon /> : <SpinnerIcon />}
-          Google Login
-        </Button>
-
-        {errorMessage && (
-          <p className="text-red-500 text-center mt-2">{errorMessage}</p>
-        )}
-      </CardContent>
-    </Card>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">
+            Bienvenido a Calculadora Cedears
+          </CardTitle>
+          <CardDescription className="text-center">
+            Elegi el login
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Button
+            variant="outline"
+            className="cursor-pointer"
+            onClick={loginWithGoogle}
+            disabled={isLoading}
+          >
+            {!isGoogleLoading ? <GoogleIcon /> : <SpinnerIcon />}
+            Google Login
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

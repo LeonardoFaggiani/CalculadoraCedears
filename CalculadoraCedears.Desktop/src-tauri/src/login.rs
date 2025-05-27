@@ -17,7 +17,6 @@ pub struct OAuthConfig {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OAuthConfigs {
     pub google: OAuthConfig,
-    pub github: OAuthConfig,
 }
 
 #[derive(Serialize)]
@@ -37,7 +36,6 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     // Get provider-specific configuration
     let config = match provider.as_str() {
         "google" => configs.google,
-        "github" => configs.github,
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
 
@@ -116,12 +114,6 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             .header("Accept", "application/json")
             .send()
             .await,
-        "github" => client.get(&config.user_info_url)
-            .header("Authorization", format!("Bearer {}", access_token))
-            .header("Accept", "application/vnd.github.v3+json")
-            .header("User-Agent", "tauri-app") 
-            .send()
-            .await,
         _ => return Err(format!("Unsupported provider: {}", provider)),
     }
     .map_err(|err| err.to_string())?;
@@ -139,12 +131,6 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             user_info["name"].as_str().unwrap_or("").to_string(),
             user_info["email"].as_str().unwrap_or("").to_string(),
             user_info["picture"].as_str().map(|s| s.to_string()),
-        ),
-        "github" => (
-            user_info["id"].to_string(),
-            user_info["name"].as_str().unwrap_or_else(|| user_info["login"].as_str().unwrap_or("")).to_string(),
-            user_info["email"].as_str().unwrap_or("").to_string(),
-            user_info["avatar_url"].as_str().map(|s| s.to_string()),
         ),
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
