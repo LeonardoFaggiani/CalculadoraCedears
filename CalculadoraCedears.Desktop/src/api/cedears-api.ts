@@ -4,6 +4,7 @@ import { CreateCedear } from "../types/create-cedear";
 import { BrokerResponse } from "../types/broker-response";
 import { CedearResponse } from "@/types/cedear-response";
 import { UpdateCedear } from "@/types/update-cedear";
+import { CraeteUser } from "@/types/create-user";
 
 export async function getCedearsAsync(): Promise<CedearResponse> {
   try {
@@ -49,10 +50,10 @@ export async function getBrokersAsync(): Promise<BrokerResponse> {
   }
 }
 
-export async function getCedearStockHoldingAsync(): Promise<CedearsStockResponse> {
-  try {
+export async function getCedearStockHoldingAsync(userId:string): Promise<CedearsStockResponse> {
+  try {    
     const response = await fetch(
-      "http://localhost:5124/api/CedearsStockHolding",
+      `http://localhost:5124/api/CedearsStockHolding?userId=${userId}`,
       {
         method: "GET",
         danger: {
@@ -144,6 +145,37 @@ export async function deleteCedearStockHoldingAsync(
       `http://localhost:5124/api/CedearsStockHolding?cedearsStockHoldingId=${cedearStockHoldingId}`,
       {
         method: "DELETE",
+        danger: {
+          acceptInvalidCerts: true,
+          acceptInvalidHostnames: true,
+        },
+      }
+    );
+
+    if (response.ok) {
+      return response.json();
+    }
+
+    throw new Error(
+      `Error ${response.status}: ${JSON.stringify(response.json())}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function postUserLoginAsync(
+  userRequest: CraeteUser
+): Promise<void> {
+  try {
+    const response = await fetch(
+      "http://localhost:5124/api/User/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userRequest),
         danger: {
           acceptInvalidCerts: true,
           acceptInvalidHostnames: true,

@@ -4,6 +4,5 @@ export type SummaryPortfolioProps = {
     dolarCCL: {
       amount: number
       percentage: number
-    },
-    onRefresh: () => Promise<void>;
+    }
   };

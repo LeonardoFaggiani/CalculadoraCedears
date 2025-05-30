@@ -16,7 +16,10 @@
     [PurchaseValueUsd]      DECIMAL(10, 2)      NOT NULL,
     [BrokerId]              INT                 NOT NULL,
     [CedearId]              UNIQUEIDENTIFIER    NOT NULL,
+    [UserId]                INT                 NOT NULL,
     CONSTRAINT [PK_CedearsStockHolding] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [FK_CedearsStockHolding_Brokers] FOREIGN KEY ([BrokerId]) REFERENCES [dbo].[Brokers] ([Id]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_CedearsStockHolding_Cedears] FOREIGN KEY ([CedearId]) REFERENCES [dbo].[Cedears] ([Id]) ON DELETE CASCADE
+    CONSTRAINT [FK_CedearsStockHolding_Cedears] FOREIGN KEY ([CedearId]) REFERENCES [dbo].[Cedears] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_CedearsStockHolding_Users] FOREIGN KEY ([UserId]) REFERENCES [dbo].[Users] ([Id]) ON DELETE CASCADE
+
 )

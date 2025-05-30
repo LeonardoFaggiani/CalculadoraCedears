@@ -47,7 +47,10 @@ app.Use(async (context, next) =>
             var socket = await context.WebSockets.AcceptWebSocketAsync();
             var clientId = Guid.NewGuid().ToString();
 
-            service.AddClient(clientId, socket);
+
+            var userId = context.Request.Query["userId"].ToString();
+
+            service.AddClient(userId, socket);
 
             // Enviar datos iniciales (opcional)
             //await SendInitialData(socket);

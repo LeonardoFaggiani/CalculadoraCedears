@@ -32,15 +32,15 @@ namespace CalculadoraCedears.Api.Application.Controllers
         }
 
         /// <summary>
-        /// Devuelve todos los CedearsStockHolding activos
+        /// Devuelve todos los CedearsStockHolding activos por usuario.
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpGet]
         [AllowAnonymous]
         [Produces("application/json", Type = typeof(CedearsStockHoldingQueryResponse))]
-        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAsync([FromQuery] string userId, CancellationToken cancellationToken)
         {
-            return Ok(await mediator.Send(new CedearsStockHoldingQuery(), cancellationToken));
+            return Ok(await mediator.Send(new CedearsStockHoldingQuery(userId), cancellationToken));
         }
 
         /// <summary>

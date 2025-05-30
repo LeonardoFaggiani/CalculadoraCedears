@@ -27,7 +27,7 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Queries
 
         public async Task<CedearsStockHoldingQueryResponse> Handle(CedearsStockHoldingQuery request, CancellationToken cancellationToken)
         {
-            var cedearsByTicker = await this.cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(cancellationToken);
+            var cedearsByTicker = await this.cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(request.UserId, cancellationToken);
 
             return new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(this.mapper));
         }

@@ -4,6 +4,6 @@ using MediatR;
 
 namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Queries
 {
-    public class CedearsStockHoldingQuery : IRequest<CedearsStockHoldingQueryResponse>
+    public record CedearsStockHoldingQuery(string UserId) : IRequest<CedearsStockHoldingQueryResponse>
     { }
 }

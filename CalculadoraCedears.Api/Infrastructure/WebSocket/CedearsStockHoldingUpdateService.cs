@@ -9,16 +9,22 @@ namespace CalculadoraCedears.Api.Infrastructure.WebSocket
 {
     public interface ICedearsStockHoldingUpdateService
     {
-        Task BroadcastCedearsStockHoldingUpdatesAsync(CedearsStockHoldingQueryResponse updates);
+        Task BroadcastCedearsStockHoldingUpdatesAsync(System.Net.WebSockets.WebSocket client, CedearsStockHoldingQueryResponse updates);
         void AddClient(string id, System.Net.WebSockets.WebSocket socket);
         void RemoveClient(string id);
+        ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> Clients { get; }
     }
 
     public class CedearsStockHoldingUpdateService : ICedearsStockHoldingUpdateService
     {
-        private readonly ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> _clients = new();
+        public ConcurrentDictionary<string, System.Net.WebSockets.WebSocket> Clients { get; set; }
 
-        public async Task BroadcastCedearsStockHoldingUpdatesAsync(CedearsStockHoldingQueryResponse updates)
+        public CedearsStockHoldingUpdateService()
+        {
+            this.Clients = new ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>();
+        }
+
+        public async Task BroadcastCedearsStockHoldingUpdatesAsync(System.Net.WebSockets.WebSocket client, CedearsStockHoldingQueryResponse updates)
         {
             var options = new JsonSerializerOptions
             {
@@ -29,39 +35,37 @@ namespace CalculadoraCedears.Api.Infrastructure.WebSocket
             {
                 type = "cedears_stockholding_updated",
                 data = JsonSerializer.Serialize(updates, options),
-                timestamp = DateTime.Now                
+                timestamp = DateTime.Now
             });
 
             var bytes = Encoding.UTF8.GetBytes(message);
 
-            foreach (var client in _clients.Values)
+            if (client.State == WebSocketState.Open)
             {
-                if (client.State == WebSocketState.Open)
+                try
                 {
-                    try
-                    {
-                        await client.SendAsync(
-                            new ArraySegment<byte>(bytes),
-                            WebSocketMessageType.Text,
-                            true,
-                            CancellationToken.None);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error sending to client: {ex.Message}");
-                    }
+                    await client.SendAsync(
+                        new ArraySegment<byte>(bytes),
+                        WebSocketMessageType.Text,
+                        true,
+                        CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error sending to client: {ex.Message}");
                 }
             }
+
         }
 
         public void AddClient(string id, System.Net.WebSockets.WebSocket socket)
         {
-            _clients.TryAdd(id, socket);
+            this.Clients.TryAdd(id, socket);
         }
 
         public void RemoveClient(string id)
         {
-            _clients.TryRemove(id, out _);
+            this.Clients.TryRemove(id, out _);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using NetDevPack.Domain;
+﻿using NetDevPack.Domain;
 
 namespace CalculadoraCedears.Api.Domain
 {
@@ -44,10 +42,12 @@ namespace CalculadoraCedears.Api.Domain
         public int BrokerId { get; protected set; }
 
         public Guid CedearId { get; protected set; }
+        public int UserId { get; protected set; }
 
         public virtual Broker Broker { get; protected set; }
 
         public virtual Cedear Cedear { get; protected set; }
+        public virtual User User { get; protected set; }
 
         public CedearsStockHolding SetCedear(Cedear cedear)
         {
@@ -58,6 +58,12 @@ namespace CalculadoraCedears.Api.Domain
         public CedearsStockHolding SetBroker(Broker broker)
         {
             this.Broker = broker;
+            return this;
+        }
+
+        public CedearsStockHolding SetUser(User user)
+        {
+            this.User = user;
             return this;
         }
 

@@ -1,6 +1,10 @@
 import { CedearsStockResponse } from "@/types/cedears";
 import { UpdateCedearStockHoldingEvent } from "@/types/update-cedears-stock-holding-event";
 import WebSocket, { Message } from "@tauri-apps/plugin-websocket";
+import {
+  logout as authLogout,
+  getCurrentUser,
+} from "./auth.service";
 
 class WebSocketClient {
   private socket: WebSocket | null = null;
@@ -24,9 +28,7 @@ class WebSocketClient {
 
       this.socket.addListener((event: Message) => {
         try {
-
           if (event.type === "Pong") {
-
           }
 
           if (event.type === "Close") {
@@ -38,19 +40,24 @@ class WebSocketClient {
           }
 
           if (event.type === "Text") {
-            const eventResult: UpdateCedearStockHoldingEvent = JSON.parse(event.data);
+            const eventResult: UpdateCedearStockHoldingEvent = JSON.parse(
+              event.data
+            );
 
-            if (eventResult && eventResult.type === "cedears_stockholding_updated") {
-                const cedearsStockResponse: CedearsStockResponse = JSON.parse(eventResult.data);
+            if (
+              eventResult &&
+              eventResult.type === "cedears_stockholding_updated"
+            ) {
+              const cedearsStockResponse: CedearsStockResponse = JSON.parse(
+                eventResult.data
+              );
               this.notifyListeners(cedearsStockResponse);
             }
-
           }
         } catch (error) {
           console.error("Error processing message:", error);
         }
       });
-
     } catch (error) {
       console.error("Failed to connect to WebSocket:", error);
       this.handleReconnect();
@@ -72,11 +79,14 @@ class WebSocketClient {
     }, delay);
   }
 
-  subscribe(listener: any): () => void {
+  async subscribe(listener: any): Promise<() => void> {
     this.listeners.push(listener);
 
     if (this.listeners.length === 1) {
-      this.connect();
+      await getCurrentUser().then((user) => {
+        this.url = `${this.url}?userId=${user.id}`;
+        this.connect();
+      });
     }
 
     return () => {

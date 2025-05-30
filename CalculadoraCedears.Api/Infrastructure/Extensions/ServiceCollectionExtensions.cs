@@ -104,6 +104,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             services.AddScoped<ICedearRepository, CedearRepository>();
             services.AddScoped<ICedearStockHoldingRepository, CedearStockHoldingRepository>();
             services.AddScoped<IBrokerRepository, BrokerRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGoogleFinanceRepository, GoogleFinanceRepository>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

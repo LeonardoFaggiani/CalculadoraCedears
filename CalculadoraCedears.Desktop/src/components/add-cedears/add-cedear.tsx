@@ -38,6 +38,7 @@ import { postCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CreateCedear } from "@/types/create-cedear";
 import { useDataContext } from "@/context/data-context";
 import { ToastService } from "@/services/toast.service";
+import { getCurrentUser } from "../../services/auth.service";
 
 export default function AddCedear() {
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -57,9 +58,12 @@ export default function AddCedear() {
   });
 
   const onSubmit = async () => {
+
     const formValues = form.getValues();
+    const user = await getCurrentUser();
 
     const request: CreateCedear = {
+      userId: user.id,
       brokerId: formValues.broker,
       cedearId: formValues.cedear,
       exchangeRateCcl: formValues.exchangeRateCcl,
@@ -75,6 +79,7 @@ export default function AddCedear() {
     }).finally(() => {
       navigate("/home");
     });
+    
   };
 
   return (

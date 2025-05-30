@@ -40,19 +40,20 @@ export default function Dashboard() {
 
   useEffect(() => {
     getUser();
-    loadCedears();
   }, []);
 
   const getUser = async () => {
     return await getCurrentUser().then((user) => {
       setUser(user);
+      loadCedears(user.id);
     });
   };
-  const loadCedears = async () => {
+  
+  const loadCedears = async (userId: string) => {
     try {
       setLoading(true);
 
-      await getCedearStockHoldingAsync()
+      await getCedearStockHoldingAsync(userId)
         .then(setCedearsStockHolding)
         .catch(console.log);
     } catch (err) {
@@ -67,16 +68,21 @@ export default function Dashboard() {
   useEffect(() => {
     if (loading) return;
 
-    const unsubscribe = wsClient.subscribe(
-      (updatedStocksHolding: CedearsStockResponse) => {
+    let unsubscribe: (() => void) | null = null;
+
+    wsClient.subscribe((updatedStocksHolding: CedearsStockResponse) => {
         updateCedearStockHoldingPrice(
           updatedStocksHolding.cedearWithStockHoldings
         );
-      }
-    );
+      })
+      .then((unsub) => {
+        unsubscribe = unsub;
+      });
 
     return () => {
-      unsubscribe();
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
   }, [loading]);
 
@@ -188,7 +194,6 @@ export default function Dashboard() {
             <SummaryPortfolio
               portfolioValue={portfolioValue}
               dolarCCL={totalGainLoss}
-              onRefresh={loadCedears}
               loading={loading}
             />
 
@@ -228,7 +233,7 @@ export default function Dashboard() {
                     cedears={cedearsStockResponse?.cedearWithStockHoldings}
                     expandedTicker={expandedTicker}
                     toggleCedear={toggleCedear}
-                    onRefresh={loadCedears}
+                    onRefresh={() => loadCedears(user!.id)}
                   />
                 </>
               )}

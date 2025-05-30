@@ -1,4 +1,5 @@
 export type CreateCedear = {
+    userId:string;
     cedearId: string;
     brokerId: string;
     quantity: number;

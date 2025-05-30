@@ -65,6 +65,7 @@
     <Build Include="Tables\Cedears.sql" />
     <Build Include="Tables\Brokers.sql" />
     <Build Include="Tables\CedearsStockHolding.sql" />
+    <Build Include="Tables\Users.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\PostDeployment\Cedears.sql" />

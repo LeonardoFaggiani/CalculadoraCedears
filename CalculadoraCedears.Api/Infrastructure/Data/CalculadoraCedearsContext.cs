@@ -23,11 +23,9 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
         }
 
         public virtual DbSet<Broker> Brokers { get; set; }
-
         public virtual DbSet<Cedear> Cedears { get; set; }
-
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<CedearsStockHolding> CedearsStockHoldings { get; set; }
-
 
         public async Task<bool> Commit()
         {
@@ -73,6 +71,20 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 .IsUnicode(false);
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.ThirdPartyUserId)
+                .IsRequired()
+                .HasMaxLength(100);
+
+                entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(100);
+
+                entity.Property(e => e.LastLogin)
+                .IsRequired();
+            });
+
             modelBuilder.Entity<CedearsStockHolding>(entity =>
             {
                 entity.ToTable("CedearsStockHolding");
@@ -101,6 +113,10 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.HasOne(d => d.Cedear).WithMany(p => p.CedearsStockHoldings)
                     .HasForeignKey(d => d.CedearId)
                     .HasConstraintName("FK_CedearsStockHolding_Cedears");
+
+                entity.HasOne(d => d.User).WithMany(p => p.CedearsStockHoldings)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_CedearsStockHolding_Users");
             });
         }
     }

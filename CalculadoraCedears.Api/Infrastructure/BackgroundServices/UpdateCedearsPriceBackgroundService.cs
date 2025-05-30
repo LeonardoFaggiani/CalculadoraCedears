@@ -55,13 +55,16 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
 
                 await cedearRepository.UnitOfWork.Commit();
 
-                var cedearsByTicker = await cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(cancellationToken, true);
-
-                if (cedearsByTicker.Any())
+                foreach (var client in cedearsStockHoldingUpdateService.Clients)
                 {
-                    var result = new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(mapper));
+                    var cedearsByTicker = await cedearStockHoldingRepository.GetActivesAndGroupedByTickerAsync(client.Key, cancellationToken, true);
 
-                    await cedearsStockHoldingUpdateService.BroadcastCedearsStockHoldingUpdatesAsync(result);
+                    if (cedearsByTicker.Any())
+                    {
+                        var result = new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(mapper));
+
+                        await cedearsStockHoldingUpdateService.BroadcastCedearsStockHoldingUpdatesAsync(client.Value, result);
+                    }
                 }
 
                 await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);

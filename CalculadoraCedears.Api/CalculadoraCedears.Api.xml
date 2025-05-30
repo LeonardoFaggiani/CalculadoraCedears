@@ -23,9 +23,9 @@
             <param name="request"></param>
             <param name="cancellationToken"></param>
         </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.GetAsync(System.Threading.CancellationToken)">
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.GetAsync(System.String,System.Threading.CancellationToken)">
             <summary>
-            Devuelve todos los CedearsStockHolding activos
+            Devuelve todos los CedearsStockHolding activos por usuario.
             </summary>                
             <param name="cancellationToken"></param>
         </member>
@@ -41,6 +41,12 @@
             Elimina un CedearsStockHolding
             </summary>        
             <param name="cedearsStockHoldingId"></param>
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.UserController.PostLoginAsync(CalculadoraCedears.Api.Dto.Users.Request.UserRequest,System.Threading.CancellationToken)">
+            <summary>
+            Da de alta un usuario
+            </summary>                
             <param name="cancellationToken"></param>
         </member>
         <member name="T:CalculadoraCedears.Api.CrossCutting.Resources.Messages">

@@ -1,8 +1,10 @@
+import { postUserLoginAsync } from '@/api/cedears-api';
+import { CreateUser } from '@/types/create-user';
 import { User } from '@/types/user';
 import { invoke } from '@tauri-apps/api/core';
 import { load } from '@tauri-apps/plugin-store';
 
-let currentUser: User | null = null;
+let currentUser: User | undefined;
 let store: Awaited<ReturnType<typeof load>> | null = null;
 
 async function getStore() {
@@ -20,7 +22,6 @@ export async function login(provider: 'google'): Promise<User> {
       name: string;
       email: string;
       avatar: string | null;
-      provider: string;
       access_token: string;
     }>('login_with_provider', { provider });
 
@@ -29,8 +30,12 @@ export async function login(provider: 'google'): Promise<User> {
       name: userInfo.name,
       email: userInfo.email,
       avatar: userInfo.avatar || undefined,
-      provider: userInfo.provider as 'google',
       accessToken: userInfo.access_token,
+    };
+
+    const userRequest: CreateUser = {
+      userId: userInfo.id,
+      email: userInfo.email
     };
 
     // Store user in Tauri Store
@@ -38,6 +43,8 @@ export async function login(provider: 'google'): Promise<User> {
     await store.set('user', currentUser);
     await store.save();
     console.log('User logged in:', currentUser);
+
+    await postUserLoginAsync(userRequest);
 
     return currentUser;
   } catch (error) {
@@ -47,21 +54,20 @@ export async function login(provider: 'google'): Promise<User> {
 }
 
 
-export async function getCurrentUser(): Promise<User | null> {
+export async function getCurrentUser(): Promise<User> {
   if (!currentUser) {
     try {
       const store = await getStore();
-      currentUser = await store.get<User>('user') || null;
+      currentUser = await store.get<User>('user');
     } catch (error) {
       console.error('Failed to get stored user:', error);
     }
   }
-  return currentUser;
+  return currentUser!;
 }
 
 
 export async function logout(): Promise<void> {
-  currentUser = null;
   const store = await getStore();
   await store.delete('user');
   await store.save();
