@@ -18,10 +18,11 @@ import {
   logout as authLogout,
   getCurrentUser,
 } from "../../services/auth.service";
+import { useDataContext } from "@/context/data-context";
 
 export default function Dashboard() {
-  const [cedearsStockResponse, setCedearsStockHolding] =
-    useState<CedearsStockResponse>();
+  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
+  const { refreshData } = useDataContext();
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>({
@@ -37,6 +38,10 @@ export default function Dashboard() {
     amount: 999.99,
     percentage: 9.99,
   };
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
 
   useEffect(() => {
     getUser();
@@ -161,7 +166,9 @@ export default function Dashboard() {
   };
 
   const handleLogout = () => {
+    authLogout();
     setUser(null);
+    navigate('/');
     console.log("User logged out");
   };
 

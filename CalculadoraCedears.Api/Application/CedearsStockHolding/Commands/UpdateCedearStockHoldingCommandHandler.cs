@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 
-using CalculadoraCedears.Api.Application.Base;
 using CalculadoraCedears.Api.Infrastructure.Repositories;
 
 using CommunityToolkit.Diagnostics;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
 {
-    public class UpdateCedearStockHoldingCommandHandler : CommandHandler<UpdateCedearStockHoldingCommand>
+    public class UpdateCedearStockHoldingCommandHandler : AsyncRequestHandler<UpdateCedearStockHoldingCommand>
     {
         private readonly ICedearStockHoldingRepository cedearStockHoldingRepository;
         private readonly IMapper mapper;
@@ -34,7 +35,7 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
 
             this.cedearStockHoldingRepository.Update(cedearStockHolding);
 
-            await Commit(this.cedearStockHoldingRepository.UnitOfWork);
+            await this.cedearStockHoldingRepository.UnitOfWork.Commit();
         }
     }
 }

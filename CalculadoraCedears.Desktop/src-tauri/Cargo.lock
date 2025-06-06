@@ -3,6 +3,26 @@
 version = 4
 
 [[package]]
+name = "CalculadoraCedears"
+version = "1.0.0"
+dependencies = [
+ "rand 0.8.5",
+ "reqwest 0.11.27",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-http",
+ "tauri-plugin-oauth",
+ "tauri-plugin-opener",
+ "tauri-plugin-shell",
+ "tauri-plugin-store",
+ "tauri-plugin-websocket",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -393,25 +413,6 @@ dependencies = [
  "glib-sys",
  "libc",
  "system-deps",
-]
-
-[[package]]
-name = "calculadoracedearsdesktop"
-version = "0.1.0"
-dependencies = [
- "rand 0.8.5",
- "reqwest 0.11.27",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-http",
- "tauri-plugin-oauth",
- "tauri-plugin-opener",
- "tauri-plugin-shell",
- "tauri-plugin-store",
- "tauri-plugin-websocket",
- "url",
 ]
 
 [[package]]
@@ -4632,7 +4633,9 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",

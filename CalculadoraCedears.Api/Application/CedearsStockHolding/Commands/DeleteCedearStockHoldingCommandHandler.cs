@@ -1,13 +1,14 @@
-﻿using CalculadoraCedears.Api.Application.Base;
-using CalculadoraCedears.Api.Infrastructure.Repositories;
+﻿using CalculadoraCedears.Api.Infrastructure.Repositories;
 
 using CommunityToolkit.Diagnostics;
+
+using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
 {
-    public class DeleteCedearStockHoldingCommandHandler : CommandHandler<DeleteCedearStockHoldingCommand>
+    public class DeleteCedearStockHoldingCommandHandler : AsyncRequestHandler<DeleteCedearStockHoldingCommand>
     {
         private readonly ICedearStockHoldingRepository cedearStockHoldingRepository;
 
@@ -25,7 +26,7 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
             if (cedearsStockHolding is not null)
             {
                 this.cedearStockHoldingRepository.Delete(cedearsStockHolding);
-                await Commit(this.cedearStockHoldingRepository.UnitOfWork);
+                await this.cedearStockHoldingRepository.UnitOfWork.Commit();
             }
         }
     }

@@ -1,5 +1,6 @@
 import { postUserLoginAsync } from '@/api/cedears-api';
 import { CreateUser } from '@/types/create-user';
+import { LoginResponse } from '@/types/login-response';
 import { User } from '@/types/user';
 import { invoke } from '@tauri-apps/api/core';
 import { load } from '@tauri-apps/plugin-store';
@@ -22,6 +23,7 @@ export async function login(provider: 'google'): Promise<User> {
       name: string;
       email: string;
       avatar: string | null;
+      id_token: string;
       access_token: string;
     }>('login_with_provider', { provider });
 
@@ -29,30 +31,33 @@ export async function login(provider: 'google'): Promise<User> {
       id: userInfo.id,
       name: userInfo.name,
       email: userInfo.email,
+      id_token: userInfo.id_token,
       avatar: userInfo.avatar || undefined,
       accessToken: userInfo.access_token,
     };
 
     const userRequest: CreateUser = {
       userId: userInfo.id,
-      email: userInfo.email
+      email: userInfo.email,
+      googleToken: userInfo.id_token,
     };
 
-    // Store user in Tauri Store
-    const store = await getStore();
-    await store.set('user', currentUser);
-    await store.save();
-    console.log('User logged in:', currentUser);
-
-    await postUserLoginAsync(userRequest);
-
+    await postUserLoginAsync(userRequest).then(
+      async (loginResponse: LoginResponse) => {        
+        currentUser!.id_token = loginResponse.jwt;
+        const store = await getStore();
+        await store.set("user", currentUser);
+        await store.save();
+      }
+    );
+    
     return currentUser;
+
   } catch (error) {
     console.error('Login failed:', error);
     throw error;
   }
 }
-
 
 export async function getCurrentUser(): Promise<User> {
   if (!currentUser) {

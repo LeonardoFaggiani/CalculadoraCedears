@@ -23,7 +23,6 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> PostAsync([FromBody] CedearStockHoldingRequest request, CancellationToken cancellationToken)
         {
             var query = new CedearStockHoldingCommand(request);
@@ -36,7 +35,6 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpGet]
-        [AllowAnonymous]
         [Produces("application/json", Type = typeof(CedearsStockHoldingQueryResponse))]
         public async Task<IActionResult> GetAsync([FromQuery] string userId, CancellationToken cancellationToken)
         {
@@ -49,7 +47,6 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         [HttpPut]
-        [AllowAnonymous]
         public async Task<IActionResult> PutAsync([FromBody] UpdateCedearStockHoldingRequest request, CancellationToken cancellationToken)
         {
             var command = new UpdateCedearStockHoldingCommand(request);
@@ -63,7 +60,6 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// <param name="cedearsStockHoldingId"></param>
         /// <param name="cancellationToken"></param>
         [HttpDelete]
-        [AllowAnonymous]
         public async Task<IActionResult> DeleteAsync([FromQuery] Guid cedearsStockHoldingId, CancellationToken cancellationToken)
         {
             var command = new DeleteCedearStockHoldingCommand(cedearsStockHoldingId);

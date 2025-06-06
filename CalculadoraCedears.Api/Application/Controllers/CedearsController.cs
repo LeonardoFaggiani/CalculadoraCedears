@@ -4,7 +4,6 @@ using CalculadoraCedears.Api.Dto.Cedears;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCedears.Api.Application.Controllers
@@ -19,7 +18,6 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpGet]
-        [AllowAnonymous]
         [Produces("application/json", Type = typeof(CedearsQueryResponse))]
         public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {

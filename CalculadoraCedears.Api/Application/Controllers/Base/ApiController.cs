@@ -10,6 +10,7 @@ namespace CalculadoraCedears.Api.Application.Controllers.Base
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
+
     public abstract class ApiController : ControllerBase
     {
         protected readonly IMediator mediator;

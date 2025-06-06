@@ -12,7 +12,6 @@ import { login } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { ToastService } from "@/services/toast.service";
 
-// Iconos SVG como componentes
 const GoogleIcon: React.FC = () => (
   <svg
     className="mr-2 h-4 w-4"
@@ -56,7 +55,7 @@ const Login: React.FC = () => {
       setIsGoogleLoading(true);
 
       await login(provider);
-
+      
       navigate("/home");
     } catch (error) {
       console.error(`${provider} login failed:`, error);
@@ -75,9 +74,6 @@ const Login: React.FC = () => {
           <CardTitle className="text-2xl font-bold text-center">
             Bienvenido a Calculadora Cedears
           </CardTitle>
-          <CardDescription className="text-center">
-            Elegi el login
-          </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <Button

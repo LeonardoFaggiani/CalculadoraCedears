@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "calculadoracedearsdesktop",
+  "productName": "CalculadoraCedear",
   "version": "0.1.0",
-  "identifier": "com.calculadoracedearsdesktop.app",
+  "identifier": "com.calculadoracedear.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,20 +13,20 @@
     "windows": [
       {
         "url": "/",
-        "title": "calculadoracedearsdesktop",
+        "title": "Calculadora de Cedears",
         "width": 1600,
         "height": 800,
         "resizable": false
       }
     ],
     "security": {
-      "csp": null,
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost",
       "dangerousDisableAssetCspModification": true
     }    
   },
   "plugins": {
     "http": null
-  },
+  },  
   "bundle": {
     "active": true,
     "targets": "all",

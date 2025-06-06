@@ -26,6 +26,7 @@ pub struct UserInfo {
     pub email: String,
     pub avatar: Option<String>,
     pub provider: String,
+    pub id_token: String,
     pub access_token: String,
 }
 
@@ -104,9 +105,10 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
     let token_data: serde_json::Value = token_response.json().await.map_err(|err| err.to_string())?;
     let access_token = token_data["access_token"].as_str().ok_or("No access token found")?;
+    let id_token = token_data["id_token"].as_str().ok_or("No ID token found")?;
 
     print!( "access_token: {:?}",access_token);
-
+    
     // Get user info
     let user_info_response = match provider.as_str() {
         "google" => client.get(&config.user_info_url)
@@ -141,6 +143,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         email,
         avatar,
         provider,
+        id_token:id_token.to_string(),
         access_token: access_token.to_string(),
     })
 }

@@ -5,8 +5,13 @@ use tauri_plugin_opener;
 use tauri_plugin_shell;
 use tauri_plugin_store;
 
+
 mod login;
+mod httpclientwrapper;
+
+// Importar funciones públicas
 pub use login::{login_with_provider, UserInfo};
+pub use httpclientwrapper::{http_request, ApiResponse};
 
 #[tauri::command]
 fn start_oauth_server(window: Window) -> Result<u16, String> {
@@ -33,7 +38,8 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![
             start_oauth_server,
-            login::login_with_provider
+            login::login_with_provider,
+            httpclientwrapper::http_request
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

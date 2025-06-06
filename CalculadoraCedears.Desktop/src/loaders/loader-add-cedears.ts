@@ -1,6 +1,6 @@
 import { getBrokersAsync, getCedearsAsync } from "@/api/cedears-api";
 import { Broker } from "@/types/broker-response";
-import { Cedear } from "@/types/cedear-response";
+import { Cedears } from "@/types/cedears";
 import { ListItem } from "@/types/list-item";
 
 export async function getAddCedearData() {
@@ -18,7 +18,7 @@ export async function getAddCedearData() {
     label: x.name
   }));
 
-  const cedears: ListItem[] = cedearsResponse.cedears.map((x: Cedear) => ({
+  const cedears: ListItem[] = cedearsResponse.cedears.map((x: Cedears) => ({
     id: x.id,
     label: `${x.name} - (${x.ticker})`
   }));

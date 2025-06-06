@@ -52,14 +52,14 @@ export default function CedearsInfoTabs({
                         <div className="text-xs text-gray-500">
                           TOTAL VALOR COMPRA (U$S)
                         </div>
-                        <div>{getTotalChangeSummary(cedear).totalPurchase}</div>
+                        <div className="text-right">{getTotalChangeSummary(cedear).totalPurchase}</div>
                       </div>
                       <div>
                         <div className="text-xs text-gray-500">
                           TOTAL VALOR ACTUAL (U$S)
                         </div>
                         <div
-                          className={`text-center transition duration-500 ${
+                          className={`text-right transition duration-500 ${
                             cedear.priceChangeDirection === "up"
                               ? "text-green-100"
                               : cedear.priceChangeDirection === "down"

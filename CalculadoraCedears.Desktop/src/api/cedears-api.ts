@@ -1,196 +1,194 @@
 import { CedearsStockResponse } from "@/types/cedears";
-import { fetch } from "@tauri-apps/plugin-http";
 import { CreateCedear } from "../types/create-cedear";
 import { BrokerResponse } from "../types/broker-response";
 import { CedearResponse } from "@/types/cedear-response";
 import { UpdateCedear } from "@/types/update-cedear";
-import { CraeteUser } from "@/types/create-user";
+import { CreateUser } from "@/types/create-user";
+import { LoginResponse } from "@/types/login-response";
+import { invoke } from "@tauri-apps/api/core";
+import { getCurrentUser } from "@/services/auth.service";
 
-export async function getCedearsAsync(): Promise<CedearResponse> {
+export async function getCedearsAsync()
+: Promise<CedearResponse> {
   try {
-    const response = await fetch("http://localhost:5124/api/Cedears", {
+    const currentUser = await getCurrentUser();
+
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+    };
+
+    const response = await invoke<any>("http_request", {
+      url: `http://localhost:5124/api/Cedears`,
       method: "GET",
-      danger: {
-        acceptInvalidCerts: true,
-        acceptInvalidHostnames: true,
-      },
+      body: null,
+      headers: headers,
     });
 
-    if (response.ok) {
-      return response.json();
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || "Error obteniendo Cedears");
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error("Error en getCedearsAsync:", error);
     throw error;
   }
 }
 
-export async function getBrokersAsync(): Promise<BrokerResponse> {
+export async function getBrokersAsync()
+: Promise<BrokerResponse> {
   try {
-    const response = await fetch("http://localhost:5124/api/Broker", {
+    const currentUser = await getCurrentUser();
+
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+    };
+
+    const response = await invoke<any>("http_request", {
+      url: `https://localhost:7016/api/Broker`,
       method: "GET",
-      danger: {
-        acceptInvalidCerts: true,
-        acceptInvalidHostnames: true,
-      },
+      body: null,
+      headers: headers,
     });
 
-    if (response.ok) {
-      return response.json();
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || "Error obteniendo Brokers");
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error("Error en getBrokersAsync:", error);
     throw error;
   }
 }
 
-export async function getCedearStockHoldingAsync(userId:string): Promise<CedearsStockResponse> {
-  try {    
-    const response = await fetch(
-      `http://localhost:5124/api/CedearsStockHolding?userId=${userId}`,
-      {
-        method: "GET",
-        danger: {
-          acceptInvalidCerts: true,
-          acceptInvalidHostnames: true,
-        },
-      }
-    );
-
-    if (response.ok) {
-      return response.json();
-    }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function postCedearStockHoldingAsync(
-  createCedearRequest: CreateCedear
-): Promise<void> {
+export async function getCedearStockHoldingAsync(userId: string)
+: Promise<CedearsStockResponse> {
   try {
-    const response = await fetch(
-      "http://localhost:5124/api/CedearsStockHolding",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(createCedearRequest),
-        danger: {
-          acceptInvalidCerts: true,
-          acceptInvalidHostnames: true,
-        },
-      }
-    );
+    const currentUser = await getCurrentUser();
 
-    if (response.ok) {
-      return response.json();
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+    };
+
+    const response = await invoke<any>("http_request", {
+      url: `https://localhost:7016/api/CedearsStockHolding?userId=${userId}`,
+      method: "GET",
+      body: null,
+      headers: headers,
+    });
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || "Error obteniendo CedearsStockHolding");
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error("Error en getCedearStockHoldingAsync:", error);
     throw error;
   }
 }
 
-export async function putCedearStockHoldingAsync(
-  updateCedearRequest: UpdateCedear
-): Promise<void> {
+export async function postCedearStockHoldingAsync(createCedearRequest: CreateCedear)
+: Promise<void>  {
   try {
-    const response = await fetch(
-      "http://localhost:5124/api/CedearsStockHolding",
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateCedearRequest),
-        danger: {
-          acceptInvalidCerts: true,
-          acceptInvalidHostnames: true,
-        },
-      }
-    );
 
-    if (response.ok) {
-      return response.json();
+    const currentUser = await getCurrentUser();
+
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+    };
+
+    const response = await invoke<any>('http_request', {
+      url: "https://localhost:7016/api/CedearsStockHolding",
+      method: "POST",
+      body: JSON.stringify(createCedearRequest),
+      headers: headers
+    });
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || 'Error creando de CedearStockHolding');
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error('Error en postCedearStockHoldingAsync:', error);
     throw error;
   }
 }
 
-export async function deleteCedearStockHoldingAsync(
-  cedearStockHoldingId: string
-): Promise<void> {
+export async function putCedearStockHoldingAsync(updateCedearRequest: UpdateCedear)
+: Promise<void> {
   try {
-    const response = await fetch(
-      `http://localhost:5124/api/CedearsStockHolding?cedearsStockHoldingId=${cedearStockHoldingId}`,
-      {
-        method: "DELETE",
-        danger: {
-          acceptInvalidCerts: true,
-          acceptInvalidHostnames: true,
-        },
-      }
-    );
+    const currentUser = await getCurrentUser();
 
-    if (response.ok) {
-      return response.json();
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token}`,
+    };
+
+    const response = await invoke<any>("http_request", {
+      url: "https://localhost:7016/api/CedearsStockHolding",
+      method: "PUT",
+      body: JSON.stringify(updateCedearRequest),
+      headers: headers,
+    });
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || "Error actualizando Cedear");
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error("Error en putCedearStockHoldingAsync:", error);
     throw error;
   }
 }
 
-export async function postUserLoginAsync(
-  userRequest: CraeteUser
-): Promise<void> {
+export async function deleteCedearStockHoldingAsync(cedearStockHoldingId: string)
+: Promise<void>  {
   try {
-    const response = await fetch(
-      "http://localhost:5124/api/User/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userRequest),
-        danger: {
-          acceptInvalidCerts: true,
-          acceptInvalidHostnames: true,
-        },
-      }
-    );
 
-    if (response.ok) {
-      return response.json();
+    const currentUser = await getCurrentUser();
+
+    const headers = {
+      Authorization: `Bearer ${currentUser.id_token}`,
+    };
+
+    const response = await invoke<any>('http_request', {
+      url: `https://localhost:7016/api/CedearsStockHolding?cedearsStockHoldingId=${cedearStockHoldingId}`,
+      method: "DELETE",
+      body: null,
+      headers: headers
+    });
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || 'Error borrando de CedearStockHolding');
     }
-
-    throw new Error(
-      `Error ${response.status}: ${JSON.stringify(response.json())}`
-    );
   } catch (error) {
+    console.error('Error en deleteCedearStockHoldingAsync:', error);
+    throw error;
+  }
+}
+
+export async function postUserLoginAsync(userRequest: CreateUser)
+: Promise<LoginResponse> {
+  try {
+    const response = await invoke<any>("http_request", {
+      url: "https://localhost:7016/api/User/login",
+      method: "POST",
+      body: JSON.stringify(userRequest),
+      headers: null,
+    });
+
+    if (response.success) {
+      return response.data;
+    } else {
+      throw new Error(response.error || "Error en login");
+    }
+  } catch (error) {
+    console.error("Error en postUserLoginAsync:", error);
     throw error;
   }
 }

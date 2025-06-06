@@ -1,6 +1,5 @@
 ﻿using CalculadoraCedears.Api.Application.Controllers.Base;
 using CalculadoraCedears.Api.Application.Users.Commands;
-using CalculadoraCedears.Api.Dto.CedearsStockHolding.Request;
 using CalculadoraCedears.Api.Dto.Users.Request;
 
 using MediatR;
@@ -16,7 +15,7 @@ namespace CalculadoraCedears.Api.Application.Controllers
         { }
 
         /// <summary>
-        /// Da de alta un usuario
+        /// Autentifica el token de google, si es valido da de alta un usuario
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpPost]

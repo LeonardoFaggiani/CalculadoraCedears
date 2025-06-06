@@ -1,4 +1,5 @@
 ﻿using CalculadoraCedears.Api.CrossCutting.Bus;
+using CalculadoraCedears.Api.CrossCutting.Jwt;
 using CalculadoraCedears.Api.Infrastructure.BackgroundServices;
 using CalculadoraCedears.Api.Infrastructure.Data;
 using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
@@ -153,13 +154,16 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             })
             .AddJwtBearer(x =>
             {
+                x.RequireHttpsMetadata = false;
                 x.TokenValidationParameters = new TokenValidationParameters
-                {
+                {                    
+                    ValidateIssuer = true,
+                    ValidIssuers = new[] { configuration.GetSection("JwtOptions:Issuer").Value },
+                    ValidateAudience = true,
+                    ValidAudience = configuration.GetSection("JwtOptions:Audience").Value,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+                };               
             });
 
             return services;
@@ -178,13 +182,21 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
 
             return services;
         }
+
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton<ICedearsStockHoldingUpdateService, CedearsStockHoldingUpdateService>();
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
             return services;
         }
 
+        public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+
+            return services;
+        }
 
         public static IApplicationBuilder UseHealthChecks(this IApplicationBuilder app)
         {

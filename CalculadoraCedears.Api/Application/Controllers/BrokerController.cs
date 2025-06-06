@@ -4,7 +4,6 @@ using CalculadoraCedears.Api.Dto.Brokers;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCedears.Api.Application.Controllers
@@ -18,8 +17,7 @@ namespace CalculadoraCedears.Api.Application.Controllers
         /// Devuelve todos los brokers
         /// </summary>                
         /// <param name="cancellationToken"></param>
-        [HttpGet]
-        [AllowAnonymous]        
+        [HttpGet]      
         [Produces("application/json", Type = typeof(BrokerQueryResponse))]
         public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {

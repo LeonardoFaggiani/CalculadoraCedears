@@ -67,7 +67,7 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(60), cancellationToken);
             }
         }
     }
