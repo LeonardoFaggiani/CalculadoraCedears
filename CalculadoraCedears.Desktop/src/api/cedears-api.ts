@@ -18,7 +18,7 @@ export async function getCedearsAsync()
     };
 
     const response = await invoke<any>("http_request", {
-      url: `http://localhost:5124/api/Cedears`,
+      url: `https://localhost:7016/api/Cedears`,
       method: "GET",
       body: null,
       headers: headers,
