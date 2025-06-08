@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
-import { LogOut, User } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 interface UserProfileDropdownProps {
   user: {

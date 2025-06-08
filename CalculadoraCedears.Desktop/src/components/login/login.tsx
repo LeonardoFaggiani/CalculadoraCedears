@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react";
 import { Button } from "../ui/button";
 import {
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   Card,

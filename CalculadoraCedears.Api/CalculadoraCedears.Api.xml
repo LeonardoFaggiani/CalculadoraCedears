@@ -45,7 +45,13 @@
         </member>
         <member name="M:CalculadoraCedears.Api.Application.Controllers.UserController.PostLoginAsync(CalculadoraCedears.Api.Dto.Users.Request.UserRequest,System.Threading.CancellationToken)">
             <summary>
-            Autentifica el token de google, si es valido da de alta un usuario
+            Autentifica el token de google, si es valido da de alta un usuario.
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.UserController.PostAuthSuccessAsync(System.Threading.CancellationToken)">
+            <summary>
+            Devuelve html de login exitoso.
             </summary>                
             <param name="cancellationToken"></param>
         </member>

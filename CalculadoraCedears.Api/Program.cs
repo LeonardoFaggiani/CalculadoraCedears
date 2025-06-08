@@ -89,6 +89,9 @@ app.Use(async (context, next) =>
     }
 });
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.Run();

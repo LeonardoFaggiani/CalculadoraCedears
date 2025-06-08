@@ -15,7 +15,7 @@ namespace CalculadoraCedears.Api.Application.Controllers
         { }
 
         /// <summary>
-        /// Autentifica el token de google, si es valido da de alta un usuario
+        /// Autentifica el token de google, si es valido da de alta un usuario.
         /// </summary>                
         /// <param name="cancellationToken"></param>
         [HttpPost]
@@ -24,6 +24,18 @@ namespace CalculadoraCedears.Api.Application.Controllers
         public async Task<IActionResult> PostLoginAsync([FromBody] UserRequest request, CancellationToken cancellationToken)
         {
             return Ok(await mediator.Send(new CreateUserCommand(request), cancellationToken));
+        }
+
+        /// <summary>
+        /// Devuelve html de login exitoso.
+        /// </summary>                
+        /// <param name="cancellationToken"></param>
+        [HttpGet]
+        [Route("auth/callback")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PostAuthSuccessAsync(CancellationToken cancellationToken)
+        {
+            return Redirect($"/login-success.html");
         }
     }
 }

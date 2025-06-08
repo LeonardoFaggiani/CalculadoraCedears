@@ -20,6 +20,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.CedearsStockHolding.Comm
         private readonly ICedearStockHoldingRepository CedearStockHoldingRepository;
         private readonly IBrokerRepository BrokerRepository;
         private readonly IGoogleFinanceRepository GoogleFinanceRepository;
+        private readonly IUserRepository UserRepository;
         private readonly IUnitOfWork UnitOfWork;
 
         public CedearStockHoldingCommandHandlerTests()
@@ -28,6 +29,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.CedearsStockHolding.Comm
             this.CedearStockHoldingRepository = Mock.Of<ICedearStockHoldingRepository>();
             this.BrokerRepository = Mock.Of<IBrokerRepository>();
             this.GoogleFinanceRepository = Mock.Of<IGoogleFinanceRepository>();
+            this.UserRepository = Mock.Of<IUserRepository>();
 
             this.UnitOfWork = Mock.Of<IUnitOfWork>();
 
@@ -36,11 +38,11 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.CedearsStockHolding.Comm
 
             Mock.Get(this.CedearRepository).Setup(x => x.All()).Returns(cedears.AsQueryable().BuildMock());
             Mock.Get(this.CedearStockHoldingRepository).Setup(x => x.UnitOfWork).Returns(UnitOfWork);
-            Mock.Get(this.CedearStockHoldingRepository).Setup(x => x.TryIfAlreadyExistsAsync(It.IsAny<DateTime>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
+            Mock.Get(this.CedearStockHoldingRepository).Setup(x => x.TryIfAlreadyExistsAsync(It.IsAny<DateTime>(), It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()));
             Mock.Get(this.BrokerRepository).Setup(x => x.All()).Returns(brokers.AsQueryable().BuildMock());
             Mock.Get(this.GoogleFinanceRepository).Setup(x => x.TryGetCurrentPriceByTickerAndMarketAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
-            Sut = new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, this.BrokerRepository, this.GoogleFinanceRepository);
+            Sut = new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, this.BrokerRepository, this.GoogleFinanceRepository, this.UserRepository);
         }
 
         public class The_Constructor : CedearStockHoldingCommandHandlerTests
@@ -49,28 +51,35 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.CedearsStockHolding.Comm
             public void Should_throw_an_ArgumentNullException_when_cedearStockHoldingRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(null, this.CedearRepository, this.BrokerRepository, this.GoogleFinanceRepository));
+                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(null, this.CedearRepository, this.BrokerRepository, this.GoogleFinanceRepository, this.UserRepository));
             }
 
             [Fact]
             public void Should_throw_an_ArgumentNullException_when_cedearRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, null, this.BrokerRepository, this.GoogleFinanceRepository));
+                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, null, this.BrokerRepository, this.GoogleFinanceRepository, this.UserRepository));
             }
 
             [Fact]
             public void Should_throw_an_ArgumentNullException_when_brokerRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, null, this.GoogleFinanceRepository));
+                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, null, this.GoogleFinanceRepository, this.UserRepository));
             }
 
             [Fact]
             public void Should_throw_an_ArgumentNullException_when_googleFinanceRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, this.BrokerRepository, null));
+                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, this.BrokerRepository, null, this.UserRepository));
+            }
+
+            [Fact]
+            public void Should_throw_an_ArgumentNullException_when_userRepository_is_null()
+            {
+                //Act & Assert
+                Assert.Throws<ArgumentNullException>(() => new CedearStockHoldingCommandHandler(this.CedearStockHoldingRepository, this.CedearRepository, this.BrokerRepository, this.GoogleFinanceRepository, null));
             }
         }
 

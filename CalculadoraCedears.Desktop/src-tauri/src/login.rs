@@ -33,6 +33,7 @@ pub struct UserInfo {
 #[tauri::command]
 pub async fn login_with_provider(_window: Window, provider: String) -> Result<UserInfo, String> {
     let configs = load_oauth_configs()?;
+    let client = reqwest::Client::new();
 
     // Get provider-specific configuration
     let config = match provider.as_str() {
@@ -40,14 +41,31 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
 
+    // ✅ Cargar el HTML en un contexto permitido usando spawn_blocking
+    let html_response = tokio::task::spawn_blocking(|| {
+        let client = reqwest::blocking::Client::builder()
+            .danger_accept_invalid_certs(true)
+            .build()?;
+
+        let response = client
+            .get("https://localhost:7016/api/User/auth/callback")
+            .send()?
+            .text()?;
+
+        Ok::<String, reqwest::Error>(response)
+    })
+    .await
+    .map_err(|e| format!("Blocking task join error: {}", e))?
+    .map_err(|e| format!("Failed to load HTML: {}", e))?;
+
     // OAuth configuration for the server
     let oauth_config = tauri_plugin_oauth::OauthConfig {
         ports: Some(vec![8000, 8001, 8002]),
-        response: Some("OAuth process completed. You can close this window.".into()),
+        response: Some(html_response.into()),
     };
 
     // Create a channel to receive the authorization code
-    let (tx, rx) = mpsc::channel::<String>();
+    let (tx, rx) = std::sync::mpsc::channel::<String>();
     let tx_clone = tx.clone();
 
     // Start the OAuth server
@@ -84,11 +102,10 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let code = rx.recv().map_err(|err| err.to_string())?;
 
     // Exchange the code for an access token
-    let client = reqwest::Client::new();
     let token_response = client.post(&config.token_url)
         .form(&[
-            ("client_id", config.client_id),
-            ("client_secret", config.client_secret),
+            ("client_id", config.client_id.clone()),
+            ("client_secret", config.client_secret.clone()),
             ("code", code),
             ("redirect_uri", format!("http://localhost:{}", port)),
             ("grant_type", "authorization_code".to_string()),
@@ -98,7 +115,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         .await
         .map_err(|err| err.to_string())?;
 
-        print!( "token_response: {:?}",token_response);
+    println!("token_response: {:?}", token_response);
     if !token_response.status().is_success() {
         return Err(format!("Failed to exchange code for token: {}", token_response.status()));
     }
@@ -107,8 +124,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let access_token = token_data["access_token"].as_str().ok_or("No access token found")?;
     let id_token = token_data["id_token"].as_str().ok_or("No ID token found")?;
 
-    print!( "access_token: {:?}",access_token);
-    
+    println!("access_token: {:?}", access_token);
+
     // Get user info
     let user_info_response = match provider.as_str() {
         "google" => client.get(&config.user_info_url)
@@ -143,7 +160,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         email,
         avatar,
         provider,
-        id_token:id_token.to_string(),
+        id_token: id_token.to_string(),
         access_token: access_token.to_string(),
     })
 }

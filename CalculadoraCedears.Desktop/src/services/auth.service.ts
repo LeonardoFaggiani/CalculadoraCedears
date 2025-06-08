@@ -15,7 +15,6 @@ async function getStore() {
   return store;
 }
 
-
 export async function login(provider: 'google'): Promise<User> {
   try {
     const userInfo = await invoke<{
