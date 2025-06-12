@@ -1,7 +1,5 @@
 ﻿using NetDevPack.Domain;
 
-using System.Reflection.Metadata.Ecma335;
-
 namespace CalculadoraCedears.Api.Domain
 {
     public class Cedear : Entity
