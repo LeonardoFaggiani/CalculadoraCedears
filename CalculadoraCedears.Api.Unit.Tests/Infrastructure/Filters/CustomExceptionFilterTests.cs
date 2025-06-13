@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-using CalculadoraCedears.Api.Infrastructure.Exceptions;
+﻿using CalculadoraCedears.Api.Infrastructure.Exceptions;
 using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
 using CalculadoraCedears.Api.Infrastructure.Filters;
 
@@ -10,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-using Moq;
+using System.Net;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Infrastructure.Filters
 {

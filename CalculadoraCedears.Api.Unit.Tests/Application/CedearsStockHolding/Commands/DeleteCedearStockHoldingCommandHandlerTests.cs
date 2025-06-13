@@ -6,8 +6,6 @@ using MediatR;
 
 using MockQueryable;
 
-using Moq;
-
 using NetDevPack.Data;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Application.CedearsStockHolding.Commands

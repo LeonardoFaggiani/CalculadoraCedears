@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-using CalculadoraCedears.Api.CrossCutting.Resources;
+﻿using CalculadoraCedears.Api.CrossCutting.Resources;
 using CalculadoraCedears.Api.Infrastructure.Exceptions.Builder;
 using CalculadoraCedears.Api.Unit.Tests.Base;
 
@@ -13,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-using Moq;
+using System.Net;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Infrastructure.Exceptions.Builder
 {

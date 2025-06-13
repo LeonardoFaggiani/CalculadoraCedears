@@ -8,8 +8,6 @@ using CalculadoraCedears.Api.Unit.Tests.Base;
 
 using MockQueryable;
 
-using Moq;
-
 namespace CalculadoraCedears.Api.Unit.Tests.Application.Brokers.Queries
 {
     public class BrokerQueryHandlerTests : BaseTestClass<BrokerQueryHandler>

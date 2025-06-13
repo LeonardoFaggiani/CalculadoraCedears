@@ -1,73 +1,79 @@
 ﻿using CalculadoraCedears.Api.Application.CedearsStockHolding.Commands;
+using CalculadoraCedears.Api.Application.CedearsStockHolding.Queries;
 using CalculadoraCedears.Api.Application.Controllers;
-using CalculadoraCedears.Api.Dto;
 using CalculadoraCedears.Api.Dto.CedearsStockHolding.Request;
-using CalculadoraCedears.Api.Unit.Tests.Base;
 
-using FluentAssertions;
-
-using Microsoft.AspNetCore.Mvc;
-
-using Moq;
+using MediatR;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
 {
-    public class CedearsStockHoldingControllerTests : BaseTestClass<CedearsStockHoldingController>
+    public class CedearsStockHoldingControllerTests
     {
+        private readonly CedearsStockHoldingController Sut;
+        private readonly IMediator Mediator;
+        private CancellationToken CancellationToken = CancellationToken.None;
+
         public CedearsStockHoldingControllerTests()
         {
-            var cedaerDtos = new List<CedearDto>()
-            {
-                new CedearDto()
-                {
-                    Id = new Guid("5e832cf5-6934-485f-bd8a-207eb3eadc4c"),
-                    Name = "Tests"
-                }
-            };
-
-            Mock.Get(Mediator).Setup(m => m.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()));
-
-            Sut = new CedearsStockHoldingController(Mediator);
+            this.Mediator = Mock.Of<IMediator>();
+            this.Sut = new CedearsStockHoldingController(this.Mediator);
         }
+
 
         public class The_Constructor : CedearsStockHoldingControllerTests
         {
             [Fact]
-            public void Should_throw_an_argumentNullException_when_mediator_is_null()
+            public void Should_throws_argumentNullException_when_mediator_is_null()
             {
-                // act & assert
                 Assert.Throws<ArgumentNullException>(() => new CedearsStockHoldingController(null));
             }
         }
-        
+
+        public class The_Method_GetAsync : CedearsStockHoldingControllerTests
+        {
+            [Fact]
+            public async void Should_call_service_getAsync()
+            {
+                var result = await this.Sut.GetAsync("123", this.CancellationToken);
+
+                Mock.Get(this.Mediator).Verify(x => x.Send(It.IsAny<CedearsStockHoldingQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+            }
+        }
 
         public class The_Method_PostAsync : CedearsStockHoldingControllerTests
         {
-            private CedearStockHoldingRequest Request;
-
-            public The_Method_PostAsync()
-            {
-                Request = new CedearStockHoldingRequest();
-            }
-
             [Fact]
-            public async Task Should_verify_if_mediator_was_called()
+            public async void Should_call_service_postAsync()
             {
-                //Act                
-                await Sut.PostAsync(Request, CancellationToken);
+                var request = new CedearStockHoldingRequest();
 
-                //Assert
-                Mock.Get(Mediator).Verify(x => x.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+                var result = await this.Sut.PostAsync(request, this.CancellationToken);
+
+                Mock.Get(this.Mediator).Verify(x => x.Send(It.IsAny<CedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
             }
+        }
 
+        public class The_Method_PutAsync : CedearsStockHoldingControllerTests
+        {
             [Fact]
-            public async Task Should_verify_query_results()
+            public async void Should_call_service_putAsync()
             {
-                //Act                
-                var result = await Sut.PostAsync(Request, CancellationToken);
+                var request = new UpdateCedearStockHoldingRequest();
 
-                //Assert
-                result.As<OkObjectResult>().Value.As<IActionResult>();
+                var result = await this.Sut.PutAsync(request, this.CancellationToken);
+
+                Mock.Get(this.Mediator).Verify(x => x.Send(It.IsAny<UpdateCedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+            }
+        }
+
+        public class The_Method_DeleteAsync : CedearsStockHoldingControllerTests
+        {
+            [Fact]
+            public async void Should_call_service_deleteAsync()
+            {
+                var result = await this.Sut.DeleteAsync(Guid.NewGuid(), this.CancellationToken);
+
+                Mock.Get(this.Mediator).Verify(x => x.Send(It.IsAny<DeleteCedearStockHoldingCommand>(), It.IsAny<CancellationToken>()), Times.Once);
             }
         }
     }

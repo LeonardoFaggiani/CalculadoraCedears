@@ -6,7 +6,6 @@ using CalculadoraCedears.Api.Dto.CedearsStockHolding.Request;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalculadoraCedears.Api.Application.Controllers

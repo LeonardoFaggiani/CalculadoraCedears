@@ -4,8 +4,6 @@ using CalculadoraCedears.Api.Unit.Tests.Base;
 
 using FluentAssertions;
 
-using Moq;
-
 using NetDevPack.Domain;
 
 namespace CalculadoraCedears.Api.Unit.Tests.Infrastructure.Repositories.Base

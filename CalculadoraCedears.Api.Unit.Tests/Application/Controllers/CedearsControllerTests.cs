@@ -9,8 +9,6 @@ using FluentAssertions;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Moq;
-
 namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
 {
     public class CedearsControllerTests : BaseTestClass<CedearsController>
