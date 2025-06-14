@@ -1,8 +1,6 @@
-
-use std::sync::mpsc;
+use serde::{Deserialize, Serialize};
 use tauri::Window;
 use url::Url;
-use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OAuthConfig {
@@ -72,7 +70,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let port = tauri_plugin_oauth::start_with_config(oauth_config, move |url| {
         // Extract the authorization code from the URL
         let url_obj = Url::parse(&url).expect("Failed to parse URL");
-        let code = url_obj.query_pairs()
+        let code = url_obj
+            .query_pairs()
             .find(|(key, _)| key == "code")
             .map(|(_, value)| value.to_string())
             .expect("No code found in URL");
@@ -84,7 +83,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
     // Build the authorization URL
     let mut auth_url_obj = Url::parse(&config.auth_url).map_err(|err| err.to_string())?;
-    auth_url_obj.query_pairs_mut()
+    auth_url_obj
+        .query_pairs_mut()
         .append_pair("client_id", &config.client_id)
         .append_pair("redirect_uri", &format!("http://localhost:{}", port))
         .append_pair("scope", &config.scope)
@@ -102,7 +102,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
     let code = rx.recv().map_err(|err| err.to_string())?;
 
     // Exchange the code for an access token
-    let token_response = client.post(&config.token_url)
+    let token_response = client
+        .post(&config.token_url)
         .form(&[
             ("client_id", config.client_id.clone()),
             ("client_secret", config.client_secret.clone()),
@@ -117,31 +118,46 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
     println!("token_response: {:?}", token_response);
     if !token_response.status().is_success() {
-        return Err(format!("Failed to exchange code for token: {}", token_response.status()));
+        return Err(format!(
+            "Failed to exchange code for token: {}",
+            token_response.status()
+        ));
     }
 
-    let token_data: serde_json::Value = token_response.json().await.map_err(|err| err.to_string())?;
-    let access_token = token_data["access_token"].as_str().ok_or("No access token found")?;
+    let token_data: serde_json::Value =
+        token_response.json().await.map_err(|err| err.to_string())?;
+    let access_token = token_data["access_token"]
+        .as_str()
+        .ok_or("No access token found")?;
     let id_token = token_data["id_token"].as_str().ok_or("No ID token found")?;
 
     println!("access_token: {:?}", access_token);
 
     // Get user info
     let user_info_response = match provider.as_str() {
-        "google" => client.get(&config.user_info_url)
-            .header("Authorization", format!("Bearer {}", access_token))
-            .header("Accept", "application/json")
-            .send()
-            .await,
+        "google" => {
+            client
+                .get(&config.user_info_url)
+                .header("Authorization", format!("Bearer {}", access_token))
+                .header("Accept", "application/json")
+                .send()
+                .await
+        }
         _ => return Err(format!("Unsupported provider: {}", provider)),
     }
     .map_err(|err| err.to_string())?;
 
     if !user_info_response.status().is_success() {
-        return Err(format!("Failed to get user info: {}", user_info_response.status()));
+        return Err(format!(
+            "Failed to get user info: {}",
+            user_info_response.status()
+        ));
     }
 
-    let user_info: serde_json::Value = user_info_response.json().await.map_err(|err| err.to_string())?;
+    let user_info: serde_json::Value = user_info_response
+        .json()
+        .await
+        .map_err(|err| err.to_string())?;
 
     // Extract user info based on provider
     let (id, name, email, avatar) = match provider.as_str() {
@@ -167,7 +183,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
 // Helper function to generate a random string
 fn generate_random_string(length: usize) -> String {
-    use rand::{Rng, thread_rng};
+    use rand::{thread_rng, Rng};
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let mut rng = thread_rng();
 
@@ -194,4 +210,3 @@ fn load_oauth_configs() -> Result<OAuthConfigs, String> {
 
     Err("cannot find config".to_string())
 }
-

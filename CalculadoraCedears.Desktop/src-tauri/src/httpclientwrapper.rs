@@ -18,7 +18,7 @@ pub async fn http_request(
     headers: Option<HashMap<String, String>>,
 ) -> Result<ApiResponse, String> {
     let client = reqwest::Client::new();
-    
+
     let mut request_builder = match method.to_uppercase().as_str() {
         "GET" => client.get(&url),
         "POST" => client.post(&url),
@@ -29,13 +29,13 @@ pub async fn http_request(
     };
 
     request_builder = request_builder.header("Content-Type", "application/json");
-    
+
     if let Some(custom_headers) = headers {
         for (key, value) in custom_headers {
             request_builder = request_builder.header(&key, &value);
         }
     }
-    
+
     if let Some(request_body) = body {
         request_builder = request_builder.body(request_body);
     }
@@ -43,7 +43,7 @@ pub async fn http_request(
     match request_builder.send().await {
         Ok(response) => {
             let status = response.status();
-            
+
             if status.is_success() {
                 match response.json::<Value>().await {
                     Ok(json_data) => Ok(ApiResponse {
@@ -51,12 +51,13 @@ pub async fn http_request(
                         data: Some(json_data),
                         error: None,
                     }),
-                    Err(e)  => {
-                        Err(format!("Error parseando respuesta: {}", e))
-                    }
+                    Err(e) => Err(format!("Error parseando respuesta: {}", e)),
                 }
             } else {
-                let error_text = response.text().await.unwrap_or_else(|_| "Error desconocido".to_string());
+                let error_text = response
+                    .text()
+                    .await
+                    .unwrap_or_else(|_| "Error desconocido".to_string());
                 Ok(ApiResponse {
                     success: false,
                     data: None,

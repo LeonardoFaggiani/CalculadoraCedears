@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "CalculadoraCedear",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "com.calculadoracedear.app",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -25,7 +25,14 @@
     }    
   },
   "plugins": {
-    "http": null
+    "http": null,
+    "updater": {
+      "windows": {
+        "installMode": "passive"
+      },
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY2RDUzNEYwOTA0MDc4MkUKUldRdWVFQ1E4RFRWWnFmaFZpVTNrYit1cjNFZ0dCRElLM1RpMVNFM2k4MXZ5ekNQWTNnZm9ReXUK",
+      "endpoints": ["https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/download/latest/latest.json"]
+    }
   },  
   "bundle": {
     "active": true,

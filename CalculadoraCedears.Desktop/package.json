@@ -1,7 +1,7 @@
 {
   "name": "calculadoracedear",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -26,6 +26,7 @@
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-shell": "^2.2.1",
     "@tauri-apps/plugin-store": "^2.2.0",
+    "@tauri-apps/plugin-updater": "^2.7.1",
     "@tauri-apps/plugin-websocket": "^2.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

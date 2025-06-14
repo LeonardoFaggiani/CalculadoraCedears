@@ -4,14 +4,14 @@ use tauri_plugin_oauth::OauthConfig;
 use tauri_plugin_opener;
 use tauri_plugin_shell;
 use tauri_plugin_store;
+use tauri_plugin_updater;
 
-
-mod login;
 mod httpclientwrapper;
+mod login;
 
 // Importar funciones públicas
-pub use login::{login_with_provider, UserInfo};
 pub use httpclientwrapper::{http_request, ApiResponse};
+pub use login::{login_with_provider, UserInfo};
 
 #[tauri::command]
 fn start_oauth_server(window: Window) -> Result<u16, String> {
@@ -30,6 +30,7 @@ fn start_oauth_server(window: Window) -> Result<u16, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_http::init())
