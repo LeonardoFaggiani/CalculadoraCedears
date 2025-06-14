@@ -43,8 +43,9 @@ jobs:
         with:
           projectPath: CalculadoraCedears.Desktop
           tagName: app-v__VERSION__ # __VERSION__ se reemplaza por la versión de tu tauri.conf.json
-          releaseName: 'App v__VERSION__'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
+          releaseName: 'CalculadoraCedears v__VERSION__'
+          releaseBody: 'Vea los recursos para descargar e instalarla la aplicación.'
+          includeUpdaterJson: true 
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
