@@ -34,6 +34,14 @@ jobs:
             sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
             sed -i 's|\$GOOGLE_CLIENT_SECRET|'"${{ secrets.GOOGLE_CLIENT_SECRET }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
 
+      - name: Reemplazo de Credenciales de JWT en appSettings.json
+        shell: bash
+        run: |
+            sed -i 's|\$JWT_AUDIENCE|'"${{ secrets.JWT_AUDIENCE }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
