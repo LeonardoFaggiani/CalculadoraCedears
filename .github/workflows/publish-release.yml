@@ -23,26 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verificar si TAURI_SIGNING_PRIVATE_KEY existe
-        shell: bash
-        run: |
-            if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
-                echo "❌ No se encontró TAURI_SIGNING_PRIVATE_KEY"
-                exit 1
-            else
-                echo "✅ TAURI_SIGNING_PRIVATE_KEY está presente"
-            fi
-
-      - name: Verificar si TAURI_SIGNING_PRIVATE_KEY_PASSWORD existe.
-        shell: bash
-        run: |
-            if [ -z "$TAURI_SIGNING_PRIVATE_KEY_PASSWORD" ]; then
-                echo "❌ No se encontró TAURI_SIGNING_PRIVATE_KEY_PASSWORD"
-                exit 1
-            else
-                echo "✅ TAURI_SIGNING_PRIVATE_KEY_PASSWORD está presente"
-            fi
-
       - name: setup node
         uses: actions/setup-node@v4
         with:
