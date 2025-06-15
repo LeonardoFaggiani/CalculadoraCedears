@@ -31,11 +31,12 @@
         "installMode": "passive"
       },
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY2RDUzNEYwOTA0MDc4MkUKUldRdWVFQ1E4RFRWWnFmaFZpVTNrYit1cjNFZ0dCRElLM1RpMVNFM2k4MXZ5ekNQWTNnZm9ReXUK",
-      "endpoints": ["https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/download/latest/latest.json"]
+      "endpoints": ["https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/latest/download/latest.json"]
     }
-  },  
+  },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": "all",
     "icon": [
       "icons/32x32.png",
