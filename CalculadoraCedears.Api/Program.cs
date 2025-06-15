@@ -55,11 +55,6 @@ app.Use(async (context, next) =>
 
             service.AddClient(userId, socket);
 
-            // Enviar datos iniciales (opcional)
-            //await SendInitialData(socket);
-
-            // Mantener la conexi�n abierta y manejar mensajes entrantes
-
             var buffer = new byte[1024 * 4];
             var receiveResult = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 

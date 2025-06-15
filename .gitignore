@@ -20,3 +20,6 @@ CalculadoraCedears.Desktop/.vscode/extensions.json
 /CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.dbmdl
 /CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.jfm
 /CaluladoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj.user
+CalculadoraCedears.Desktop/src-tauri/oauth_config.json
+CalculadoraCedears.Desktop/~/.tauri/CalculadoraCedears.key
+CalculadoraCedears.Desktop/~/.tauri/CalculadoraCedears.key.pub
