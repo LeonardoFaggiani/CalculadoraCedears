@@ -28,6 +28,12 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Reemplazo de Credenciales de Google en oauth_config.json
+        shell: bash
+        run: |
+            sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
+            sed -i 's|\$GOOGLE_CLIENT_SECRET|'"${{ secrets.GOOGLE_CLIENT_SECRET }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
