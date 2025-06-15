@@ -30,7 +30,7 @@
       "windows": {
         "installMode": "passive"
       },
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY2RDUzNEYwOTA0MDc4MkUKUldRdWVFQ1E4RFRWWnFmaFZpVTNrYit1cjNFZ0dCRElLM1RpMVNFM2k4MXZ5ekNQWTNnZm9ReXUK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ1MkI3Qjc3QjQxNDE5RDYKUldUV0dSUzBkM3NyUmRuUm5sNFY0QzBkakNlcnhsa0tlSHpCTlhkRXUvOUhqTmZGWFk0eExpMkQK",
       "endpoints": ["https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/latest/download/latest.json"]
     }
   },
