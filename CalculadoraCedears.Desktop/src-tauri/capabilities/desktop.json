@@ -1,14 +1,16 @@
 {
   "identifier": "desktop-capability",
+  "description": "Capability for the checkupdates window",
   "platforms": [
     "macOS",
     "windows",
     "linux"
   ],
   "windows": [
-    "main"
+    "checkupdates"
   ],
   "permissions": [
+    "process:default",
     "updater:default",
     "updater:allow-check",
     "updater:allow-download-and-install"
