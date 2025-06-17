@@ -18,7 +18,7 @@ export async function getCedearsAsync()
     };
 
     const response = await invoke<any>("http_request", {
-      url: `https://localhost:7016/api/Cedears`,
+      endpoint: `Cedears`,
       method: "GET",
       body: null,
       headers: headers,
@@ -45,7 +45,7 @@ export async function getBrokersAsync()
     };
 
     const response = await invoke<any>("http_request", {
-      url: `https://localhost:7016/api/Broker`,
+      endpoint: `Broker`,
       method: "GET",
       body: null,
       headers: headers,
@@ -72,7 +72,7 @@ export async function getCedearStockHoldingAsync(userId: string)
     };
 
     const response = await invoke<any>("http_request", {
-      url: `https://localhost:7016/api/CedearsStockHolding?userId=${userId}`,
+      endpoint: `CedearsStockHolding?userId=${userId}`,
       method: "GET",
       body: null,
       headers: headers,
@@ -100,7 +100,7 @@ export async function postCedearStockHoldingAsync(createCedearRequest: CreateCed
     };
 
     const response = await invoke<any>('http_request', {
-      url: "https://localhost:7016/api/CedearsStockHolding",
+      endpoint: "CedearsStockHolding",
       method: "POST",
       body: JSON.stringify(createCedearRequest),
       headers: headers
@@ -127,7 +127,7 @@ export async function putCedearStockHoldingAsync(updateCedearRequest: UpdateCede
     };
 
     const response = await invoke<any>("http_request", {
-      url: "https://localhost:7016/api/CedearsStockHolding",
+      endpoint: "CedearsStockHolding",
       method: "PUT",
       body: JSON.stringify(updateCedearRequest),
       headers: headers,
@@ -155,7 +155,7 @@ export async function deleteCedearStockHoldingAsync(cedearStockHoldingId: string
     };
 
     const response = await invoke<any>('http_request', {
-      url: `https://localhost:7016/api/CedearsStockHolding?cedearsStockHoldingId=${cedearStockHoldingId}`,
+      endpoint: `CedearsStockHolding?cedearsStockHoldingId=${cedearStockHoldingId}`,
       method: "DELETE",
       body: null,
       headers: headers
@@ -176,7 +176,7 @@ export async function postUserLoginAsync(userRequest: CreateUser)
 : Promise<LoginResponse> {
   try {
     const response = await invoke<any>("http_request", {
-      url: "https://localhost:7016/api/User/login",
+      endpoint: "User/login",
       method: "POST",
       body: JSON.stringify(userRequest),
       headers: null,

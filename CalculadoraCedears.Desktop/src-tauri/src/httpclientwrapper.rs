@@ -12,19 +12,21 @@ pub struct ApiResponse {
 
 #[tauri::command]
 pub async fn http_request(
-    url: String,
+    endpoint: String,
     method: String,
     body: Option<String>,
     headers: Option<HashMap<String, String>>,
 ) -> Result<ApiResponse, String> {
     let client = reqwest::Client::new();
 
+    let full_url = format!("{}{}", get_base_url(), endpoint);
+
     let mut request_builder = match method.to_uppercase().as_str() {
-        "GET" => client.get(&url),
-        "POST" => client.post(&url),
-        "PUT" => client.put(&url),
-        "DELETE" => client.delete(&url),
-        "PATCH" => client.patch(&url),
+        "GET" => client.get(&full_url),
+        "POST" => client.post(&full_url),
+        "PUT" => client.put(&full_url),
+        "DELETE" => client.delete(&full_url),
+        "PATCH" => client.patch(&full_url),
         _ => return Err("Método HTTP no soportado".to_string()),
     };
 
@@ -67,4 +69,8 @@ pub async fn http_request(
         }
         Err(e) => Err(format!("Error de conexión: {}", e)),
     }
+}
+
+fn get_base_url() -> String {
+    std::env::var("API_BASE_URL").unwrap_or_else(|_| "https://localhost:7016/api/".to_string())
 }
