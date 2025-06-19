@@ -8,6 +8,7 @@ use tauri_plugin_updater;
 
 mod httpclientwrapper;
 mod login;
+mod utils;
 
 // Importar funciones públicas
 pub use httpclientwrapper::{http_request, ApiResponse};

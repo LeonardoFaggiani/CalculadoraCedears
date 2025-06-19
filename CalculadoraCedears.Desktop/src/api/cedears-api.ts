@@ -7,6 +7,7 @@ import { CreateUser } from "@/types/create-user";
 import { LoginResponse } from "@/types/login-response";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentUser } from "@/services/auth.service";
+import { ToastService } from "@/services/toast.service";
 
 export async function getCedearsAsync()
 : Promise<CedearResponse> {
@@ -184,10 +185,13 @@ export async function postUserLoginAsync(userRequest: CreateUser)
 
     if (response.success) {
       return response.data;
-    } else {
+    } else {      
+      await ToastService.error(response.error);
       throw new Error(response.error || "Error en login");
     }
-  } catch (error) {
+  } catch (error:any) {  
+    
+    await ToastService.error(error);
     console.error("Error en postUserLoginAsync:", error);
     throw error;
   }

@@ -2,6 +2,7 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
+use crate::utils::get_base_url;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiResponse {
@@ -69,8 +70,4 @@ pub async fn http_request(
         }
         Err(e) => Err(format!("Error de conexión: {}", e)),
     }
-}
-
-fn get_base_url() -> String {
-    std::env::var("API_BASE_URL").unwrap_or_else(|_| "https://localhost:7016/api/".to_string())
 }

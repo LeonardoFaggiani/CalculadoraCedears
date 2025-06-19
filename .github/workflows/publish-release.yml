@@ -61,7 +61,6 @@ jobs:
           releaseName: 'CalculadoraCedears v__VERSION__'
           releaseBody: 'Vea los recursos para descargar e instalarla la aplicación.'
           includeUpdaterJson: true 
-          tauriScript: 'npm run build'
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

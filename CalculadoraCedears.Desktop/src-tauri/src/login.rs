@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use tauri::Window;
 use url::Url;
+use crate::utils::get_base_url;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OAuthConfig {
@@ -39,6 +40,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
         _ => return Err(format!("Unsupported provider: {}", provider)),
     };
 
+    let full_url = format!("{}{}", get_base_url(), "User/auth/callback");
+
     // ✅ Cargar el HTML en un contexto permitido usando spawn_blocking
     let html_response = tokio::task::spawn_blocking(|| {
         let client = reqwest::blocking::Client::builder()
@@ -46,7 +49,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             .build()?;
 
         let response = client
-            .get("https://localhost:7016/api/User/auth/callback")
+            .get(full_url)
             .send()?
             .text()?;
 
