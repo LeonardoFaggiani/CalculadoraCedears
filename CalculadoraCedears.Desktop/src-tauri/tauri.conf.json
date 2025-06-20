@@ -50,16 +50,13 @@
       "endpoints": [
         "https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/latest/download/latest.json"
       ]
-    },
-    "log": {
-      "level": "info",
-      "targets": ["logDir", "stdout"]
     }
   },
   "bundle": {
     "active": true,
     "createUpdaterArtifacts": true,
     "targets": "all",
+    "resources": ["oauth_config.json"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

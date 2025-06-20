@@ -29,6 +29,8 @@ pub struct UserInfo {
     pub access_token: String,
 }
 
+const CONFIG_STR: &str = include_str!("../../src-tauri/oauth_config.json");
+
 #[tauri::command]
 pub async fn login_with_provider(_window: Window, provider: String) -> Result<UserInfo, String> {
     let configs = load_oauth_configs()?;
@@ -198,17 +200,8 @@ fn generate_random_string(length: usize) -> String {
 }
 
 fn load_oauth_configs() -> Result<OAuthConfigs, String> {
-    let config_path = std::path::Path::new("oauth_config.json");
+    let configs: OAuthConfigs = serde_json::from_str(CONFIG_STR)
+        .map_err(|e| format!("Failed to parse config: {}", e))?;
 
-    if config_path.exists() {
-        let config_content = std::fs::read_to_string(config_path)
-            .map_err(|e| format!("Failed to read config file: {}", e))?;
-
-        let configs: OAuthConfigs = serde_json::from_str(&config_content)
-            .map_err(|e| format!("Failed to parse config file: {}", e))?;
-
-        return Ok(configs);
-    }
-
-    Err("cannot find config".to_string())
+    Ok(configs)
 }

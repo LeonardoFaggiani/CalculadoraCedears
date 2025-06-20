@@ -57,15 +57,15 @@ const Login: React.FC = () => {
       await login(provider);
 
       navigate("/home");
-      
+
     } catch (error: any) {
       if (error instanceof Error) {
         LogError(`Mensaje de error:${error.message}`);
+        ToastService.error(`Mensaje de error:${error.message}`);
       } else {
         LogError(`Error inesperado:${error}`);
+        ToastService.error(`Error inesperado:${error}`);
       }
-
-      ToastService.error("Google login failed, please retry");
     } finally {
       setIsGoogleLoading(false);
     }

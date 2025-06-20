@@ -22,7 +22,7 @@ pub async fn http_request(
 
     let full_url = format!("{}{}", get_base_url(), endpoint);
 
-    log::info!("{}", full_url);
+    log::info!("Endpoiunt que se llama en httpwrapper: {}", full_url);
 
     let mut request_builder = match method.to_uppercase().as_str() {
         "GET" => client.get(&full_url),
