@@ -1,9 +1,9 @@
-name: 'publish'
+name: 'Deply Tauri App'
 
 on:
   push:
     branches:
-      - main
+      - Release
 
 # Este workflow se ejecuta en cada push a la rama `main` para crear una release de GitHub,
 # construir tu aplicación Tauri y subir los artefactos generados.

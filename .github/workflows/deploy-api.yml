@@ -3,7 +3,7 @@ name: Deploy .NET API to Azure
 on:
   push:
     branches:
-      - main  # o la rama que uses para publicar
+      - main
 
 jobs:
   build-and-deploy:
@@ -25,6 +25,7 @@ jobs:
             sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
             sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
             sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$SQL_CONNECTION_STRING|'"${{ secrets.SQL_CONNECTION_STRING }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
 
       - name: Restore dependencies
         run: dotnet restore CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
