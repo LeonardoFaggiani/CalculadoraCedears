@@ -10,6 +10,7 @@ import {
 import { login } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { ToastService } from "@/services/toast.service";
+import { error as LogError } from '@tauri-apps/plugin-log';
 
 const GoogleIcon: React.FC = () => (
   <svg
@@ -54,10 +55,16 @@ const Login: React.FC = () => {
       setIsGoogleLoading(true);
 
       await login(provider);
-      
+
       navigate("/home");
-    } catch (error) {
-      console.error(`${provider} login failed:`, error);
+      
+    } catch (error: any) {
+      if (error instanceof Error) {
+        LogError(`Mensaje de error:${error.message}`);
+      } else {
+        LogError(`Error inesperado:${error}`);
+      }
+
       ToastService.error("Google login failed, please retry");
     } finally {
       setIsGoogleLoading(false);

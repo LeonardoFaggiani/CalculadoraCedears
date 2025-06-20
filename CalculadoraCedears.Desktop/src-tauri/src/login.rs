@@ -42,6 +42,8 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
 
     let full_url = format!("{}{}", get_base_url(), "User/auth/callback");
 
+    log::info!("Endpoint a llamar:{}", full_url);
+
     // ✅ Cargar el HTML en un contexto permitido usando spawn_blocking
     let html_response = tokio::task::spawn_blocking(|| {
         let client = reqwest::blocking::Client::builder()
