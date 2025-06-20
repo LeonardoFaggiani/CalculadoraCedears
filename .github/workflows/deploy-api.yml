@@ -1,0 +1,46 @@
+name: Deploy .NET API to Azure
+
+on:
+  push:
+    branches:
+      - main  # o la rama que uses para publicar
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Reemplazo de Credenciales de JWT en appSettings.json
+        shell: bash
+        run: |
+            sed -i 's|\$JWT_AUDIENCE|'"${{ secrets.JWT_AUDIENCE }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+            sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+
+      - name: Restore dependencies
+        run: dotnet restore CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
+
+      - name: Run unit tests
+        run: dotnet test CalculadoraCedears.Api.Unit.Tests/CalculadoraCedears.Api.Unit.Tests.csproj --configuration Release --no-build --verbosity normal
+
+      - name: Build
+        run: dotnet build --configuration Release CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
+
+      - name: Publish
+        run: dotnet publish -c Release -o ./publish CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
