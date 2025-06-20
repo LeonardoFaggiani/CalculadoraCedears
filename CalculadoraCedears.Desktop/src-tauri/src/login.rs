@@ -1,7 +1,7 @@
+use crate::utils::get_base_url;
 use serde::{Deserialize, Serialize};
 use tauri::Window;
 use url::Url;
-use crate::utils::get_base_url;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OAuthConfig {
@@ -48,10 +48,7 @@ pub async fn login_with_provider(_window: Window, provider: String) -> Result<Us
             .danger_accept_invalid_certs(true)
             .build()?;
 
-        let response = client
-            .get(full_url)
-            .send()?
-            .text()?;
+        let response = client.get(full_url).send()?.text()?;
 
         Ok::<String, reqwest::Error>(response)
     })

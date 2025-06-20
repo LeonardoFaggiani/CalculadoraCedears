@@ -32,6 +32,7 @@ url = "2.4"
 rand = "0.8"
 tokio = { version = "1.0", features = ["rt-multi-thread", "macros"] }
 tauri-plugin-process = "2"
-
+tauri-plugin-log = "2"
+log = "0.4"
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-updater = "2"

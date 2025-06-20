@@ -1,8 +1,8 @@
+use crate::utils::get_base_url;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
-use crate::utils::get_base_url;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ApiResponse {
@@ -21,6 +21,8 @@ pub async fn http_request(
     let client = reqwest::Client::new();
 
     let full_url = format!("{}{}", get_base_url(), endpoint);
+
+    log::info!("{}", full_url);
 
     let mut request_builder = match method.to_uppercase().as_str() {
         "GET" => client.get(&full_url),

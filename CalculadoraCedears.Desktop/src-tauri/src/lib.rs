@@ -5,6 +5,7 @@ use tauri_plugin_opener;
 use tauri_plugin_shell;
 use tauri_plugin_store;
 use tauri_plugin_updater;
+use tauri_plugin_log;
 
 mod httpclientwrapper;
 mod login;
@@ -30,7 +31,7 @@ fn start_oauth_server(window: Window) -> Result<u16, String> {
 
 #[tauri::command]
 async fn relaunch(app: AppHandle) -> Result<(), ()> {
-    app.restart();        
+    app.restart();
 }
 
 #[tauri::command]
@@ -53,6 +54,11 @@ async fn show_splash_screen(app: AppHandle) -> Result<(), ()> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_log::Builder::new().target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::LogDir {
+                file_name: Some("logs".to_string())
+            },
+          )).build())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_websocket::init())
