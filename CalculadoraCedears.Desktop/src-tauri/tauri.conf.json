@@ -38,7 +38,7 @@
     "security": {
       "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost",
       "dangerousDisableAssetCspModification": true
-    }    
+    }
   },
   "plugins": {
     "http": null,
@@ -47,7 +47,13 @@
         "installMode": "passive"
       },
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ1MkI3Qjc3QjQxNDE5RDYKUldUV0dSUzBkM3NyUmRuUm5sNFY0QzBkakNlcnhsa0tlSHpCTlhkRXUvOUhqTmZGWFk0eExpMkQK",
-      "endpoints": ["https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/latest/download/latest.json"]
+      "endpoints": [
+        "https://github.com/LeonardoFaggiani/CalculadoraCedears/releases/latest/download/latest.json"
+      ]
+    },
+    "log": {
+      "level": "info",
+      "targets": ["logDir", "stdout"]
     }
   },
   "bundle": {
