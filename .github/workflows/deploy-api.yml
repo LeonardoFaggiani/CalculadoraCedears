@@ -53,7 +53,7 @@ jobs:
         uses: Azure/sql-action@v2
         with:
           connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-          path: "CalculadoraCedears.Api.Db/dacpac/CalculadoraCedears.Api.Db.dacpac
+          path: "CalculadoraCedears.Api.Db/dacpac/CalculadoraCedears.Api.Db.dacpac"
           action: Publish
 
       - name: Publicar Api .NET
