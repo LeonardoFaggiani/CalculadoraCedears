@@ -41,20 +41,19 @@ jobs:
 
       - name: Build DACPAC
         run: |
-          msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:Dsp=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider
+          msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:Dsp=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider /p:OutputPath=./dacpac
         shell: powershell
 
-      - name: Copiar DACPAC generado a output
+      - name: Verificar archivo DACPAC
         run: |
-          mkdir output
-          copy "CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db/output/*.dacpac" output/
+            dir CalculadoraCedears.Api.Db/dacpac/
         shell: powershell
 
       - name: Publicar DACPAC a Azure SQL
         uses: Azure/sql-action@v2
         with:
           connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-          path: ./output/CalculadoraCedears.Api.Db.dacpac
+          path: "CalculadoraCedears.Api.Db/dacpac/CalculadoraCedears.Api.Db.dacpac
           action: Publish
 
       - name: Publicar Api .NET
