@@ -36,9 +36,13 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
 
+      - name: MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+
       - name: Build DACPAC
         run: |
             msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:OutputPath=./dacpac
+        shell: powershell
 
       - name: Publicar de DACPAC a Azure SQL
         uses: Azure/sql-action@v2
