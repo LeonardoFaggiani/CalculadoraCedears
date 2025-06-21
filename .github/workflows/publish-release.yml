@@ -1,13 +1,9 @@
-name: 'Deply Tauri App'
+name: 'Deploy Tauri App'
 
 on:
   push:
-    branches:
-      - Release
-
-# Este workflow se ejecuta en cada push a la rama `main` para crear una release de GitHub,
-# construir tu aplicación Tauri y subir los artefactos generados.
-
+    tags:
+      - 'v*'
 jobs:
   publish-tauri:
     permissions:
@@ -31,8 +27,8 @@ jobs:
       - name: Reemplazo de Credenciales de Google en oauth_config.json
         shell: bash
         run: |
-            sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
-            sed -i 's|\$GOOGLE_CLIENT_SECRET|'"${{ secrets.GOOGLE_CLIENT_SECRET }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
+          sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
+          sed -i 's|\$GOOGLE_CLIENT_SECRET|'"${{ secrets.GOOGLE_CLIENT_SECRET }}"'|g' CalculadoraCedears.Desktop/src-tauri/oauth_config.json
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -49,9 +45,9 @@ jobs:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
         with:
           projectPath: CalculadoraCedears.Desktop
-          tagName: Release-v__VERSION__ # __VERSION__ se reemplaza por la versión de tu tauri.conf.json
-          releaseName: 'CalculadoraCedears v__VERSION__'
-          releaseBody: 'Vea los recursos para descargar e instalarla la aplicación.'
+          tagName: Release-${{ github.ref_name }}
+          releaseName: 'CalculadoraCedears ${{ github.ref_name }}'
+          releaseBody: 'Vea los recursos para descargar e instalar la aplicación.'
           includeUpdaterJson: true 
           releaseDraft: false
           prerelease: false
