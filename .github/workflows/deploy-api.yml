@@ -21,11 +21,11 @@ jobs:
       - name: Reemplazo de Credenciales de JWT en appSettings.json
         shell: bash
         run: |
-            sed -i 's|\$JWT_AUDIENCE|'"${{ secrets.JWT_AUDIENCE }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
-            sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
-            sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
-            sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
-            sed -i 's|\$SQL_CONNECTION_STRING|'"${{ secrets.SQL_CONNECTION_STRING }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$JWT_AUDIENCE|'"${{ secrets.JWT_AUDIENCE }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$SQL_CONNECTION_STRING|'"${{ secrets.SQL_CONNECTION_STRING }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
 
       - name: Restore dependencias
         run: dotnet restore CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
@@ -41,20 +41,26 @@ jobs:
 
       - name: Build DACPAC
         run: |
-         msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:Dsp=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider /p:OutputPath=./CalculadoraCedears.Api.Db/output
+          msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:Dsp=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider
         shell: powershell
 
-      - name: Publicar de DACPAC a Azure SQL
+      - name: Copiar DACPAC generado a output
+        run: |
+          mkdir output
+          copy "CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db/output/*.dacpac" output/
+        shell: powershell
+
+      - name: Publicar DACPAC a Azure SQL
         uses: Azure/sql-action@v2
         with:
-            connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-            path: ./CalculadoraCedears.Api.Db/output/CalculadoraCedears.Api.Db.dacpac
-            action: Publish
+          connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
+          path: ./output/CalculadoraCedears.Api.Db.dacpac
+          action: Publish
 
-      - name: Publicar Api
+      - name: Publicar Api .NET
         run: dotnet publish -c Release -o ./publish CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
 
-      - name: Deploy to Azure Web App
+      - name: Deploy de la API a Azure App Service
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
