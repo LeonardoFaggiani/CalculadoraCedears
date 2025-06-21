@@ -47,9 +47,8 @@ jobs:
       - name: Publicar de DACPAC a Azure SQL
         uses: Azure/sql-action@v2
         with:
-            server-name: ${{ secrets.AZURE_SQL_SERVER_NAME }}
             connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
-            dacpac-path: ./dacpac/CalculadoraCedears.Api.Db.dacpac
+            path: ./dacpac/CalculadoraCedears.Api.Db.dacpac
             action: Publish
 
       - name: Publicar Api
