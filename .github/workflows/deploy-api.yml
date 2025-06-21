@@ -1,4 +1,4 @@
-name: Deploy .NET API to Azure
+name: Deploy del proyecto .NET API a Azure
 
 on:
   push:
@@ -27,16 +27,28 @@ jobs:
             sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
             sed -i 's|\$SQL_CONNECTION_STRING|'"${{ secrets.SQL_CONNECTION_STRING }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
 
-      - name: Restore dependencies
+      - name: Restore dependencias
         run: dotnet restore CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
 
-      - name: Run unit tests
+      - name: Unit test
         run: dotnet test CalculadoraCedears.Api.Unit.Tests/CalculadoraCedears.Api.Unit.Tests.csproj --configuration Release --no-build --verbosity normal
 
       - name: Build
         run: dotnet build --configuration Release CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
 
-      - name: Publish
+      - name: Build DACPAC
+        run: |
+            msbuild CalculadoraCedears.Api.Db/CalculadoraCedears.Api.Db.sqlproj /p:Configuration=Release /p:OutputPath=./dacpac
+
+      - name: Publicar de DACPAC a Azure SQL
+        uses: Azure/sql-action@v2
+        with:
+            server-name: ${{ secrets.AZURE_SQL_SERVER_NAME }}
+            connection-string: ${{ secrets.SQL_CONNECTION_STRING }}
+            dacpac-path: ./dacpac/CalculadoraCedears.Api.Db.dacpac
+            action: Publish
+
+      - name: Publicar Api
         run: dotnet publish -c Release -o ./publish CalculadoraCedears.Api/CalculadoraCedears.Api.csproj
 
       - name: Deploy to Azure Web App
