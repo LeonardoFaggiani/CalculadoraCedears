@@ -25,6 +25,8 @@ jobs:
           sed -i 's|\$JWT_ISSUER|'"${{ secrets.JWT_ISSUER }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
           sed -i 's|\$JWT_SECRET|'"${{ secrets.JWT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
           sed -i 's|\$GOOGLE_CLIENT_ID|'"${{ secrets.GOOGLE_CLIENT_ID }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$GOOGLE_SECRET|'"${{ secrets.GOOGLE_CLIENT_SECRET }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
+          sed -i 's|\$GOOGLE_REDIRECT_URI|'"${{ secrets.GOOGLE_REDIRECT_URI }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
           sed -i 's|\$SQL_CONNECTION_STRING|'"${{ secrets.SQL_CONNECTION_STRING }}"'|g' CalculadoraCedears.Api/appsettings.Development.json
 
       - name: Restore dependencias
