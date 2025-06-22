@@ -1,6 +1,5 @@
 ﻿using CalculadoraCedears.Api.Application.Controllers;
 using CalculadoraCedears.Api.Application.Users.Commands;
-using CalculadoraCedears.Api.Dto.Users.Request;
 
 using FluentAssertions;
 
@@ -31,25 +30,25 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Controllers
             }
         }
 
-        public class The_Method_GetAsync : UserControllerTests
+        public class The_Method_PostAuthSuccessAsync : UserControllerTests
         {
-            [Fact]
-            public async void Should_call_service_postLoginAsync()
+            public The_Method_PostAuthSuccessAsync()
             {
-                var request = new UserRequest();
+                Mock.Get(this.Mediator).Setup(x => x.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Dto.Users.Response.CreateUserCommandResponse("jwt"));
+            }
 
-                var result = await this.Sut.PostLoginAsync(request, this.CancellationToken);
+            [Fact]
+            public async Task Should_call_createUserCommand()
+            {
+                await this.Sut.PostAuthSuccessAsync("jwtTest", "state", this.CancellationToken);
 
                 Mock.Get(this.Mediator).Verify(x => x.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()), Times.Once);
             }
-        }
 
-        public class The_Method_PostAuthSuccessAsync : UserControllerTests
-        {
             [Fact]
-            public async void Should_call_service_postAuthSuccessAsync()
+            public async Task Should_check_result_redirect()
             {
-                var result = await this.Sut.PostAuthSuccessAsync(this.CancellationToken);
+                var result = await this.Sut.PostAuthSuccessAsync("jwtTest", "state", this.CancellationToken);
 
                 result.As<RedirectResult>();
             }

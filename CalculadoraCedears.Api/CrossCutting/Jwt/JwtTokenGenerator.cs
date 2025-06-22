@@ -1,4 +1,6 @@
-﻿using Google.Apis.Auth;
+﻿using CalculadoraCedears.Api.Infrastructure.Repositories;
+
+using CommunityToolkit.Diagnostics;
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -11,29 +13,36 @@ namespace CalculadoraCedears.Api.CrossCutting.Jwt
 {
     public interface IJwtTokenGenerator
     {
-        Task<string> ValidateAndGenerateTokenAsync(string email, string userId, string googleToken, string googleClientId);
+        Task<GoogleUserInfo> ValidateAndGenerateTokenAsync(string googleToken);
     }
 
+    public record GoogleUserInfo(string UserId, string Email, string Jwt);
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly JwtOptions options;
+        private readonly IGoogleRepository googleRepository;
 
-        public JwtTokenGenerator(IOptions<JwtOptions> options)
+        public JwtTokenGenerator(IOptions<JwtOptions> options, IGoogleRepository googleRepository)
         {
+            Guard.IsNotNull(options, nameof(options));
+            Guard.IsNotNull(googleRepository, nameof(googleRepository));
+
             this.options = options.Value;
+            this.googleRepository = googleRepository;
         }
 
-        public async Task<string> ValidateAndGenerateTokenAsync(string email, string userId, string googleToken, string googleClientId)
+        public async Task<GoogleUserInfo> ValidateAndGenerateTokenAsync(string googleCode)
         {
-            var validPayload = await ValidateGoogleToken(googleToken, googleClientId);
+            var googleToken = await this.googleRepository.ExchangeCodeAsync(googleCode);
 
-            if (validPayload is null)
+            if (googleToken is null)
                 throw new UnauthorizedAccessException("Invalid Google token");
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.Sub, googleToken.Subject),
+                new Claim(JwtRegisteredClaimNames.Name, googleToken.Name),
+                new Claim(JwtRegisteredClaimNames.Email, googleToken.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -49,25 +58,7 @@ namespace CalculadoraCedears.Api.CrossCutting.Jwt
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        private async Task<GoogleJsonWebSignature.Payload?> ValidateGoogleToken(string googleToken, string googleClientId)
-        {
-            try
-            {
-                var settings = new GoogleJsonWebSignature.ValidationSettings()
-                {
-                    Audience = new[] { googleClientId }
-                };
-                var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken, settings);
-
-                return payload;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+            return new GoogleUserInfo(googleToken.Subject, googleToken.Email, new JwtSecurityTokenHandler().WriteToken(token));
+        }   
     }
 }

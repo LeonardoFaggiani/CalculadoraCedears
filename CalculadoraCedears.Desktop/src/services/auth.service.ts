@@ -1,6 +1,3 @@
-import { postUserLoginAsync } from '@/api/cedears-api';
-import { CreateUser } from '@/types/create-user';
-import { LoginResponse } from '@/types/login-response';
 import { User } from '@/types/user';
 import { invoke } from '@tauri-apps/api/core';
 import { load } from '@tauri-apps/plugin-store';
@@ -15,45 +12,30 @@ async function getStore() {
   return store;
 }
 
-export async function login(provider: 'google'): Promise<User> {
+export async function login(provider: "google"): Promise<User> {
   try {
     const userInfo = await invoke<{
-      id: string;
+      sub: string;
       name: string;
       email: string;
-      avatar: string | null;
-      id_token: string;
-      access_token: string;
-    }>('login_with_provider', { provider });
+      token: string;
+    }>("login_with_provider", { provider });
 
     currentUser = {
-      id: userInfo.id,
+      id: userInfo.sub,
       name: userInfo.name,
       email: userInfo.email,
-      id_token: userInfo.id_token,
-      avatar: userInfo.avatar || undefined,
-      accessToken: userInfo.access_token,
+      avatar: "",
+      token: userInfo.token,
     };
 
-    const userRequest: CreateUser = {
-      userId: userInfo.id,
-      email: userInfo.email,
-      googleToken: userInfo.id_token,
-    };
+    const store = await getStore();
+    await store.set("user", currentUser);
+    await store.save();
 
-    await postUserLoginAsync(userRequest).then(
-      async (loginResponse: LoginResponse) => {        
-        currentUser!.id_token = loginResponse.jwt;
-        const store = await getStore();
-        await store.set("user", currentUser);
-        await store.save();
-      }
-    );
-    
     return currentUser;
-
   } catch (error) {
-    console.error('Login failed:', error);
+    console.error("Login failed:", error);
     throw error;
   }
 }

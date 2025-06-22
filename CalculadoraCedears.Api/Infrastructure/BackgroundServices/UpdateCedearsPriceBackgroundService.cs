@@ -28,7 +28,7 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
             while (!cancellationToken.IsCancellationRequested)
             {
                 using var scope = scopeFactory.CreateScope();
-                var googleFinanceRepository = scope.ServiceProvider.GetRequiredService<IGoogleFinanceRepository>();
+                var googleRepository = scope.ServiceProvider.GetRequiredService<IGoogleRepository>();
                 var cedearRepository = scope.ServiceProvider.GetRequiredService<ICedearRepository>();
                 var cedearsStockHoldingUpdateService = scope.ServiceProvider.GetRequiredService<ICedearsStockHoldingUpdateService>();
                 var cedearStockHoldingRepository = scope.ServiceProvider.GetRequiredService<ICedearStockHoldingRepository>();
@@ -40,8 +40,8 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
                 {
                     try
                     {
-                        var googleFinance = await googleFinanceRepository
-                            .TryGetCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
+                        var googleFinance = await googleRepository
+                            .TryGetFromFinanceCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
 
                         cedear.SetPriceHasBeenChanged(Math.Round(googleFinance.Price, 2, MidpointRounding.AwayFromZero) != cedear.Price);
                         cedear.SetPrice(Math.Round(googleFinance.Price, 2, MidpointRounding.AwayFromZero));

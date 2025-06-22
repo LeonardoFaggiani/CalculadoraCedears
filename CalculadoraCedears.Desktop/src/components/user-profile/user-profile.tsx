@@ -15,7 +15,6 @@ interface UserProfileDropdownProps {
   user: {
     name: string
     email: string
-    image?: string
   } | null
   onLogout: () => void
 }
@@ -38,7 +37,7 @@ export default function UserProfile({ user, onLogout }: UserProfileDropdownProps
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-12 w-12 rounded-full p-0 hover:bg-white/10 cursor-pointer">
             <Avatar className="h-12 w-12 border-2 border-white/20 shadow-lg">
-              <AvatarImage src={user.image || "/placeholder.svg"} alt={user.name} />
+              <AvatarImage src="/placeholder.svg" alt={user.name} />
               <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
                 {getInitials(user.name)}
               </AvatarFallback>

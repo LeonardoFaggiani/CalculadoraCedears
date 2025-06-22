@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0;url=https://api-calculadoracedears-dmdgbva0gncwgcba.eastus2-01.azurewebsites.net/login-success.html" />
-
     <title>Autenticación Exitosa - Calculadora CEDEARs</title>
     <style type="text/css">
         * {
@@ -364,6 +362,25 @@
     </div>
 
     <script>
+
+        window.onload = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get("token");
+            if (token) {
+                try {
+
+                    const iframe = document.createElement("iframe");
+                    iframe.style.display = "none";
+                    iframe.src = `http://localhost:8000/?token=${token}`;
+                    document.body.appendChild(iframe);
+
+                } catch (e) {
+                    console.error("No se pudo contactar con Tauri:", e);
+                }
+            }
+
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
 
             const closeButton = document.getElementById('close-button');

@@ -36,9 +36,9 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
             this.Command = new CreateUserCommand(request);
 
             Mock.Get(this.UserRepository).Setup(x => x.All()).Returns(users.AsQueryable().BuildMock());
-            Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync("jwt");
+            Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("1","test@test","jwt"));
 
-            Sut = new CreateUserCommandHandler(this.UserRepository, this.JwtTokenGenerator, this.Configuration);
+            Sut = new CreateUserCommandHandler(this.UserRepository, this.JwtTokenGenerator);
         }
 
         public class The_Constructor : CreateUserCommandHandlerTests
@@ -47,21 +47,14 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
             public void Should_throw_an_ArgumentNullException_when_userRepository_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CreateUserCommandHandler(null, this.JwtTokenGenerator, this.Configuration));
+                Assert.Throws<ArgumentNullException>(() => new CreateUserCommandHandler(null, this.JwtTokenGenerator));
             }
 
             [Fact]
             public void Should_throw_an_ArgumentNullException_when_jwtTokenGenerator_is_null()
             {
                 //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CreateUserCommandHandler(this.UserRepository, null, this.Configuration));
-            }
-
-            [Fact]
-            public void Should_throw_an_ArgumentNullException_when_configuration_is_null()
-            {
-                //Act & Assert
-                Assert.Throws<ArgumentNullException>(() => new CreateUserCommandHandler(this.UserRepository, this.JwtTokenGenerator, null));
+                Assert.Throws<ArgumentNullException>(() => new CreateUserCommandHandler(this.UserRepository, null));
             }
         }
 
@@ -90,6 +83,9 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
             [Fact]
             public async Task Should_verify_if_updated_is_called()
             {
+                //Arrange
+                Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("123", "test@test", "jwt"));
+
                 //Act
                 await Sut.Handle(this.Command, CancellationToken);
 

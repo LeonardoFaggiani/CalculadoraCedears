@@ -1,0 +1,3 @@
+interface TokenMessage {
+  token?: string;
+}

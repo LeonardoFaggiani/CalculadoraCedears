@@ -1,4 +1,7 @@
 use crate::utils::get_base_url;
+use crate::utils::decode_jwt_unverified;
+pub use crate::utils::UserInfo;
+
 use serde::{Deserialize, Serialize};
 use tauri::Window;
 use url::Url;
@@ -18,174 +21,68 @@ pub struct OAuthConfigs {
     pub google: OAuthConfig,
 }
 
-#[derive(Serialize)]
-pub struct UserInfo {
-    pub id: String,
-    pub name: String,
-    pub email: String,
-    pub avatar: Option<String>,
-    pub provider: String,
-    pub id_token: String,
-    pub access_token: String,
-}
-
 const CONFIG_STR: &str = include_str!("../../src-tauri/oauth_config.json");
+
 
 #[tauri::command]
 pub async fn login_with_provider(_window: Window, provider: String) -> Result<UserInfo, String> {
+
+    let config = get_provider_config(&provider)?;
+    let redirect_url = format!("{}{}", get_base_url(), "User/auth/callback");
+
+    let jwt_token = perform_oauth_flow(&config, &redirect_url)?;    
+
+    let user_info = decode_jwt_unverified(&jwt_token)?;
+
+    Ok(user_info)
+}
+
+fn get_provider_config(provider: &str) -> Result<OAuthConfig, String> {
     let configs = load_oauth_configs()?;
-    let client = reqwest::Client::new();
+    match provider {
+        "google" => Ok(configs.google),
+        _ => Err(format!("Unsupported provider: {}", provider)),
+    }
+}
 
-    // Get provider-specific configuration
-    let config = match provider.as_str() {
-        "google" => configs.google,
-        _ => return Err(format!("Unsupported provider: {}", provider)),
-    };
-
-    let full_url = format!("{}{}", get_base_url(), "User/auth/callback");
-
-    log::info!("Endpoint a llamar:{}", full_url);
-
-    // ✅ Cargar el HTML en un contexto permitido usando spawn_blocking
-    let html_response = tokio::task::spawn_blocking(|| {
-        let client = reqwest::blocking::Client::builder()
-            .danger_accept_invalid_certs(true)
-            .build()?;
-
-        let response = client.get(full_url).send()?.text()?;
-
-        Ok::<String, reqwest::Error>(response)
-    })
-    .await
-    .map_err(|e| format!("Blocking task join error: {}", e))?
-    .map_err(|e| format!("Failed to load HTML: {}", e))?;
-
-    // OAuth configuration for the server
+fn perform_oauth_flow(config: &OAuthConfig, redirect_url: &str) -> Result<String, String> {
     let oauth_config = tauri_plugin_oauth::OauthConfig {
         ports: Some(vec![8000, 8001, 8002]),
-        response: Some(html_response.into()),
+        response: None,
     };
 
-    // Create a channel to receive the authorization code
     let (tx, rx) = std::sync::mpsc::channel::<String>();
     let tx_clone = tx.clone();
 
-    // Start the OAuth server
-    let port = tauri_plugin_oauth::start_with_config(oauth_config, move |url| {
-        // Extract the authorization code from the URL
-        let url_obj = Url::parse(&url).expect("Failed to parse URL");
-        let code = url_obj
-            .query_pairs()
-            .find(|(key, _)| key == "code")
-            .map(|(_, value)| value.to_string())
-            .expect("No code found in URL");
-
-        // Send the code through the channel
-        tx_clone.send(code).expect("Failed to send code");
-    })
-    .map_err(|err| err.to_string())?;
-
-    // Build the authorization URL
-    let mut auth_url_obj = Url::parse(&config.auth_url).map_err(|err| err.to_string())?;
-    auth_url_obj
-        .query_pairs_mut()
-        .append_pair("client_id", &config.client_id)
-        .append_pair("redirect_uri", &format!("http://localhost:{}", port))
-        .append_pair("scope", &config.scope)
-        .append_pair("response_type", "code");
-
-    // Generate a random state for CSRF protection
-    let state = generate_random_string(16);
-    auth_url_obj.query_pairs_mut().append_pair("state", &state);
-
-    // Open the authorization URL in the default browser
-    tauri_plugin_opener::open_url(auth_url_obj.as_str(), None::<&str>)
-        .map_err(|err| err.to_string())?;
-
-    // Wait for the authorization code
-    let code = rx.recv().map_err(|err| err.to_string())?;
-
-    // Exchange the code for an access token
-    let token_response = client
-        .post(&config.token_url)
-        .form(&[
-            ("client_id", config.client_id.clone()),
-            ("client_secret", config.client_secret.clone()),
-            ("code", code),
-            ("redirect_uri", format!("http://localhost:{}", port)),
-            ("grant_type", "authorization_code".to_string()),
-        ])
-        .header("Accept", "application/json")
-        .send()
-        .await
-        .map_err(|err| err.to_string())?;
-
-    println!("token_response: {:?}", token_response);
-    if !token_response.status().is_success() {
-        return Err(format!(
-            "Failed to exchange code for token: {}",
-            token_response.status()
-        ));
-    }
-
-    let token_data: serde_json::Value =
-        token_response.json().await.map_err(|err| err.to_string())?;
-    let access_token = token_data["access_token"]
-        .as_str()
-        .ok_or("No access token found")?;
-    let id_token = token_data["id_token"].as_str().ok_or("No ID token found")?;
-
-    println!("access_token: {:?}", access_token);
-
-    // Get user info
-    let user_info_response = match provider.as_str() {
-        "google" => {
-            client
-                .get(&config.user_info_url)
-                .header("Authorization", format!("Bearer {}", access_token))
-                .header("Accept", "application/json")
-                .send()
-                .await
+    tauri_plugin_oauth::start_with_config(oauth_config, move |url| {
+        if let Ok(url_obj) = Url::parse(&url) {
+            if let Some(token) = url_obj
+                .query_pairs()
+                .find(|(key, _)| key == "token")
+                .map(|(_, value)| value.to_string())
+            {
+                let _ = tx_clone.send(token);
+            }
         }
-        _ => return Err(format!("Unsupported provider: {}", provider)),
-    }
-    .map_err(|err| err.to_string())?;
-
-    if !user_info_response.status().is_success() {
-        return Err(format!(
-            "Failed to get user info: {}",
-            user_info_response.status()
-        ));
-    }
-
-    let user_info: serde_json::Value = user_info_response
-        .json()
-        .await
-        .map_err(|err| err.to_string())?;
-
-    // Extract user info based on provider
-    let (id, name, email, avatar) = match provider.as_str() {
-        "google" => (
-            user_info["sub"].as_str().unwrap_or("").to_string(),
-            user_info["name"].as_str().unwrap_or("").to_string(),
-            user_info["email"].as_str().unwrap_or("").to_string(),
-            user_info["picture"].as_str().map(|s| s.to_string()),
-        ),
-        _ => return Err(format!("Unsupported provider: {}", provider)),
-    };
-
-    Ok(UserInfo {
-        id,
-        name,
-        email,
-        avatar,
-        provider,
-        id_token: id_token.to_string(),
-        access_token: access_token.to_string(),
     })
+    .map_err(|err| format!("Failed to start OAuth listener: {}", err))?;
+
+    let mut auth_url = Url::parse(&config.auth_url)
+        .map_err(|err| format!("Invalid auth URL: {}", err))?;
+
+    auth_url.query_pairs_mut()
+        .append_pair("client_id", &config.client_id)
+        .append_pair("redirect_uri", redirect_url)
+        .append_pair("scope", &config.scope)
+        .append_pair("response_type", "code")
+        .append_pair("state", &generate_random_string(16));
+
+    tauri_plugin_opener::open_url(auth_url.as_str(), None::<&str>)
+        .map_err(|err| format!("Failed to open browser: {}", err))?;
+
+    rx.recv().map_err(|err| format!("Failed to receive token: {}", err))
 }
 
-// Helper function to generate a random string
 fn generate_random_string(length: usize) -> String {
     use rand::{thread_rng, Rng};
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

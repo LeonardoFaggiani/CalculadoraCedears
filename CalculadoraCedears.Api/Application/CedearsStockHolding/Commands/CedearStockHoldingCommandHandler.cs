@@ -13,25 +13,25 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
         private readonly ICedearStockHoldingRepository cedearStockHoldingRepository;
         private readonly ICedearRepository cedearRepository;
         private readonly IBrokerRepository brokerRepository;
-        private readonly IGoogleFinanceRepository googleFinanceRepository;
+        private readonly IGoogleRepository googleRepository;
         private readonly IUserRepository userRepository;
 
         public CedearStockHoldingCommandHandler(ICedearStockHoldingRepository cedearStockHoldingRepository,
             ICedearRepository cedearRepository,
             IBrokerRepository brokerRepository,
-            IGoogleFinanceRepository googleFinanceRepository,
+            IGoogleRepository googleRepository,
             IUserRepository userRepository)
         {
             Guard.IsNotNull(cedearStockHoldingRepository, nameof(cedearStockHoldingRepository));
             Guard.IsNotNull(cedearRepository, nameof(cedearRepository));
             Guard.IsNotNull(brokerRepository, nameof(brokerRepository));
-            Guard.IsNotNull(googleFinanceRepository, nameof(googleFinanceRepository));
+            Guard.IsNotNull(googleRepository, nameof(googleRepository));
             Guard.IsNotNull(userRepository, nameof(userRepository));
 
             this.cedearStockHoldingRepository = cedearStockHoldingRepository;
             this.cedearRepository = cedearRepository;
             this.brokerRepository = brokerRepository;
-            this.googleFinanceRepository = googleFinanceRepository;
+            this.googleRepository = googleRepository;
             this.userRepository = userRepository;
         }
 
@@ -45,7 +45,7 @@ namespace CalculadoraCedears.Api.Application.CedearsStockHolding.Commands
             var broker = await this.brokerRepository.All().FirstAsync(x => x.Id == command.request.BrokerId, cancellationToken);
             var user = await this.userRepository.All().FirstAsync(x => x.ThirdPartyUserId.ToLower() == command.request.UserId.ToLower(), cancellationToken);
 
-            var googleFinance = await this.googleFinanceRepository.TryGetCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
+            var googleFinance = await this.googleRepository.TryGetFromFinanceCurrentPriceByTickerAndMarketAsync(cedear.Ticker, cedear.Market, cancellationToken);
 
             cedearsStockHolding.SetBroker(broker)
                 .SetCedear(cedear)

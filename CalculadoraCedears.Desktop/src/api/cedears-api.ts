@@ -3,11 +3,8 @@ import { CreateCedear } from "../types/create-cedear";
 import { BrokerResponse } from "../types/broker-response";
 import { CedearResponse } from "@/types/cedear-response";
 import { UpdateCedear } from "@/types/update-cedear";
-import { CreateUser } from "@/types/create-user";
-import { LoginResponse } from "@/types/login-response";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentUser } from "@/services/auth.service";
-import { ToastService } from "@/services/toast.service";
 
 export async function getCedearsAsync()
 : Promise<CedearResponse> {
@@ -15,7 +12,7 @@ export async function getCedearsAsync()
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+      Authorization: `Bearer ${currentUser.token!.trim()}`,
     };
 
     const response = await invoke<any>("http_request", {
@@ -42,7 +39,7 @@ export async function getBrokersAsync()
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+      Authorization: `Bearer ${currentUser.token!.trim()}`,
     };
 
     const response = await invoke<any>("http_request", {
@@ -69,7 +66,7 @@ export async function getCedearStockHoldingAsync(userId: string)
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+      Authorization: `Bearer ${currentUser.token!.trim()}`,
     };
 
     const response = await invoke<any>("http_request", {
@@ -97,7 +94,7 @@ export async function postCedearStockHoldingAsync(createCedearRequest: CreateCed
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token!.trim()}`,
+      Authorization: `Bearer ${currentUser.token!.trim()}`,
     };
 
     const response = await invoke<any>('http_request', {
@@ -124,7 +121,7 @@ export async function putCedearStockHoldingAsync(updateCedearRequest: UpdateCede
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token}`,
+      Authorization: `Bearer ${currentUser.token}`,
     };
 
     const response = await invoke<any>("http_request", {
@@ -152,7 +149,7 @@ export async function deleteCedearStockHoldingAsync(cedearStockHoldingId: string
     const currentUser = await getCurrentUser();
 
     const headers = {
-      Authorization: `Bearer ${currentUser.id_token}`,
+      Authorization: `Bearer ${currentUser.token}`,
     };
 
     const response = await invoke<any>('http_request', {
@@ -169,30 +166,6 @@ export async function deleteCedearStockHoldingAsync(cedearStockHoldingId: string
     }
   } catch (error) {
     console.error('Error en deleteCedearStockHoldingAsync:', error);
-    throw error;
-  }
-}
-
-export async function postUserLoginAsync(userRequest: CreateUser)
-: Promise<LoginResponse> {
-  try {
-    const response = await invoke<any>("http_request", {
-      endpoint: "User/login",
-      method: "POST",
-      body: JSON.stringify(userRequest),
-      headers: null,
-    });
-
-    if (response.success) {
-      return response.data;
-    } else {      
-      await ToastService.error(response.error);
-      throw new Error(response.error || "Error en login");
-    }
-  } catch (error:any) {  
-    
-    await ToastService.error(error);
-    console.error("Error en postUserLoginAsync:", error);
     throw error;
   }
 }

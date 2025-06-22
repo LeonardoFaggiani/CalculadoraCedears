@@ -29,8 +29,7 @@ export default function Dashboard() {
     id: "1",
     name: "Default",
     email: "Default@gmail.com",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    avatar: "",
   });
 
   const portfolioValue = 99999;
