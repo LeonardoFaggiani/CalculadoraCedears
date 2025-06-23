@@ -71,4 +71,7 @@
     <None Include="Scripts\PostDeployment\Cedears.sql" />
     <PostDeploy Include="Scripts\Script.PostDeployment.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\PostDeployment\Brokers.sql" />
+  </ItemGroup>
 </Project>

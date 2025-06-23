@@ -11,3 +11,4 @@ Post-Deployment Script Template
 */
 
 :r .\PostDeployment\Cedears.sql
+:r .\PostDeployment\Brokers.sql
