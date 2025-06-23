@@ -1,5 +1,4 @@
 using CalculadoraCedears.Api.Infrastructure.Extensions;
-using CalculadoraCedears.Api.Infrastructure.WebSocket;
 
 using MediatR;
 
@@ -7,6 +6,8 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.AddSecretEnviroment();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAuthorization(builder.Configuration);
@@ -35,54 +36,7 @@ app.MapControllers();
 
 app.UseHealthChecks();
 
-app.UseWebSockets(new WebSocketOptions
-{
-    KeepAliveInterval = TimeSpan.FromMinutes(2)
-});
-
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path == "/ws/stocks")
-    {
-        if (context.WebSockets.IsWebSocketRequest)
-        {
-            var service = context.RequestServices.GetRequiredService<ICedearsStockHoldingUpdateService>();
-            var socket = await context.WebSockets.AcceptWebSocketAsync();
-            var clientId = Guid.NewGuid().ToString();
-
-
-            var userId = context.Request.Query["userId"].ToString();
-
-            service.AddClient(userId, socket);
-
-            var buffer = new byte[1024 * 4];
-            var receiveResult = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            while (!receiveResult.CloseStatus.HasValue)
-            {
-                // Aqu� podr�as procesar mensajes recibidos desde el cliente si es necesario
-                // Por ejemplo, si el cliente quiere suscribirse solo a ciertos s�mbolos
-
-                receiveResult = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-
-            await socket.CloseAsync(
-                receiveResult.CloseStatus.Value,
-                receiveResult.CloseStatusDescription,
-                CancellationToken.None);
-
-            service.RemoveClient(clientId);
-        }
-        else
-        {
-            context.Response.StatusCode = 400;
-        }
-    }
-    else
-    {
-        await next();
-    }
-});
+app.UseWebSockets();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

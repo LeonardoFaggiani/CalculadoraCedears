@@ -23,3 +23,4 @@ CalculadoraCedears.Desktop/.vscode/extensions.json
 CalculadoraCedears.Desktop/src-tauri/oauth_config.json
 CalculadoraCedears.Desktop/~/.tauri/CalculadoraCedears.key
 CalculadoraCedears.Desktop/~/.tauri/CalculadoraCedears.key.pub
+/CalculadoraCedears.Api/secret.settings.json
