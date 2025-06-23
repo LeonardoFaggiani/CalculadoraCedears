@@ -12,6 +12,8 @@ Post-Deployment Script Template
 
 SET NOCOUNT ON
 
+SET IDENTITY_INSERT [Brokers] ON
+
 MERGE INTO [Brokers] AS [Target]
 USING (VALUES 
 (1,'Bull Market', 0.70)) AS [Source] ([Id],[Name],[Comision])
@@ -44,5 +46,8 @@ ELSE
  END
 GO
 
+
+SET IDENTITY_INSERT [Brokers] OFF
+GO
 SET NOCOUNT OFF
 GO
