@@ -31,7 +31,7 @@ export function NumericInputFields<T extends FieldValues>({
     const intRegex = /^\d*$/;
   
     const isValid = numericType === "int" ? intRegex.test(val) : decimalRegex.test(val);
-  
+
     if (isValid) {
       setInputValue(val); // mantener como string mientras el usuario escribe
   
@@ -41,14 +41,13 @@ export function NumericInputFields<T extends FieldValues>({
         form.setValue(name, parsed as any);
       }
     }
-  };
+  };  
   
-
   return (
     <FormField
       control={form.control}
       name={name}
-      render={() => (
+      render={({field}) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
@@ -59,7 +58,7 @@ export function NumericInputFields<T extends FieldValues>({
                 </span>
               )}
               <Input
-                value={inputValue}
+                value={inputValue || field.value}
                 placeholder={placeholder}
                 onChange={handleChange}
                 required={required}

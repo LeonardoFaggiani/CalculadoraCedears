@@ -50,7 +50,7 @@ export function SelectItemField<T extends FieldValues>({
     <FormField
       control={form.control}
       name={name}
-      render={({ field }) => (
+      render={ ({field}) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
