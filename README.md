@@ -5,14 +5,14 @@ La idea de este proyecto es generar una calculadora de cedears para que se pueda
 ## Que resuelve `CalculadoraCedears`
 
 Como en varios brokers Argentinos no hay forma de calcular la ganancia verdadera, si no que se ve "afectada" por el tipo de cambio del dolar, por este motivo surgio la idea de crear esta calculadora para poder obtener de una manera rapida y facil la ganancia neta.
-### 📌 Prerrequisito
+## 📌 Prerrequisito
    - NET 8.
    - Net. Standard 2.1
    - Net. Framework 4.8.1
    - NodeJS 22.13.1
    - SQL Express
 
-### 🔧 Configuración
+## 🔧 Configuración
 
 #### Este proyecto requiere que configures tus propias credenciales de Google para poder autenticar usuarios.
 Para ello, haz lo siguiente:

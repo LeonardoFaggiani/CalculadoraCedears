@@ -78,11 +78,12 @@ namespace CalculadoraCedears.Api.Domain
         {
             decimal comision = (this.PurchasePriceArs * brokerComision) / 100;
 
-            this.PurchasePriceUsd = (this.PurchasePriceArs + comision)/((decimal)(this.ExchangeRateCcl * ratio));
+            this.PurchasePriceUsd = ((this.PurchasePriceArs + comision)/this.ExchangeRateCcl) * ratio;
             this.PurchaseValueUsd = (this.PurchasePriceUsd * this.EffectiveRatio);
 
             return this;
         }
+
         public CedearsStockHolding SetCurrentUsd(decimal price)
         {
             this.Cedear.SetPrice(price);
