@@ -1,7 +1,7 @@
-﻿using CalculadoraCedears.Api.Application.Users.Commands;
+﻿using CalculadoraCedears.Api.Application.Auth.Commands;
 using CalculadoraCedears.Api.CrossCutting.Jwt;
 using CalculadoraCedears.Api.Domain;
-using CalculadoraCedears.Api.Dto.Users.Request;
+using CalculadoraCedears.Api.Dto.Auth.Request;
 using CalculadoraCedears.Api.Infrastructure.Repositories;
 using CalculadoraCedears.Api.Unit.Tests.Base;
 
@@ -11,7 +11,7 @@ using MockQueryable;
 
 using NetDevPack.Data;
 
-namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
+namespace CalculadoraCedears.Api.Unit.Tests.Application.Auth.Commands
 {
     public class CreateUserCommandHandlerTests : BaseTestClass<CreateUserCommandHandler>
     {
@@ -36,7 +36,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
             this.Command = new CreateUserCommand(request);
 
             Mock.Get(this.UserRepository).Setup(x => x.All()).Returns(users.AsQueryable().BuildMock());
-            Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("1","test@test","jwt"));
+            Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("1","test@test","jwt", "refreshJwt"));
 
             Sut = new CreateUserCommandHandler(this.UserRepository, this.JwtTokenGenerator);
         }
@@ -84,7 +84,7 @@ namespace CalculadoraCedears.Api.Unit.Tests.Application.Users.Commands
             public async Task Should_verify_if_updated_is_called()
             {
                 //Arrange
-                Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("123", "test@test", "jwt"));
+                Mock.Get(this.JwtTokenGenerator).Setup(x => x.ValidateAndGenerateTokenAsync(It.IsAny<string>())).ReturnsAsync(new GoogleUserInfo("123", "test@test", "jwt", "refreshJwt"));
 
                 //Act
                 await Sut.Handle(this.Command, CancellationToken);

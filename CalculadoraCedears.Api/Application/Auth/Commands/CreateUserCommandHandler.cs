@@ -1,5 +1,5 @@
 ﻿using CalculadoraCedears.Api.CrossCutting.Jwt;
-using CalculadoraCedears.Api.Dto.Users.Response;
+using CalculadoraCedears.Api.Dto.Auth.Response;
 using CalculadoraCedears.Api.Infrastructure.Repositories;
 
 using CommunityToolkit.Diagnostics;
@@ -8,7 +8,7 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace CalculadoraCedears.Api.Application.Users.Commands
+namespace CalculadoraCedears.Api.Application.Auth.Commands
 {
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, CreateUserCommandResponse>
     {
@@ -41,11 +41,12 @@ namespace CalculadoraCedears.Api.Application.Users.Commands
                 this.userRepository.Update(user);
             }
 
+            user.SetRefreshToken();
             user.SetLastLogin();
 
             await this.userRepository.UnitOfWork.Commit();
 
-            return new CreateUserCommandResponse(googleUserInfo.Jwt);
+            return new CreateUserCommandResponse(googleUserInfo.Jwt, user.RefreshToken);
         }
     }
 }

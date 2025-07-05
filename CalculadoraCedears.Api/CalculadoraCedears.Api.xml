@@ -4,6 +4,24 @@
         <name>CalculadoraCedears.Api</name>
     </assembly>
     <members>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.AuthController.PostAuthSuccessAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Autentifica el token de google, si es valido da de alta un usuario y rediriji a login exitoso.
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.AuthController.PostRefreshTokenAsync(CalculadoraCedears.Api.Dto.Auth.Request.JwtTokenRequest,System.Threading.CancellationToken)">
+            <summary>
+            Valida el refreshToken y genera un nuevo jwt, si el refreshToken vencio, se desloguea al usaurio.
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.AuthController.PostLogoutAsync(CalculadoraCedears.Api.Dto.Auth.Request.LogOutUserRequest,System.Threading.CancellationToken)">
+            <summary>
+            Desloguea el usuario.
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
         <member name="M:CalculadoraCedears.Api.Application.Controllers.BrokerController.GetAsync(System.Threading.CancellationToken)">
             <summary>
             Devuelve todos los brokers
@@ -41,12 +59,6 @@
             Elimina un CedearsStockHolding
             </summary>        
             <param name="cedearsStockHoldingId"></param>
-            <param name="cancellationToken"></param>
-        </member>
-        <member name="M:CalculadoraCedears.Api.Application.Controllers.UserController.PostAuthSuccessAsync(System.String,System.String,System.Threading.CancellationToken)">
-            <summary>
-            Autentifica el token de google, si es valido da de alta un usuario y rediriji a login exitoso.
-            </summary>                
             <param name="cancellationToken"></param>
         </member>
         <member name="T:CalculadoraCedears.Api.CrossCutting.Resources.Messages">

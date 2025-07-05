@@ -38,7 +38,7 @@ import { postCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CreateCedear } from "@/types/create-cedear";
 import { useDataContext } from "@/context/data-context";
 import { ToastService } from "@/services/toast.service";
-import { getCurrentUser } from "../../services/auth.service";
+import { getCurrentUser } from "@/lib/utils";
 
 export default function AddCedear() {
   const [openCalendar, setOpenCalendar] = useState(false);

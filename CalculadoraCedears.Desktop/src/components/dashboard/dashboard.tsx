@@ -16,9 +16,9 @@ import EmptyStatePortfolio from "../summary-portfolio/empty-state-portfolio";
 import CedearsInfoTabs from "../cedears-info/cedears-info-tabs";
 import {
   logout as authLogout,
-  getCurrentUser,
 } from "../../services/auth.service";
 import { useDataContext } from "@/context/data-context";
+import { getCurrentUser } from "@/lib/utils";
 
 export default function Dashboard() {
   const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();

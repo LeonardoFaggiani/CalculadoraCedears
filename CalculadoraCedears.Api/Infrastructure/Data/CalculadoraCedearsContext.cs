@@ -81,6 +81,13 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 .IsRequired()
                 .HasMaxLength(100);
 
+                entity.Property(e => e.ExpiresAt)
+                .IsRequired();
+
+                entity.Property(e => e.RefreshToken)
+                .IsRequired()
+                .HasMaxLength(50);
+
                 entity.Property(e => e.LastLogin)
                 .IsRequired();
             });

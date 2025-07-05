@@ -21,6 +21,12 @@ pub struct OAuthConfigs {
     pub google: OAuthConfig,
 }
 
+#[derive(Debug, Clone)]
+pub struct TokenResponse {
+    pub token: String,
+    pub refresh_token: String,
+}
+
 const CONFIG_STR: &str = include_str!("../../src-tauri/oauth_config.json");
 
 
@@ -28,11 +34,11 @@ const CONFIG_STR: &str = include_str!("../../src-tauri/oauth_config.json");
 pub async fn login_with_provider(_window: Window, provider: String) -> Result<UserInfo, String> {
 
     let config = get_provider_config(&provider)?;
-    let redirect_url = format!("{}{}", get_base_url(), "User/auth/callback");
+    let redirect_url = format!("{}{}", get_base_url(), "Auth/callback");
 
-    let jwt_token = perform_oauth_flow(&config, &redirect_url)?;    
+    let token_response  = perform_oauth_flow(&config, &redirect_url)?;    
 
-    let user_info = decode_jwt_unverified(&jwt_token)?;
+    let user_info = decode_jwt_unverified(&token_response.token, &token_response.refresh_token)?;
 
     Ok(user_info)
 }
@@ -45,23 +51,34 @@ fn get_provider_config(provider: &str) -> Result<OAuthConfig, String> {
     }
 }
 
-fn perform_oauth_flow(config: &OAuthConfig, redirect_url: &str) -> Result<String, String> {
+fn perform_oauth_flow(config: &OAuthConfig, redirect_url: &str) ->  Result<TokenResponse, String> {
     let oauth_config = tauri_plugin_oauth::OauthConfig {
         ports: Some(vec![8000, 8001, 8002]),
         response: None,
     };
 
-    let (tx, rx) = std::sync::mpsc::channel::<String>();
+    let (tx, rx) = std::sync::mpsc::channel::<TokenResponse>();
     let tx_clone = tx.clone();
 
     tauri_plugin_oauth::start_with_config(oauth_config, move |url| {
-        if let Ok(url_obj) = Url::parse(&url) {
-            if let Some(token) = url_obj
-                .query_pairs()
-                .find(|(key, _)| key == "token")
-                .map(|(_, value)| value.to_string())
-            {
-                let _ = tx_clone.send(token);
+        if let Ok(url_obj) = Url::parse(&url) {            
+            let mut token = None;
+            let mut refresh_token = None;
+            
+            for (key, value) in url_obj.query_pairs() {
+                match key.as_ref() {
+                    "token" => token = Some(value.to_string()),
+                    "refreshToken" => refresh_token = Some(value.to_string()),
+                    _ => {}
+                }  
+            }
+
+            if let (Some(tok), Some(refresh_tok)) = (token, refresh_token) {      
+
+                let _ = tx_clone.send(TokenResponse {
+                    token: tok,
+                    refresh_token: refresh_tok,
+                });
             }
         }
     })

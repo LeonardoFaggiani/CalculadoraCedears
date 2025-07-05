@@ -1,16 +1,8 @@
-import { User } from '@/types/user';
-import { invoke } from '@tauri-apps/api/core';
-import { load } from '@tauri-apps/plugin-store';
-
-let currentUser: User | undefined;
-let store: Awaited<ReturnType<typeof load>> | null = null;
-
-async function getStore() {
-  if (!store) {
-    store = await load('user-store.json', { autoSave: true });
-  }
-  return store;
-}
+import { User } from "@/types/user";
+import { invoke } from "@tauri-apps/api/core";
+import { postLogOutUserAsync } from "@/api/cedears-api";
+import { LogOutUser } from "@/types/logout-user";
+import { deleteStore, getCurrentUser, setCurrentUser } from "@/lib/utils";
 
 export async function login(provider: "google"): Promise<User> {
   try {
@@ -19,43 +11,37 @@ export async function login(provider: "google"): Promise<User> {
       name: string;
       email: string;
       token: string;
+      refresh_token: string;
     }>("login_with_provider", { provider });
 
-    currentUser = {
+    const user: User = {
       id: userInfo.sub,
       name: userInfo.name,
       email: userInfo.email,
       avatar: "",
       token: userInfo.token,
+      refresh_token: userInfo.refresh_token,
     };
 
-    const store = await getStore();
-    await store.set("user", currentUser);
-    await store.save();
+    await setCurrentUser(user);
 
-    return currentUser;
+    return user;
   } catch (error) {
     console.error("Login failed:", error);
     throw error;
   }
 }
 
-export async function getCurrentUser(): Promise<User> {
-  if (!currentUser) {
-    try {
-      const store = await getStore();
-      currentUser = await store.get<User>('user');
-    } catch (error) {
-      console.error('Failed to get stored user:', error);
-    }
-  }
-  return currentUser!;
-}
-
-
 export async function logout(): Promise<void> {
-  const store = await getStore();
-  await store.delete('user');
-  await store.save();
-  console.log('User logged out');
+  try {
+    const user = await getCurrentUser();
+
+    const request: LogOutUser = { userId: user.id };
+    await postLogOutUserAsync(request);
+    await deleteStore();
+  } catch (error) {
+    console.error("Logout failed:", error);
+    await deleteStore();
+    throw error;
+  }
 }

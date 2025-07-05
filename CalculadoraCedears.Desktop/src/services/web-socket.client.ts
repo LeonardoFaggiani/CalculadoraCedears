@@ -1,9 +1,7 @@
+import { getCurrentUser } from "@/lib/utils";
 import { CedearsStockResponse } from "@/types/cedears";
 import { UpdateCedearStockHoldingEvent } from "@/types/update-cedears-stock-holding-event";
 import WebSocket, { Message } from "@tauri-apps/plugin-websocket";
-import {  
-  getCurrentUser,
-} from "./auth.service";
 
 class WebSocketClient {
   private socket: WebSocket | null = null;

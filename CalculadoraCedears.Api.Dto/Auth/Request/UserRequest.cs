@@ -1,4 +1,4 @@
-﻿namespace CalculadoraCedears.Api.Dto.Users.Request
+﻿namespace CalculadoraCedears.Api.Dto.Auth.Request
 {
     public class UserRequest
     {

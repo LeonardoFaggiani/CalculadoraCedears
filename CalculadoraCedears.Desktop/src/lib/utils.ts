@@ -1,6 +1,12 @@
 import { Cedears } from "@/types/cedears";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { load } from '@tauri-apps/plugin-store';
+import { User } from "@/types/user";
+import { ApiResponse } from "@/types/api-response";
+import { invoke } from "@tauri-apps/api/core";
+
+const STORE_KEY = "currentUser";
 
 export const toastBaseStyle = {
   success: {
@@ -81,4 +87,64 @@ export function getTotalChangeSummary(cedear: Cedears) {
     sinceChange,
     sinceChangePercent,
   };
+}
+
+async function getStore() {
+  return load('user-store.json', { autoSave: true });
+}
+
+export async function deleteStore() {
+  const store = await getStore();
+  await store.delete(STORE_KEY);
+  await store.save();
+}
+
+export async function setCurrentUser(user: User) {
+    const store = await getStore();
+    await store.set(STORE_KEY, user);
+    await store.save();
+}
+
+export async function getCurrentUser(): Promise<User> {
+  try {
+    const store = await getStore();
+    const user = await store.get<User>(STORE_KEY);
+    if (!user) throw new Error("No hay usuario logueado");
+    return user;
+  } catch (error) {
+    console.error('Failed to get stored user:', error);
+    throw error;
+  }
+}
+
+export async function apiRequest<T = any>({
+  endpoint,
+  method,
+  body,
+  headers = {},
+}: ApiRequestOptions): Promise<T> {
+  const currentUser = await getCurrentUser();
+
+  const finalHeaders: Record<string, string> = {
+    Authorization: `Bearer ${currentUser.token!.trim()}`,
+    "X-Refresh-Token": currentUser.refresh_token!,
+    ...headers,
+  };
+
+  const response: ApiResponse = await invoke("http_request", {
+    endpoint,
+    method,
+    body: body ? JSON.stringify(body) : null,
+    headers: finalHeaders,
+  });
+
+  if (response.success) {
+    return response.data as T;
+  } else {
+    const errorMessage =
+      typeof response.error === "string"
+        ? response.error
+        : response.error?.message ?? "Error desconocido";
+    throw new Error(errorMessage);
+  }
 }

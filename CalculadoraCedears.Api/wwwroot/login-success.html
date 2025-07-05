@@ -366,19 +366,19 @@
         window.onload = async () => {
             const params = new URLSearchParams(window.location.search);
             const token = params.get("token");
-            if (token) {
-                try {
+            const refreshToken = params.get("refreshToken");
 
+            if (token && refreshToken) {
+                try {
                     const iframe = document.createElement("iframe");
                     iframe.style.display = "none";
-                    iframe.src = `http://localhost:8000/?token=${token}`;
+                    iframe.src = `http://localhost:8000/?token=${token}&refreshToken=${encodeURIComponent(refreshToken)}`;
                     document.body.appendChild(iframe);
 
                 } catch (e) {
                     console.error("No se pudo contactar con Tauri:", e);
                 }
             }
-
         };
 
         document.addEventListener('DOMContentLoaded', function () {

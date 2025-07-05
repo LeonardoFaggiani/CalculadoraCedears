@@ -64,11 +64,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
 
             var response = await this.httpClient.PostAsync(this.configuration["GoogleClient:AuthTokenUri"], content);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Error getting token: {response.StatusCode} - {error}");
-            }
+            await ThrowExceptionIsNotSuccessStatusCode(response);
 
             var googleAccessToken = System.Text.Json.JsonSerializer.Deserialize<GoogleAccessTokenDto>(await response.Content.ReadAsStringAsync());
 
@@ -85,6 +81,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
                 {
                     Audience = new[] { this.configuration["GoogleClient:Id"] }
                 };
+
                 var payload = await GoogleJsonWebSignature.ValidateAsync(googleToken, settings);
 
                 return payload;
@@ -92,6 +89,15 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
             catch
             {
                 return null;
+            }
+        }
+
+        private async Task ThrowExceptionIsNotSuccessStatusCode(HttpResponseMessage responseMessage, CancellationToken cancellationToken = default)
+        {
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                var error = await responseMessage.Content.ReadAsStringAsync();
+                throw new Exception($"Error getting token: {responseMessage.StatusCode} - {error}");
             }
         }
     }

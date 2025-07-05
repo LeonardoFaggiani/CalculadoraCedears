@@ -4,4 +4,5 @@ export interface User {
   email: string;
   avatar: string;
   token?: string;
+  refresh_token?:string;
 }
