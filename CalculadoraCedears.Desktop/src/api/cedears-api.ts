@@ -5,6 +5,7 @@ import { CedearResponse } from "@/types/cedear-response";
 import { UpdateCedear } from "@/types/update-cedear";
 import { LogOutUser } from "@/types/logout-user";
 import { apiRequest } from "@/lib/utils";
+import { DollarCCLQuote } from "@/types/dollarCCL-quote";
 
 export async function getCedearsAsync(): Promise<CedearResponse> {
   return await apiRequest({ endpoint: "Cedears", method: "GET" });
@@ -50,4 +51,8 @@ export async function postLogOutUserAsync(logOutUserRequest: LogOutUser): Promis
     method: "POST",
     body: logOutUserRequest,
   });
+}
+
+export async function getDollarCCLQuoteAsync(): Promise<DollarCCLQuote> {
+  return await apiRequest({ endpoint: "Cedears/ccl-quote", method: "GET" });
 }

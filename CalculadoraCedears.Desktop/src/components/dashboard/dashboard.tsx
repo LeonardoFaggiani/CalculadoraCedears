@@ -22,7 +22,8 @@ import { getCurrentUser } from "@/lib/utils";
 
 export default function Dashboard() {
   const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
-  const { refreshData } = useDataContext();
+  const { refreshData, dollarCCLQuote } = useDataContext();
+  
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>({
@@ -33,9 +34,10 @@ export default function Dashboard() {
   });
 
   const portfolioValue = 99999;
+  
   const totalGainLoss: AmountPercentage = {
-    amount: 999.99,
-    percentage: 9.99,
+    amount: dollarCCLQuote ? dollarCCLQuote.dollarCCL : 0,
+    percentage: dollarCCLQuote ? dollarCCLQuote.variationCCL : 0,
   };
 
   useEffect(() => {

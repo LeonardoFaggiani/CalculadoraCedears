@@ -10,11 +10,16 @@ using Google.Apis.Auth;
 using HtmlAgilityPack;
 
 using System.Globalization;
+using System.Net;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 
 namespace CalculadoraCedears.Api.Infrastructure.Repositories
 {
     public interface IGoogleRepository
     {
+        Task<DollarCCLQuote> TryGetCurrentDollarCCLQuoteAsync(CancellationToken cancellationToken);
         Task<GoogleFinance> TryGetFromFinanceCurrentPriceByTickerAndMarketAsync(string ticker, string market, CancellationToken cancellationToken);
         Task<GoogleJsonWebSignature.Payload?> ExchangeCodeAsync(string code);
     }
@@ -33,6 +38,23 @@ namespace CalculadoraCedears.Api.Infrastructure.Repositories
             this.HtmlWeb = new HtmlWeb();
             this.httpClient = new HttpClient();
 
+        }
+
+        public async Task<DollarCCLQuote> TryGetCurrentDollarCCLQuoteAsync(CancellationToken cancellationToken)
+        {
+            var html = await this.httpClient.GetStringAsync($"https://www.rava.com/cotizaciones/dolares", cancellationToken);
+
+            var match = Regex.Match(html, @":datos=""(?<json>.*?)""");
+
+            string quoteTextJson = WebUtility.HtmlDecode(match.Groups["json"].Value);
+
+            var rootNode = JsonNode.Parse(quoteTextJson);
+
+            var bodyNode = rootNode?["body"];
+
+            var quotes = bodyNode?.Deserialize<List<DollarCCLQuote>>();
+
+            return quotes?.FirstOrDefault(x => x.DollarType != "DOLAR CCL");
         }
 
         public async Task<GoogleFinance> TryGetFromFinanceCurrentPriceByTickerAndMarketAsync(string ticker, string market, CancellationToken cancellationToken)

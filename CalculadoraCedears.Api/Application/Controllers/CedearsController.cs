@@ -23,5 +23,17 @@ namespace CalculadoraCedears.Api.Application.Controllers
         {
             return Ok(await mediator.Send(new CedearsQuery(), cancellationToken));
         }
+
+        /// <summary>
+        /// Devuelve la cotizacion del dolar CCL
+        /// </summary>                
+        /// <param name="cancellationToken"></param>
+        [HttpGet]
+        [Route("ccl-quote")]
+        [Produces("application/json", Type = typeof(DollarCCLQueryResponse))]
+        public async Task<IActionResult> GetCurrentDollarCCLQuoteAsync(CancellationToken cancellationToken)
+        {
+            return Ok(await mediator.Send(new DollarCCLQuery(), cancellationToken));
+        }
     }
 }

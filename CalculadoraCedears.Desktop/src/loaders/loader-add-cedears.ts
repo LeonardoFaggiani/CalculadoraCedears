@@ -1,12 +1,13 @@
-import { getBrokersAsync, getCedearsAsync } from "@/api/cedears-api";
+import { getBrokersAsync, getDollarCCLQuoteAsync, getCedearsAsync } from "@/api/cedears-api";
 import { Broker } from "@/types/broker-response";
 import { Cedears } from "@/types/cedears";
 import { ListItem } from "@/types/list-item";
 
 export async function getAddCedearData() {
-  const [brokersResponse, cedearsResponse] = await Promise.all([
+  const [brokersResponse, cedearsResponse, dollarCCLQuote] = await Promise.all([
     getBrokersAsync(),
     getCedearsAsync(),
+    getDollarCCLQuoteAsync(),
   ]);
 
   if (!brokersResponse.brokers || !cedearsResponse.cedears) {
@@ -23,5 +24,5 @@ export async function getAddCedearData() {
     label: `${x.name} - (${x.ticker})`
   }));
 
-  return { brokers, cedears };
+  return { brokers, cedears, dollarCCLQuote };
 }

@@ -20,33 +20,6 @@ export function GainLossPortfolio({
         </CardHeader>
       </Card>
 
-      <Card className="md:col-span-1">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-600">
-                Ganancia/Pérdida Total
-              </p>
-              <div
-                className={`flex items-center ${
-                  portfolioValue >= 0 ? "text-emerald-600" : "text-red-600"
-                }`}
-              >
-                {portfolioValue >= 0 ? (
-                  <TrendingUp className="w-4 h-4 mr-1" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 mr-1" />
-                )}
-                <span className="text-lg font-semibold">
-                  {portfolioValue >= 0 ? "+" : ""}${portfolioValue.toFixed(2)} (
-                  {portfolioValue.toFixed(2)}%)
-                </span>
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
       <Card>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
@@ -54,10 +27,10 @@ export function GainLossPortfolio({
               <p className="text-sm font-medium text-slate-600">Dólar CCL</p>
               <div
                 className={`flex items-center ${
-                  dolarCCL.amount >= 0 ? "text-emerald-600" : "text-red-600"
+                  dolarCCL.percentage >= 0 ? "text-emerald-600" : "text-red-600"
                 }`}
               >
-                {dolarCCL.amount >= 0 ? (
+                {dolarCCL.percentage >= 0 ? (
                   <TrendingUp className="w-4 h-4 mr-1" />
                 ) : (
                   <TrendingDown className="w-4 h-4 mr-1" />
@@ -65,14 +38,14 @@ export function GainLossPortfolio({
 
                 <span className="text-xl font-bold">
                   {dolarCCL.amount >= 0 ? "+" : ""}
-                  {formatCurrency(dolarCCL.amount)} ({dolarCCL.percentage}%)
+                  {formatCurrency(dolarCCL.amount!)} ({dolarCCL.percentage}%)
                 </span>
               </div>
             </div>
 
             <DollarSign
               className={`w-8 h-8 ${
-                dolarCCL.amount >= 0 ? "text-emerald-600" : "text-red-600"
+                dolarCCL.percentage >= 0 ? "text-emerald-600" : "text-red-600"
               }`}
             />
           </div>

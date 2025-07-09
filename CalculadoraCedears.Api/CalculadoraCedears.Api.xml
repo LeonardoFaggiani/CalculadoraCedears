@@ -34,6 +34,12 @@
             </summary>                
             <param name="cancellationToken"></param>
         </member>
+        <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsController.GetCurrentDollarCCLQuoteAsync(System.Threading.CancellationToken)">
+            <summary>
+            Devuelve la cotizacion del dolar CCL
+            </summary>                
+            <param name="cancellationToken"></param>
+        </member>
         <member name="M:CalculadoraCedears.Api.Application.Controllers.CedearsStockHoldingController.PostAsync(CalculadoraCedears.Api.Dto.CedearsStockHolding.Request.CedearStockHoldingRequest,System.Threading.CancellationToken)">
             <summary>
             Crea un CedearsStockHolding
