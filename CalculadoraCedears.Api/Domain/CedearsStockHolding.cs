@@ -86,8 +86,10 @@ namespace CalculadoraCedears.Api.Domain
 
         public CedearsStockHolding SetCurrentUsd(decimal price)
         {
+            decimal comision = (price * this.Broker.Comision) / 100;
+            
             this.Cedear.SetPrice(price);
-            this.CurrentValueUsd = ((decimal)this.Cedear.Price * this.EffectiveRatio);
+            this.CurrentValueUsd = ((price - comision) * this.EffectiveRatio);
 
             return this;
         }        

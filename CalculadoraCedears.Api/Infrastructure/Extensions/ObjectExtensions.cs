@@ -13,6 +13,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             foreach (var ticker in keyValuePairs.Keys)
             {
                 var cedear = keyValuePairs[ticker].First().Cedear;
+                var broker = keyValuePairs[ticker].First().Broker;
 
                 var cedearWithStockHolding = new CedearWithStockHoldingDto
                 {
@@ -26,7 +27,9 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
                 foreach (var cedearsStockHolding in keyValuePairs[ticker])
                 {
                     var cedearsStockHoldingDto = mapper.Map<Domain.CedearsStockHolding, CedearStockHoldingDto>(cedearsStockHolding);
-                    cedearsStockHoldingDto.CurrentPriceUsd = (decimal)cedear.Price;
+
+                    decimal comision = ((decimal)cedear.Price * broker.Comision) / 100;
+                    cedearsStockHoldingDto.CurrentPriceUsd = ((decimal)cedear.Price - comision);
                     cedearWithStockHolding.CedearsStockHoldings.Add(cedearsStockHoldingDto);
                 }
 

@@ -34,7 +34,10 @@ export default function Dashboard() {
   });
 
   const portfolioValue = 99999;
-  
+  const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
+    {}
+  );
+
   const totalGainLoss: AmountPercentage = {
     amount: dollarCCLQuote ? dollarCCLQuote.dollarCCL : 0,
     percentage: dollarCCLQuote ? dollarCCLQuote.variationCCL : 0,
@@ -47,6 +50,27 @@ export default function Dashboard() {
   useEffect(() => {
     getUser();
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+
+    let unsubscribe: (() => void) | null = null;
+
+    wsClient.subscribe((updatedStocksHolding: CedearsStockResponse) => {
+        updateCedearStockHoldingPrice(
+          updatedStocksHolding.cedearWithStockHoldings
+        );
+      })
+      .then((unsub) => {
+        unsubscribe = unsub;
+      });
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [loading]);
 
   const getUser = async () => {
     return await getCurrentUser().then((user) => {
@@ -70,27 +94,6 @@ export default function Dashboard() {
       }, 1000);
     }
   };
-
-  useEffect(() => {
-    if (loading) return;
-
-    let unsubscribe: (() => void) | null = null;
-
-    wsClient.subscribe((updatedStocksHolding: CedearsStockResponse) => {
-        updateCedearStockHoldingPrice(
-          updatedStocksHolding.cedearWithStockHoldings
-        );
-      })
-      .then((unsub) => {
-        unsubscribe = unsub;
-      });
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
-  }, [loading]);
 
   const resetPriceChangeColor = () => {
     setTimeout(() => {
@@ -154,10 +157,6 @@ export default function Dashboard() {
       };
     });
   };
-
-  const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
-    {}
-  );
 
   const toggleCedear = (cedearsId: string) => {
     setExpandedTicker((prev) => ({
