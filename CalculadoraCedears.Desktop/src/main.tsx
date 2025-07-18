@@ -2,10 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { Toaster } from "./components/ui/sonner";
+import { DataProvider } from "./context/data-context";
+import { WebSocketProvider } from "./context/web-socket-provider";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
-    <Toaster />
+    <DataProvider>
+      <WebSocketProvider>
+        <App />
+        <Toaster />
+      </WebSocketProvider>
+    </DataProvider>
   </React.StrictMode>
 );

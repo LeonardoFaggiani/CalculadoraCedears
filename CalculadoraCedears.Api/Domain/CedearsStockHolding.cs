@@ -17,14 +17,6 @@ namespace CalculadoraCedears.Api.Domain
         public int Quantity { get; protected set; }
         public decimal EffectiveRatio { get; protected set; }
 
-        public decimal TodayChange { get; protected set; }
-
-        public decimal TodayChangePercent { get; protected set; }
-
-        public decimal SinceChange { get; protected set; }
-
-        public decimal SinceChangePercent { get; protected set; }
-
         public DateTime SinceDate { get; protected set; }
 
         public DateTime? UntilDate { get; protected set; }

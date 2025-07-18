@@ -21,7 +21,7 @@ namespace CalculadoraCedears.Api.Infrastructure.WebSocket
 
         public CedearsStockHoldingUpdateService()
         {
-            this.Clients = new ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>();
+            this.Clients = new ConcurrentDictionary<string, System.Net.WebSockets.WebSocket>();           
         }
 
         public async Task BroadcastCedearsStockHoldingUpdatesAsync(System.Net.WebSockets.WebSocket client, CedearsStockHoldingQueryResponse updates)
@@ -34,7 +34,7 @@ namespace CalculadoraCedears.Api.Infrastructure.WebSocket
             var message = JsonSerializer.Serialize(new
             {
                 type = "cedears_stockholding_updated",
-                data = JsonSerializer.Serialize(updates, options),
+                data = JsonSerializer.Serialize(updates, options),                
                 timestamp = DateTime.Now
             });
 
@@ -60,6 +60,13 @@ namespace CalculadoraCedears.Api.Infrastructure.WebSocket
 
         public void AddClient(string id, System.Net.WebSockets.WebSocket socket)
         {
+            if (this.Clients.ContainsKey(id))
+            {
+                RemoveClient(id);
+                AddClient(id, socket);
+                return;
+            }
+
             this.Clients.TryAdd(id, socket);
         }
 

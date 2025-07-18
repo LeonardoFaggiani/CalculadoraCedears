@@ -66,6 +66,7 @@ export function getTotalChange(cedear: Cedears) {
 }
 
 export function getTotalChangeSummary(cedear: Cedears) {
+
   const totalPurchase = parseFloat(
     cedear.cedearsStockHoldings
       .reduce((acc, h) => acc + h.purchaseValueUsd, 0)

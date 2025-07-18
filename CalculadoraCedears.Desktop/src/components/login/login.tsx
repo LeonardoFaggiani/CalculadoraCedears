@@ -1,16 +1,11 @@
 import React, { useState, useMemo } from "react";
 import { Button } from "../ui/button";
-import {
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Card,
-} from "../ui/card";
+import { CardContent, CardHeader, CardTitle, Card } from "../ui/card";
 
 import { login } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { ToastService } from "@/services/toast.service";
-import { error as LogError } from '@tauri-apps/plugin-log';
+import { error as LogError } from "@tauri-apps/plugin-log";
 
 const GoogleIcon: React.FC = () => (
   <svg
@@ -55,9 +50,7 @@ const Login: React.FC = () => {
       setIsGoogleLoading(true);
 
       await login(provider);
-
       navigate("/home");
-
     } catch (error: any) {
       if (error instanceof Error) {
         LogError(`Mensaje de error:${error.message}`);

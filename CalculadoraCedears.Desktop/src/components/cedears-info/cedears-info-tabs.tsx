@@ -23,7 +23,7 @@ export default function CedearsInfoTabs({
     <Tabs defaultValue="summary" className="mb-6">
       <TabsContent value="summary" className="mt-0">
         <div className="space-y-4">
-          {cedears?.map((cedear: Cedears) => (
+          {cedears?.map((cedear: Cedears) => (            
             <Card key={cedear.ticker} className="overflow-hidden">
               <Collapsible
                 open={expandedTicker[cedear.ticker]}

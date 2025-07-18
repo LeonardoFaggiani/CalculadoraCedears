@@ -105,11 +105,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Data
                 entity.Property(e => e.PurchasePriceUsd).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.PurchaseValueUsd).HasColumnType("decimal(10, 2)");
                 entity.Property(e => e.EffectiveRatio).HasColumnType("decimal(5, 2)");
-                entity.Property(e => e.SinceChange).HasColumnType("decimal(10, 2)");
-                entity.Property(e => e.SinceChangePercent).HasColumnType("decimal(5, 2)");
                 entity.Property(e => e.SinceDate).HasColumnType("datetime");
-                entity.Property(e => e.TodayChange).HasColumnType("decimal(10, 2)");
-                entity.Property(e => e.TodayChangePercent).HasColumnType("decimal(5, 2)");
                 entity.Property(e => e.UntilDate).HasColumnType("datetime");
 
                 entity.HasOne(d => d.Broker).WithMany(p => p.CedearsStockHoldings)

@@ -97,10 +97,10 @@ export default function CedearsDetailTable({
                 {stock.purchasePriceArs}
               </TableCell>
               <TableCell className="text-center">
-                {stock.purchasePriceUsd}
+                {stock.purchasePriceUsd.toFixed(2)}
               </TableCell>
               <TableCell className="text-center">
-                {stock.purchaseValueUsd}
+                {stock.purchaseValueUsd.toFixed(2)}
               </TableCell>
               <TableCell className={`text-center transition duration-500 ${cedear.priceChangeDirection === "up" ? "text-green-100"  : cedear.priceChangeDirection === "down" ? "text-red-100" : ""}`}>
                 {stock.currentPriceUsd.toFixed(2)}                

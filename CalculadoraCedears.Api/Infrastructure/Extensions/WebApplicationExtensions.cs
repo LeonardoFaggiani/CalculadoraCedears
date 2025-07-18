@@ -28,19 +28,16 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
                     {
                         var service = context.RequestServices.GetRequiredService<ICedearsStockHoldingUpdateService>();
                         var socket = await context.WebSockets.AcceptWebSocketAsync();
-                        var clientId = Guid.NewGuid().ToString();
-
-
                         var userId = context.Request.Query["userId"].ToString();
 
                         service.AddClient(userId, socket);
 
-                        var buffer = new byte[1024 * 4];
-                        var receiveResult = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        ArraySegment<Byte> buffer = new ArraySegment<byte>(new Byte[8192]);
+                        var receiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
 
                         while (!receiveResult.CloseStatus.HasValue)
                         {
-                            receiveResult = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                            receiveResult = await socket.ReceiveAsync(buffer, CancellationToken.None);
                         }
 
                         await socket.CloseAsync(
@@ -48,7 +45,7 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
                             receiveResult.CloseStatusDescription,
                             CancellationToken.None);
 
-                        service.RemoveClient(clientId);
+                        service.RemoveClient(userId);
                     }
                     else
                     {
@@ -62,6 +59,8 @@ namespace CalculadoraCedears.Api.Infrastructure.Extensions
             });
 
             return application;
-        }
+        }      
     }
+
+
 }

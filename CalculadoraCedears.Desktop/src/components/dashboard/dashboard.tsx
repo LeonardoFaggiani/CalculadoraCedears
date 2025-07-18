@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import SummaryPortfolio from "../summary-portfolio/summary-portfolio";
 import { getCedearStockHoldingAsync } from "@/api/cedears-api";
 import { Cedears, CedearsStockResponse } from "@/types/cedears";
-import { wsClient } from "@/services/web-socket.client";
 import { AmountPercentage } from "@/types/amount-percentage";
 import { User } from "@/types/user";
 import UserProfile from "../user-profile/user-profile";
@@ -14,16 +13,17 @@ import { useNavigate } from "react-router-dom";
 import { LoaderSkeleton } from "../loader-skeleton/loader-skeleton";
 import EmptyStatePortfolio from "../summary-portfolio/empty-state-portfolio";
 import CedearsInfoTabs from "../cedears-info/cedears-info-tabs";
-import {
-  logout as authLogout,
-} from "../../services/auth.service";
+import { logout as authLogout } from "../../services/auth.service";
 import { useDataContext } from "@/context/data-context";
 import { getCurrentUser } from "@/lib/utils";
+import { useWebSocket } from "@/context/web-socket-provider";
 
 export default function Dashboard() {
-  const [cedearsStockResponse, setCedearsStockHolding] = useState<CedearsStockResponse>();
+  const [cedearsStockResponse, setCedearsStockHolding] =
+    useState<CedearsStockResponse>();
   const { refreshData, dollarCCLQuote } = useDataContext();
-  
+
+  const { client } = useWebSocket();
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>({
@@ -52,25 +52,31 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+  if (!client) return;
 
-    let unsubscribe: (() => void) | null = null;
+  let isSubscribed = false;
+  let unsubscribe: (() => void) | undefined;
 
-    wsClient.subscribe((updatedStocksHolding: CedearsStockResponse) => {
+  const subscribe = async () => {
+    unsubscribe = await client.subscribe(
+      (updatedStocksHolding: CedearsStockResponse) => {
         updateCedearStockHoldingPrice(
           updatedStocksHolding.cedearWithStockHoldings
         );
-      })
-      .then((unsub) => {
-        unsubscribe = unsub;
-      });
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
       }
-    };
-  }, [loading]);
+    );
+
+    isSubscribed = true;
+  };
+
+  subscribe();
+
+  return () => {
+    if (unsubscribe && isSubscribed) {
+      unsubscribe();
+    }
+  };
+}, [client]);
 
   const getUser = async () => {
     return await getCurrentUser().then((user) => {
@@ -78,7 +84,7 @@ export default function Dashboard() {
       loadCedears(user.id);
     });
   };
-  
+
   const loadCedears = async (userId: string) => {
     try {
       setLoading(true);
@@ -121,6 +127,7 @@ export default function Dashboard() {
   ): Cedears[] => {
     const updatedCedears = prev.cedearWithStockHoldings.map((cedear) => {
       const updated = updatedList.find((u) => u.id === cedear.id);
+
       if (!updated) return cedear;
 
       const priceChangeDirection =
@@ -131,8 +138,7 @@ export default function Dashboard() {
           : "equal";
 
       return {
-        ...cedear,
-        price: updated.price,
+        ...updated,
         priceChangeDirection,
       };
     });
@@ -140,10 +146,9 @@ export default function Dashboard() {
     return updatedCedears;
   };
 
-  const updateCedearStockHoldingPrice = (updatedList: Cedears[]) => {
+  const updateCedearStockHoldingPrice = (updatedList: Cedears[]) => {    
     setCedearsStockHolding((prev) => {
-      if (!prev) return prev;
-
+      if (!prev) return prev;      
       const updatedCedears = updateCedearWithPriceChangeDirection(
         updatedList,
         prev
@@ -168,8 +173,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     authLogout();
     setUser(null);
-    navigate('/');
-    console.log("User logged out");
+    navigate("/");
   };
 
   return (

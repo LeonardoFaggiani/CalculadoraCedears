@@ -63,11 +63,17 @@ namespace CalculadoraCedears.Api.Infrastructure.BackgroundServices
                     {
                         var result = new CedearsStockHoldingQueryResponse(cedearsByTicker.ConvertToResult(mapper));
 
+                        var cedearsStockHoldings = cedearsByTicker.Values.SelectMany(lista => lista).ToList();
+
+                        foreach (var cedearsStockHolding in cedearsStockHoldings)
+                            cedearStockHoldingRepository.Update(cedearsStockHolding);
+
+                        await cedearStockHoldingRepository.UnitOfWork.Commit();
                         await cedearsStockHoldingUpdateService.BroadcastCedearsStockHoldingUpdatesAsync(client.Value, result);
                     }
                 }
 
-                await Task.Delay(TimeSpan.FromMinutes(5), cancellationToken);
+                await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
             }
         }
     }
