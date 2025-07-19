@@ -4,8 +4,7 @@ import { AuthContextType } from "@/types/auth-context-type";
 import { LogOutUser } from "@/types/logout-user";
 import { User } from "@/types/user";
 import { invoke } from "@tauri-apps/api/core";
-import React, { createContext } from "react";
-
+import React, { createContext, useState } from "react";
 
 const STORE_KEY = "currentUser";
 
@@ -16,6 +15,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [user, setUser] = useState<User | null>(null);
 
   const login = async (provider: "google"): Promise<User> => {
     try {
@@ -38,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       await setCurrentUser(user);
       setApiToken(userInfo.token, userInfo.refresh_token);
+      setUser(user);
 
       return user;
     } catch (error) {
@@ -53,9 +54,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const request: LogOutUser = { userId: user.id };
       await postLogOutUserAsync(request);
       await deleteStore();
+      setUser(null);
     } catch (error) {
       console.error("Logout failed:", error);
       await deleteStore();
+      setUser(null);
       throw error;
     }
   };
@@ -70,8 +73,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const store = await getStore();
       const user = await store.get<User>(STORE_KEY);
+
       if (!user) throw new Error("No hay usuario logueado");
+      setUser(user);
+      
       return user;
+
     } catch (error) {
       console.error("Failed to get stored user:", error);
       throw error;
@@ -80,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, getCurrentUser, setCurrentUser }}
+      value={{ user, login, logout, getCurrentUser, setCurrentUser }}
     >
       {children}
     </AuthContext.Provider>

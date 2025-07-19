@@ -1,7 +1,6 @@
-  import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { CedearsStockResponse } from "@/types/cedears";
 import { WebSocketClient } from "@/services/web-socket.client";
-import { User } from "@/types/user";
 import { useAuth } from "@/hooks/useAuth";
 
 type WebSocketContextType = {
@@ -14,24 +13,15 @@ export const WebSocketContext = createContext<WebSocketContextType | undefined>(
 
 export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
-  const [client, setClient] = useState<WebSocketClient<CedearsStockResponse> | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-  const { getCurrentUser } = useAuth();
-  
-  useEffect(() => {
-    const loadUser = async () => {
-      const user = await getCurrentUser();
-      setUser(user);
-    };
-
-    loadUser();
-  }, []);
+  const [client, setClient] = useState<WebSocketClient<CedearsStockResponse> | null>(null);  
+  const { user } = useAuth();
 
   useEffect(() => {
     let cancelled = false;
 
     const setup = async () => {
       try {
+        
         if (client) return;
 
         if (!user?.id) return;
@@ -53,8 +43,9 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setup();
 
     return () => {
-      cancelled = true;
+      cancelled = true;      
       client?.disconnect();
+      setClient(null);
     };
   }, [user?.id]);
 
