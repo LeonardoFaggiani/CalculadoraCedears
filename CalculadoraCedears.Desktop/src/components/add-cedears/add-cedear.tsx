@@ -36,14 +36,15 @@ import { SelectItemField } from "./select-item-field";
 import { NumericInputFields } from "./numeric-input-field";
 import { postCedearStockHoldingAsync } from "@/api/cedears-api";
 import { CreateCedear } from "@/types/create-cedear";
-import { useDataContext } from "@/context/data-context";
 import { ToastService } from "@/services/toast.service";
-import { getCurrentUser } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useData } from "@/hooks/useData";
 
 export default function AddCedear() {
   const [openCalendar, setOpenCalendar] = useState(false);
   const navigate = useNavigate();
-  const { brokers, cedears } = useDataContext();
+  const { brokers, cedears } = useData();
+  const { getCurrentUser } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),

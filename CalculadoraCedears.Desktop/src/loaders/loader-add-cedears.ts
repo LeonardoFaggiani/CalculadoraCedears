@@ -3,7 +3,7 @@ import { Broker } from "@/types/broker-response";
 import { Cedears } from "@/types/cedears";
 import { ListItem } from "@/types/list-item";
 
-export async function getAddCedearData() {
+export async function getAddCedearData() {  
   const [brokersResponse, cedearsResponse, dollarCCLQuote] = await Promise.all([
     getBrokersAsync(),
     getCedearsAsync(),

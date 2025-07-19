@@ -2,10 +2,10 @@ import React, { useState, useMemo } from "react";
 import { Button } from "../ui/button";
 import { CardContent, CardHeader, CardTitle, Card } from "../ui/card";
 
-import { login } from "@/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { ToastService } from "@/services/toast.service";
 import { error as LogError } from "@tauri-apps/plugin-log";
+import { useAuth } from "@/hooks/useAuth";
 
 const GoogleIcon: React.FC = () => (
   <svg
@@ -44,6 +44,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
   const isLoading = useMemo(() => isGoogleLoading, [isGoogleLoading]);
+  const { login } = useAuth();
 
   const handleLogin = async (provider: LoginProvider) => {
     try {

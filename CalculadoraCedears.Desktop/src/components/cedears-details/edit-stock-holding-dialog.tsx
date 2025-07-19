@@ -27,7 +27,7 @@ import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { EditStockHoldingDialog } from "@/types/edit-dialog";
-import { useDataContext } from "@/context/data-context";
+import { useData } from "@/hooks/useData";
 
 export function EditDialog({
   open,
@@ -36,7 +36,7 @@ export function EditDialog({
   stock,
 }: EditStockHoldingDialog) {
   const [openCalendar, setOpenCalendar] = useState(false);
-  const { brokers } = useDataContext();
+  const { brokers } = useData();
 
   const form = useForm({
     resolver: zodResolver(formSchemaEdit),

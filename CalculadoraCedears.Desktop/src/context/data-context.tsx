@@ -1,10 +1,12 @@
+import { useAuth } from "@/hooks/useAuth";
+import { setApiToken } from "@/lib/utils";
 import { getAddCedearData } from "@/loaders/loader-add-cedears";
 import { DataContextType } from "@/types/data-context-type";
 import { DollarCCLQuote } from "@/types/dollarCCL-quote";
 import { ListItem } from "@/types/list-item";
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback } from "react";
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
+export const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -13,9 +15,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
   const [brokers, setBrokers] = useState<ListItem[]>([]);
   const [cedears, setCedears] = useState<ListItem[]>([]);
   const [dollarCCLQuote, setDollarCCLQuote] = useState<DollarCCLQuote>();
+  const { getCurrentUser } = useAuth();
 
     const fetchData = useCallback(async () => {
       try {
+        
+        const user = await getCurrentUser();
+        setApiToken(user.token!, user.refresh_token!);
+
         const addCedearDataResponse = await getAddCedearData();
         setBrokers(addCedearDataResponse.brokers);
         setCedears(addCedearDataResponse.cedears);
@@ -30,10 +37,4 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </DataContext.Provider>
   );
-};
-
-export const useDataContext = () => {
-  const ctx = useContext(DataContext);
-  if (!ctx) throw new Error("useDataContext must be used within DataProvider");
-  return ctx;
 };

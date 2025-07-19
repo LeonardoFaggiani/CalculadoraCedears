@@ -2,11 +2,13 @@ import { Cedears } from "@/types/cedears";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { load } from '@tauri-apps/plugin-store';
-import { User } from "@/types/user";
 import { ApiResponse } from "@/types/api-response";
 import { invoke } from "@tauri-apps/api/core";
 
 const STORE_KEY = "currentUser";
+
+let authToken: string = "";
+let refreshToken: string = "";
 
 export const toastBaseStyle = {
   success: {
@@ -65,6 +67,11 @@ export function getTotalChange(cedear: Cedears) {
   return total;
 }
 
+export function setApiToken(auth_token: string, refresh_token: string) {
+  authToken = auth_token;
+  refreshToken = refresh_token;
+}
+
 export function getTotalChangeSummary(cedear: Cedears) {
 
   const totalPurchase = parseFloat(
@@ -90,7 +97,7 @@ export function getTotalChangeSummary(cedear: Cedears) {
   };
 }
 
-async function getStore() {
+export async function getStore() {
   return load('user-store.json', { autoSave: true });
 }
 
@@ -100,35 +107,16 @@ export async function deleteStore() {
   await store.save();
 }
 
-export async function setCurrentUser(user: User) {
-    const store = await getStore();
-    await store.set(STORE_KEY, user);
-    await store.save();
-}
-
-export async function getCurrentUser(): Promise<User> {
-  try {
-    const store = await getStore();
-    const user = await store.get<User>(STORE_KEY);
-    if (!user) throw new Error("No hay usuario logueado");
-    return user;
-  } catch (error) {
-    console.error('Failed to get stored user:', error);
-    throw error;
-  }
-}
-
 export async function apiRequest<T = any>({
   endpoint,
   method,
   body,
   headers = {},
 }: ApiRequestOptions): Promise<T> {
-  const currentUser = await getCurrentUser();
 
   const finalHeaders: Record<string, string> = {
-    Authorization: `Bearer ${currentUser.token!.trim()}`,
-    "X-Refresh-Token": currentUser.refresh_token!,
+    Authorization: `Bearer ${authToken}`,
+    "X-Refresh-Token": refreshToken,
     ...headers,
   };
 
