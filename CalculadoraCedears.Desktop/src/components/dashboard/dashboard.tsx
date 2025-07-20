@@ -27,8 +27,6 @@ export default function Dashboard() {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-
-  const portfolioValue = 99999;
   const [expandedTicker, setExpandedTicker] = useState<Record<string, boolean>>(
     {}
   );
@@ -81,9 +79,8 @@ export default function Dashboard() {
     });
   };
 
-  const loadCedears = async (userId : string) => {
+  const loadCedears = async (userId: string) => {
     try {
-
       setLoading(true);
       await getCedearStockHoldingAsync(userId)
         .then(setCedearsStockHolding)
@@ -166,6 +163,24 @@ export default function Dashboard() {
     }));
   };
 
+  const getTotalPorfolioValue = (
+    cedearsStockResponse: CedearsStockResponse
+  ): number => {
+
+    return cedearsStockResponse.cedearWithStockHoldings.reduce(
+      (total, cedear) => {
+        const totalPorCedear = cedear.cedearsStockHoldings.reduce(
+          (subtotal, holding) => {
+            return subtotal + holding.currentValueUsd;
+          },
+          0
+        );
+        return total + totalPorCedear;
+      },
+      0
+    );
+  };
+
   const handleLogout = () => {
     logout();
     setUser(null);
@@ -199,7 +214,12 @@ export default function Dashboard() {
 
           <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <SummaryPortfolio
-              portfolioValue={portfolioValue}
+              portfolioValue={
+                cedearsStockResponse != undefined &&
+                cedearsStockResponse?.cedearWithStockHoldings.length > 0
+                  ? getTotalPorfolioValue(cedearsStockResponse)
+                  : 0
+              }
               dolarCCL={totalGainLoss}
               loading={loading}
             />
