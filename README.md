@@ -40,6 +40,10 @@ En `appsettings.Development.json` reemplazar los valores:
   2. Levantar la API que se encuentra en `CalculadoraCedears/CalculadoraCedears.Api` y ejecutar el comando `dotnet run` esto levantara la API en `https://localhost:7016`
   3. Como ultimo, la aplicacion `Tauri`, debemos ir a la carpeta `CalculadoraCedears/CalculadoraCedears.Desktop` y ejecutar el comando `npm run tauri dev` esto levanta la App Desktop apuntando a la API `https://localhost:7016`
 
+<img width="1583" height="827" alt="image" src="https://github.com/user-attachments/assets/4a2893aa-539e-4f60-9e8b-54f676b220b7" />
+
+
+
 > [!NOTE]
 > El scaffolding del proyecto fue genero completamente por Custom Api Template para proyectos NET Core.
 > ```bash
