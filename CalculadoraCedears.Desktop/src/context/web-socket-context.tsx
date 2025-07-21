@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { CedearsStockResponse } from "@/types/cedears";
 import { WebSocketClient } from "@/services/web-socket.client";
 import { useAuth } from "@/hooks/useAuth";
+const wsBaseUrl = import.meta.env.VITE_WS_BASE_URL;
 
 type WebSocketContextType = {
   client: WebSocketClient<CedearsStockResponse> | null;
@@ -27,7 +28,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (!user?.id) return;
 
         const newClient = new WebSocketClient<CedearsStockResponse>(
-          `ws://localhost:5124/ws/stocks?userId=${user.id}`,
+          `${wsBaseUrl}/ws/stocks?userId=${user.id}`,
           "cedears_stockholding_updated"
         );
 
